@@ -1,2 +1,7 @@
-package et.com.gebeya.apigateway.dto;public class Authority {
+package et.com.gebeya.apigateway.dto;
+
+public enum Authority {
+    ADMIN,
+    STUDENT,
+    TEACHER
 }
