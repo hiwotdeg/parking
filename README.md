@@ -15,7 +15,7 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin http://git.gebeya.training/parking/parking-lot-locator-syste.git
+git remote add origin http://git.gebeya.training/parking/parking-lot-locator-system.git
 git branch -M main
 git push -uf origin main
 ```
