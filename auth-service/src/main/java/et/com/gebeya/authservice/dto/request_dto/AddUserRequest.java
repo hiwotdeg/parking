@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AddUserRequest {
     private String phoneNo;
-    private Authority roll;
-    private Integer rollId;
+    private Authority role;
+    private Integer roleId;
 }
