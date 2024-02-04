@@ -104,8 +104,8 @@ public class AuthenticationService {
                 .userName(dto.getPhoneNo())
                 .password(passwordEncoder.encode(dto.getPhoneNo()))
                 .isActive(true)
-                .authority(dto.getRoll())
-                .roleId(dto.getRollId())
+                .authority(dto.getRole())
+                .roleId(dto.getRoleId())
                 .build();
       if(users!=null)
           return new ResponseEntity<>("",HttpStatus.OK);
