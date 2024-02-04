@@ -80,6 +80,15 @@ public class AuthenticationService {
                             .token(jwt).code(Code.U102).build();
                     return new ResponseEntity<>(response, HttpStatus.OK);
                 }
+                else if(users.get().getAuthorities().stream()
+                        .anyMatch(authority -> authority.getAuthority().equals(Authority.ADMIN.name()))){
+                    redisService.deleteValue(request.getOtp());
+                    String jwt = jwtService.generateToken(users.get());
+                    OtpVerificationResponseDto response = OtpVerificationResponseDto.builder()
+                            .token(jwt).code(Code.U103).build();
+                    return new ResponseEntity<>(response,HttpStatus.OK);
+                }
+
             }
         }
 

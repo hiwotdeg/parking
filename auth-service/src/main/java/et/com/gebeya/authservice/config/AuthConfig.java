@@ -63,8 +63,8 @@ public class AuthConfig {
             Users users = Users.builder()
                     .isActive(true)
                     .authority(Authority.ADMIN)
-                    .userName("admin")
-                    .password(passwordEncoder().encode("password"))
+                    .userName("0978904679")
+                    .password(passwordEncoder().encode("0978904679"))
                     .build();
             usersService.createUpdateUser(users);
         }
