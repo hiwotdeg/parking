@@ -5,7 +5,7 @@ import et.com.gebeya.authservice.dto.request_dto.AddUserRequest;
 import et.com.gebeya.authservice.dto.request_dto.UsersCredential;
 import et.com.gebeya.authservice.dto.request_dto.ValidationRequest;
 import et.com.gebeya.authservice.dto.request_dto.VerificationRequest;
-import et.com.gebeya.authservice.dto.response_dto.AuthenticationResponse;
+import et.com.gebeya.authservice.dto.response_dto.AddUserResponse;
 import et.com.gebeya.authservice.dto.response_dto.OtpVerificationResponseDto;
 import et.com.gebeya.authservice.dto.response_dto.ValidationResponse;
 import et.com.gebeya.authservice.service.AuthenticationService;
@@ -42,7 +42,7 @@ public class AuthController {
     }
 
     @PostMapping("/addUser")
-    public ResponseEntity<Object> addUser(@RequestBody AddUserRequest request)
+    public ResponseEntity<AddUserResponse> addUser(@RequestBody AddUserRequest request)
     {
         return authenticationService.addUser(request);
     }

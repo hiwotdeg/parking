@@ -2,6 +2,7 @@ package et.com.gebeya.authservice.service;
 
 
 import et.com.gebeya.authservice.dto.request_dto.*;
+import et.com.gebeya.authservice.dto.response_dto.AddUserResponse;
 import et.com.gebeya.authservice.dto.response_dto.OtpVerificationResponseDto;
 import et.com.gebeya.authservice.dto.response_dto.ValidationResponse;
 import et.com.gebeya.authservice.enums.Authority;
@@ -98,7 +99,7 @@ public class AuthenticationService {
     }
 
     // this method is used to add user credential.
-    public ResponseEntity<Object> addUser(AddUserRequest dto)
+    public ResponseEntity<AddUserResponse> addUser(AddUserRequest dto)
     {
         Users users = Users.builder()
                 .userName(dto.getPhoneNo())
@@ -108,9 +109,14 @@ public class AuthenticationService {
                 .roleId(dto.getRoleId())
                 .build();
       if(users!=null)
-          return new ResponseEntity<>("",HttpStatus.OK);
+      {
+          String jwt = jwtService.generateToken(users);
+          AddUserResponse response = AddUserResponse.builder().token(jwt).build();
+          return new ResponseEntity<>(response,HttpStatus.OK);
+      }
 
-      return new ResponseEntity<>("",HttpStatus.INTERNAL_SERVER_ERROR);
+
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
