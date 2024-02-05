@@ -10,13 +10,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class KafkaListeners {
 
-    private SMSService smsService;
+    private final SMSService smsService;
 
 
     @KafkaListener(topics = "OTP", groupId = "group1",
             containerFactory = "messagedtoListenerFactory"
     )
     void dtoListener(Otpdto dto) {
+        System.out.println(dto);
         smsService.sendOtp(dto);
     }
 }

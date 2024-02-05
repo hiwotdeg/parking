@@ -8,9 +8,10 @@ import org.springframework.stereotype.Component;
 public class TelegramService    {
     private final MessageBuilder messageBuilder;
     private final RedisService redisService;
+    private final BotStarter botStarter;
 
     public void sendMessage(String key, String message){
         long chatId = redisService.getChatId(key);
-        messageBuilder.sendMessage(chatId, message);
+        botStarter.sendMessage(chatId, message);
     }
 }

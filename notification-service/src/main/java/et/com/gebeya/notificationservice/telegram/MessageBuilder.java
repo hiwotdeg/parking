@@ -31,10 +31,4 @@ public class MessageBuilder {
                 .build();
     }
 
-    public SendMessage sendMessage(Long chatId, String message)
-    {
-        return SendMessage.builder()
-                .chatId(chatId)
-                .text(message).build();
-    }
 }

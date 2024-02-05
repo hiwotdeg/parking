@@ -5,8 +5,10 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -60,5 +62,14 @@ public class BotStarter extends TelegramLongPollingBot {
     @Override
     public String getBotUsername() {
         return username;
+    }
+
+    public void sendMessage(Long chatId, String text) {
+        SendMessage message = SendMessage.builder().chatId(chatId).text(text).build();
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
     }
 }
