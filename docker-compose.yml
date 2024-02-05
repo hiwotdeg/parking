@@ -38,8 +38,8 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_USER: parking_lot
-      POSTGRES_DB: inventory-management
+      POSTGRES_USER: postgres
+      POSTGRES_DB: parking_lot
       POSTGRES_PASSWORD: password
     ports:
       - "5432:5432"
