@@ -42,7 +42,7 @@ public class AuthenticationService {
 
         String generatedOtp = String.valueOf(otpGenerator());
         redisService.setObject(generatedOtp, usersCredential);
-        OtpRequest otp = OtpRequest.builder().otp(generatedOtp).build();
+        OtpRequest otp = OtpRequest.builder().otp(generatedOtp).phoneNo(usersCredential.getPhoneNo()).build();
         kafkaTemplate.send(NOTIFICATION_TOPIC, otp);
         return ResponseEntity.ok("");
     }

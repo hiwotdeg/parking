@@ -1,4 +1,4 @@
-package et.com.gebeya.authservice.dto.request_dto;
+package et.com.testing.service_a.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Builder
-public class OtpRequest {
+@Data
+public class Otp_dto {
     private String otp;
-    private String phoneNo;
 }
