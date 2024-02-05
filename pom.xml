@@ -19,6 +19,7 @@
         <module>service-discovery</module>
         <module>auth-service</module>
         <module>api-gateway</module>
+        <module>notification-service</module>
     </modules>
     <properties>
         <java.version>17</java.version>

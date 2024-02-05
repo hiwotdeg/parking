@@ -1,21 +1,24 @@
 package et.com.gebeya.notificationservice.listener;
 
+import et.com.gebeya.notificationservice.dto.Otpdto;
+import et.com.gebeya.notificationservice.service.SMSService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-import static et.com.gebeya.notificationservice.util.Constant.AUTH_TOPIC;
 @Component
 @RequiredArgsConstructor
-public class KafkaListener {
-//    private final EmailService emailService;
+public class KafkaListeners {
+
+    private SMSService smsService;
 
 
-    @org.springframework.kafka.annotation.KafkaListener(topics = "OTP", groupId = "group1",
+    @KafkaListener(topics = "OTP", groupId = "group1",
             containerFactory = "messagedtoListenerFactory"
     )
-    void dtoListener(Otp_dto dto) {
-        System.out.println(dto.getOtp());
+    void dtoListener(Otpdto dto) {
+        smsService.sendOtp(dto);
     }
-    }
-
 }
+
+
