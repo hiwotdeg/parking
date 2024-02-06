@@ -22,7 +22,7 @@ public class ParkingLotProvider {
     private String phoneNo;
     private Boolean isActive;
     private Boolean isVerified;
-    private Authority role;
+    private ParkingLotRole role;
 //    private ParkingLotRole role;
     private String imageUrl;
 

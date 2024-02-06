@@ -1,13 +1,15 @@
 package et.com.gebeya.parkinglotservice.util;
 
 import et.com.gebeya.parkinglotservice.dto.AddUserRequest;
+import et.com.gebeya.parkinglotservice.enums.Authority;
 import et.com.gebeya.parkinglotservice.model.ParkingLotProvider;
 
 public class MappingUtil {
+    private MappingUtil(){}
     public static AddUserRequest mapParkingLotProviderToAddUserRequest(ParkingLotProvider provider) {
         return AddUserRequest.builder()
                 .phoneNo(provider.getPhoneNo())
-                .role(provider.getRole()) // Assuming ParkingLotRole has a method getAuthority() to retrieve Authority enum
+                .role(Authority.PROVIDER) // Assuming ParkingLotRole has a method getAuthority() to retrieve Authority enum
                 .roleId(provider.getId()) // Mapping roleId to the id of ParkingLotProvider
                 .build();
     }

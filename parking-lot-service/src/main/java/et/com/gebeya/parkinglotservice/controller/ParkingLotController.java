@@ -17,6 +17,7 @@ public class ParkingLotController {
         return ResponseEntity.ok("hello");
     }
 
+
     @PostMapping("/register/lot-provider")
     public ResponseEntity<AddUserResponse> registerParkingLotProvider(@RequestBody ParkingLotProvider parkingLotProvider){
         return ResponseEntity.ok(registrationService.registerParkingLotProvider(parkingLotProvider));
