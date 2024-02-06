@@ -1,5 +1,6 @@
 package et.com.gebeya.parkinglotservice.model;
 
+import et.com.gebeya.parkinglotservice.enums.Authority;
 import et.com.gebeya.parkinglotservice.enums.ParkingLotRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,8 +22,8 @@ public class ParkingLotProvider {
     private String phoneNo;
     private Boolean isActive;
     private Boolean isVerified;
-    private ParkingLotRole Role;
-    //ParkingLotId
+    private Authority role;
+//    private ParkingLotRole role;
     private String imageUrl;
 
 }
