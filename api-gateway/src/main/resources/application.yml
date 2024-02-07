@@ -10,10 +10,13 @@ spring:
           uri: lb://Auth-Service
           predicates:
             - Path=/api/v1/auth/**
+
         - id: Parking-Lot-Service
           uri: lb://Parking-Lot-Service
           predicates:
             - Path=/api/v1/parking-lot/**
+          filters:
+            - AuthenticationFilter
 
 
   application:

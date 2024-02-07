@@ -27,7 +27,8 @@ public class CustomerService {
                 .retrieve()
                 .toEntity(AddUserResponse.class);
 
-        return responseMono.block().getBody();
-
+        return responseMono.blockOptional()
+                .map(ResponseEntity::getBody)
+                .orElseThrow(() -> new RuntimeException("Error occurred"));
     }
 }
