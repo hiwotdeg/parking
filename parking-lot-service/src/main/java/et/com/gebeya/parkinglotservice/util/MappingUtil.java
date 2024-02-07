@@ -2,6 +2,7 @@ package et.com.gebeya.parkinglotservice.util;
 
 import et.com.gebeya.parkinglotservice.dto.AddUserRequest;
 import et.com.gebeya.parkinglotservice.enums.Authority;
+import et.com.gebeya.parkinglotservice.model.Customer;
 import et.com.gebeya.parkinglotservice.model.ParkingLotProvider;
 
 public class MappingUtil {
@@ -9,17 +10,22 @@ public class MappingUtil {
     public static AddUserRequest mapParkingLotProviderToAddUserRequest(ParkingLotProvider provider) {
         return AddUserRequest.builder()
                 .phoneNo(provider.getPhoneNo())
-                .role(Authority.PROVIDER) // Assuming ParkingLotRole has a method getAuthority() to retrieve Authority enum
-                .roleId(provider.getId()) // Mapping roleId to the id of ParkingLotProvider
+                .role(Authority.PROVIDER)
+                .roleId(provider.getId())
                 .build();
     }
 
+    public static AddUserRequest mapCustomerToAddUserRequest(Customer customer){
+        return AddUserRequest.builder()
+                .phoneNo(customer.getPhoneNo())
+                .role(Authority.USER)
+                .roleId((customer.getId()))
+                .build();
+    }
 
     public static ParkingLotProvider mapToParkingLotProvider(AddUserRequest request) {
         ParkingLotProvider provider = new ParkingLotProvider();
-        // Map fields from AddUserRequest to ParkingLotProvider
         provider.setPhoneNo(request.getPhoneNo());
-        // Set other fields as needed
         return provider;
     }
 }
