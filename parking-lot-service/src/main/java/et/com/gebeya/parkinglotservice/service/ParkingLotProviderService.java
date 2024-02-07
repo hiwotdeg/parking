@@ -3,7 +3,6 @@ package et.com.gebeya.parkinglotservice.service;
 import et.com.gebeya.parkinglotservice.dto.AddUserRequest;
 import et.com.gebeya.parkinglotservice.dto.AddUserResponse;
 import et.com.gebeya.parkinglotservice.model.ParkingLotProvider;
-import et.com.gebeya.parkinglotservice.repository.CustomerRepository;
 import et.com.gebeya.parkinglotservice.repository.ParkingLotProviderRepository;
 import et.com.gebeya.parkinglotservice.util.MappingUtil;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class ParkingLotProviderService {
     private final WebClient.Builder webClientBuilder;
-    private final CustomerRepository customerRepository;
     private final ParkingLotProviderRepository parkingLotProviderRepository;
 
     public AddUserResponse registerParkingLotProvider(ParkingLotProvider parkingLotProvider){
@@ -24,13 +22,13 @@ public class ParkingLotProviderService {
         AddUserRequest addUserRequest = MappingUtil.mapParkingLotProviderToAddUserRequest(saveParkingLotProvider);
         Mono<ResponseEntity<AddUserResponse>> responseMono = webClientBuilder.build()
                 .post()
-                .uri("http://AUTH-SERVICE/api/v1/auth/addUser") // Replace with the actual URL
+                .uri("http://AUTH-SERVICE/api/v1/auth/addUser")
                 .body(Mono.just(addUserRequest), AddUserRequest.class)
                 .retrieve()
                 .toEntity(AddUserResponse.class);
 
         return responseMono.block().getBody();
-//        return Objects.requireNonNull(responseMono.block()).getBody();
+
 
     }
 
