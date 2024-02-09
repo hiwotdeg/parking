@@ -19,7 +19,7 @@ public class ImageService {
     private final ResourceLoader resourceLoader;
     private final long maxImageSize = 1048576; // 1 MB in bytes
 
-    @Value("${upload.dir}")
+//    @Value("${upload.dir}")
     private String uploadDir;
 
 
