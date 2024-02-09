@@ -18,7 +18,7 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-@Value("${token.signing.key}")
+    @Value("${token.key}")
     private String jwtSigningKey;
 
     private Key getSigningKey() {
@@ -61,7 +61,7 @@ public class JwtService {
     }
 
     public String generateToken(Users users) {
-        return generateToken(Map.of("authority", users.getAuthorities()), users);
+        return generateToken(Map.of("authority", users.getAuthorities(),"id",users.getRoleId()), users);
     }
 
 

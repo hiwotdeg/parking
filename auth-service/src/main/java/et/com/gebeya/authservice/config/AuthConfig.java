@@ -31,7 +31,7 @@ public class AuthConfig {
         http
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> request.requestMatchers("/api/v1/**").permitAll())
+                .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS));
         return http.build();
     }

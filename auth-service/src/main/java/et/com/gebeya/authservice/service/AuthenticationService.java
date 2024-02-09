@@ -108,6 +108,7 @@ public class AuthenticationService {
                 .authority(dto.getRole())
                 .roleId(dto.getRoleId())
                 .build();
+        users=userRepository.save(users);
       if(users!=null)
       {
           String jwt = jwtService.generateToken(users);
