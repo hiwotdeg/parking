@@ -17,11 +17,7 @@ spring:
             - Path=/api/v1/parking-lot/**
           filters:
             - AuthenticationFilter
-            -
-        - id: Api-Gateway
-          uri: lb://Api-Gateway
-          predicates:
-            - Path=/swagger-ui.html
+
 
 
   application:
