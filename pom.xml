@@ -21,6 +21,7 @@
         <module>api-gateway</module>
         <module>notification-service</module>
         <module>parking-lot-service</module>
+        <module>geo-location-service</module>
     </modules>
 
     <properties>

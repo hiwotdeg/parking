@@ -12,7 +12,11 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
+  mvc:
+    static-path-pattern: /image/**
+  web:
+    resources:
+      static-locations: classpath:/static/,file:/absolute/path/to/uploads/
 
 #Service Discovery
 eureka:
@@ -22,3 +26,4 @@ eureka:
 
 server:
   port: 0
+
