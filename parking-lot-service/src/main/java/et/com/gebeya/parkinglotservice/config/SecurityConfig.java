@@ -28,7 +28,7 @@ public class SecurityConfig {
     };
 
     protected static final String [] ADMIN_MATCHERS = {
-            "/api/v1/parking-lot/test"
+            "/api/v1/parking-lot/lot/AddLot"
     };
 
     @Bean

@@ -125,8 +125,7 @@ public class AuthenticationService {
     public ResponseEntity<ValidationResponse> validate(ValidationRequest validationRequest) {
         final String userName;
         userName = jwtService.extractUserName(validationRequest.getToken());
-        if (StringUtils.isNotEmpty(userName)
-                && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (StringUtils.isNotEmpty(userName)) {
             Users users = usersService.loadUserByUsername(userName);
             if (jwtService.isTokenValid(validationRequest.getToken(), users)) {
                 ValidationResponse response = ValidationResponse.builder()

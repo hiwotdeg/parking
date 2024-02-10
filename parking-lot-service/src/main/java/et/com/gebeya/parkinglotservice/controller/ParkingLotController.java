@@ -1,20 +1,22 @@
 package et.com.gebeya.parkinglotservice.controller;
 
-import et.com.gebeya.parkinglotservice.dto.AddUserResponse;
-import et.com.gebeya.parkinglotservice.model.ParkingLotProvider;
-import et.com.gebeya.parkinglotservice.service.ParkingLotProviderService;
+import et.com.gebeya.parkinglotservice.dto.AddParkingLotRequest;
+import et.com.gebeya.parkinglotservice.service.ParkingLotService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/v1/parking-lot")
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/parking-lot/lot")
 public class ParkingLotController {
-    private final ParkingLotProviderService parkingLotProviderService;
+    private final ParkingLotService parkingLotService;
 
-    @PostMapping("/register")
-    public ResponseEntity<AddUserResponse> registerParkingLotProvider(@RequestBody ParkingLotProvider parkingLotProvider){
-        return ResponseEntity.ok(parkingLotProviderService.registerParkingLotProvider(parkingLotProvider));
+    @PostMapping("/AddLot")
+    public ResponseEntity<?> addParkingLot(AddParkingLotRequest request, @RequestParam("file") MultipartFile file) throws IOException {
+        return ResponseEntity.ok(parkingLotService.addParkingLot(request, file));
     }
 }

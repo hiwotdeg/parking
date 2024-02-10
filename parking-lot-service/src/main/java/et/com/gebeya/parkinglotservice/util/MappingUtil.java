@@ -1,8 +1,10 @@
 package et.com.gebeya.parkinglotservice.util;
 
+import et.com.gebeya.parkinglotservice.dto.AddParkingLotRequest;
 import et.com.gebeya.parkinglotservice.dto.AddUserRequest;
 import et.com.gebeya.parkinglotservice.enums.Authority;
 import et.com.gebeya.parkinglotservice.model.Customer;
+import et.com.gebeya.parkinglotservice.model.ParkingLot;
 import et.com.gebeya.parkinglotservice.model.ParkingLotProvider;
 
 public class MappingUtil {
@@ -27,5 +29,15 @@ public class MappingUtil {
         ParkingLotProvider provider = new ParkingLotProvider();
         provider.setPhoneNo(request.getPhoneNo());
         return provider;
+    }
+
+    public static ParkingLot mapAddParkingLotToParkingLot(AddParkingLotRequest parkingLotRequest)
+    {
+        return ParkingLot.builder().name(parkingLotRequest.getName())
+                .address(parkingLotRequest.getAddress())
+                .latitude(parkingLotRequest.getLatitude())
+                .longitude(parkingLotRequest.getLongitude())
+                .capacity(parkingLotRequest.getCapacity())
+                .parkingType(parkingLotRequest.getParkingType()).build();
     }
 }
