@@ -6,10 +6,12 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 @Getter
 public class RoleHeaderAuthenticationToken extends AbstractAuthenticationToken {
     private String headerRole;
+    private Integer roleId;
 
-    public RoleHeaderAuthenticationToken(String headerRole) {
+    public RoleHeaderAuthenticationToken(String headerRole, String roleId) {
         super(null);
         this.headerRole = headerRole;
+        this.roleId= Integer.valueOf(roleId);
         setAuthenticated(false);
     }
 

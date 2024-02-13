@@ -17,9 +17,10 @@ public class RoleHeaderAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain chain) throws ServletException, IOException {
-        String headerRole = request.getHeader("Role"); // Replace with actual header name
-        if (headerRole != null) {
-            Authentication authentication = new RoleHeaderAuthenticationToken(headerRole);
+        String headerRole = request.getHeader("Role");
+        String roleId = request.getHeader("RoleId");
+        if (headerRole != null && roleId!=null) {
+            Authentication authentication = new RoleHeaderAuthenticationToken(headerRole,roleId);
             authentication = new RoleHeaderAuthenticationProvider().authenticate(authentication);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

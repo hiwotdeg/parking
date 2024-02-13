@@ -38,7 +38,7 @@ public class ParkingLotService {
 
         parkingLot.setRating(5.0f);
         parkingLot.setAvailableSlot(parkingLot.getCapacity());
-        parkingLot.setImageUrl(filePath);
+        parkingLot.setImageUrl(filename);
         return parkingLotRepository.save(parkingLot);
     }
 
