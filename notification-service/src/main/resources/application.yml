@@ -12,3 +12,9 @@ eureka:
 
 server:
   port: 0
+
+
+app:
+  telegram:
+    username: ${app.telegram.username:parking_lot_locator_bot}
+    token: ${app.telegram.token:6478988761:AAHoiepwTE0Bh8JjK_2piQIjDD8wyGl-qN8}

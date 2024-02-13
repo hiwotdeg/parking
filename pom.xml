@@ -72,6 +72,24 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.4.0</version>
+                <configuration>
+                    <from>
+                        <auth>
+                            <username>abinettamiru28673</username>
+                            <password>3U%j8PK9cr!EY6-</password>
+                        </auth>
+                        <image>eclipse-temurin:17-jre-jammy</image>
+                    </from>
+                    <to>
+                        <image>gebeya/${project.artifactId}:1.0</image>
+                    </to>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
