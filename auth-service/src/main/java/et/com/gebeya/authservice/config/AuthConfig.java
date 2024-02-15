@@ -58,7 +58,7 @@ public class AuthConfig {
 
     private void createAdminUser() {
         try {
-            Users users = usersService.loadUserByUsername("admin");
+            Users users = usersService.loadUserByUsername("0978904679");
         } catch (Exception e) {
             Users users = Users.builder()
                     .isActive(true)

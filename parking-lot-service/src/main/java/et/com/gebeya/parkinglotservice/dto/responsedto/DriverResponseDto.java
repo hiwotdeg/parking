@@ -1,23 +1,19 @@
-package et.com.gebeya.parkinglotservice.model;
+package et.com.gebeya.parkinglotservice.dto.responsedto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Builder
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@Entity
-@Table(name = "customer")
-public class Customer {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class DriverResponseDto {
     private Integer id;
     private String firstName;
     private String lastName;
     private String email;
     private String phoneNo;
-    private Boolean isActive;
     private String imageUrl;
 }

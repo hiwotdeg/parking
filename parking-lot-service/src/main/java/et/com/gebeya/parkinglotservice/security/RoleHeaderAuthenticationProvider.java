@@ -17,11 +17,10 @@ public class RoleHeaderAuthenticationProvider implements AuthenticationProvider 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String headerRole = ((RoleHeaderAuthenticationToken) authentication).getHeaderRole();
-        // Validate role from header (e.g., check against a database or a configuration)
+        Integer roleId = ((RoleHeaderAuthenticationToken) authentication).getRoleId();
         if ((!headerRole.isEmpty())) {
             List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(headerRole));
-            return new UsernamePasswordAuthenticationToken(headerRole, null, authorities);
-
+            return new UsernamePasswordAuthenticationToken(roleId, null, authorities);
         } else {
             throw new BadCredentialsException("Invalid role");
         }
@@ -32,3 +31,4 @@ public class RoleHeaderAuthenticationProvider implements AuthenticationProvider 
         return RoleHeaderAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }
+

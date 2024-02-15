@@ -1,4 +1,4 @@
-package et.com.gebeya.parkinglotservice.dto;
+package et.com.gebeya.parkinglotservice.dto.responsedto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

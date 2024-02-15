@@ -23,7 +23,6 @@ public class UsersService {
     }
 
 
-@Cacheable(value = "user", key = "#userName")
     public Users loadUserByUsername(String userName) {
         return usersRepository.findFirstByUserName(userName).orElseThrow(() -> new IllegalArgumentException("Invalid user name or password"));
 

@@ -1,4 +1,4 @@
-package et.com.gebeya.parkinglotservice.dto;
+package et.com.gebeya.parkinglotservice.dto.requestdto;
 
 import et.com.gebeya.parkinglotservice.enums.Authority;
 import lombok.AllArgsConstructor;

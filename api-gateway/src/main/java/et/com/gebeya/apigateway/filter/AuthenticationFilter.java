@@ -3,15 +3,14 @@ package et.com.gebeya.apigateway.filter;
 import et.com.gebeya.apigateway.dto.TokenDto;
 import et.com.gebeya.apigateway.dto.ValidationResponseDto;
 import et.com.gebeya.apigateway.exception.HeaderNotFound;
+import jakarta.validation.ValidationException;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.Objects;
@@ -33,50 +32,50 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     public GatewayFilter apply(Config config) {
         return ((exchange, chain) -> {
             if (validator.isSecured.test(exchange.getRequest())) {
-                //header contains token or not
+                // Header contains token or not
                 if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
-                    throw new HeaderNotFound("missing authorization header");
+                    throw new HeaderNotFound("Missing authorization header");
                 }
 
-                String authHeader = Objects.requireNonNull(exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION)).get(0);
+                String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
                 if (authHeader != null && authHeader.startsWith("Bearer ")) {
                     authHeader = authHeader.substring(7);
                 }
                 TokenDto token = TokenDto.builder().token(authHeader).build();
-               ValidationResponseDto response = identityValidator(token).block();
-//                System.out.println(response);
-//                template.getForObject("http://AUTH-SERVICE//validate?name=" + authHeader, String.class);
-//                ValidationResponseDto responseDto = validate(token);
-                System.out.println(response.getRole());
+                return validateAuthorization(token)
+                        .flatMap(response -> {
+                            ServerHttpRequest mutatedHttpRequest = exchange.getRequest().mutate()
+                                    .header("Role", response.getRole().toString())
+                                    .header("RoleId",response.getRoleId().toString())
+                                    .build();
+                            ServerWebExchange mutatedExchange = exchange.mutate().request(mutatedHttpRequest).build();
+                            return chain.filter(mutatedExchange);
+                        });
             }
             return chain.filter(exchange);
         });
-
-
     }
 
-    private Mono<ValidationResponseDto> identityValidator(TokenDto token) {
 
+    public Mono<ValidationResponseDto> validateAuthorization(TokenDto token) {
+        return webClientBuilder.build()
+                .post()
+                .uri("http://Auth-Service/api/v1/auth/validate")
+                .header("Content-Type", "application/json")
+                .body(Mono.just(token), TokenDto.class)
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, response -> {
+                    HttpStatusCode status = response.statusCode();
+                    if(status.is4xxClientError())
+                        return Mono.error(new ValidationException("UNAUTHORIZED"));
+                    else{
+                        return Mono.error(new RuntimeException("UNKNOWN ERROR OCCURRED"));
+                    }
 
-        WebClient.RequestHeadersSpec<?> headersSpec = webClientBuilder.build().post()
-                .uri("http://AUTH-SERVICE/api/v1/auth/validate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(token);
-
-
-        return headersSpec.exchangeToMono(response -> {
-            if (response.statusCode().equals(HttpStatus.OK)) {
-                return response.bodyToMono(ValidationResponseDto.class);
-            } else if (response.statusCode().is4xxClientError()) {
-                return response.createException()
-                        .flatMap(Mono::error);
-            } else {
-                return response.createException()
-                        .flatMap(Mono::error);
-            }
-        });
-
-
+                })
+                .toEntity(ValidationResponseDto.class)
+                .flatMap(responseEntity -> Mono.just(Objects.requireNonNull(responseEntity.getBody())));
     }
+
 
 }

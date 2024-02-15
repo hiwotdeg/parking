@@ -1,6 +1,5 @@
 package et.com.gebeya.parkinglotservice.model;
 
-import et.com.gebeya.parkinglotservice.enums.ParkingType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,24 +14,21 @@ import java.time.Instant;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "parking_lot")
 @Builder
-public class ParkingLot {
+@Table(name = "driver")
+public class Driver {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String name;
-    private String address;
-    private Double latitude;
-    private Double longitude;
-    private Integer capacity;
-    private String imageUrl;
-    private Integer availableSlot;
-    private ParkingType parkingType;
-    private Float rating;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phoneNo;
     private Boolean isActive;
+    private String imageUrl;
     @CreationTimestamp
     private Instant createdOn;
     @UpdateTimestamp
     private Instant updatedOn;
+
 }

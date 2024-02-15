@@ -1,21 +1,24 @@
-package et.com.gebeya.parkinglotservice.dto;
+package et.com.gebeya.parkinglotservice.dto.responsedto;
 
 import et.com.gebeya.parkinglotservice.enums.ParkingType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
+@Builder
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@Data
-public class AddParkingLotRequest {
+public class ParkingLotResponseDto {
+    private Integer id;
     private String name;
     private String address;
     private Double latitude;
     private Double longitude;
     private Integer capacity;
+    private String imageUrl;
+    private Integer availableSlot;
     private ParkingType parkingType;
+    private Float rating;
 }
