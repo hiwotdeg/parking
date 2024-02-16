@@ -9,6 +9,7 @@ import et.com.gebeya.parkinglotservice.enums.ParkingLotRole;
 import et.com.gebeya.parkinglotservice.model.Driver;
 import et.com.gebeya.parkinglotservice.model.ParkingLot;
 import et.com.gebeya.parkinglotservice.model.ParkingLotProvider;
+import et.com.gebeya.parkinglotservice.model.Review;
 
 public class MappingUtil {
     private MappingUtil(){}
@@ -126,6 +127,13 @@ public static DriverResponseDto mapDriverToDriverResponseDto(Driver driver){
                 .isActive(true)
                 .isVerified(true)
                 .role(ParkingLotRole.ADMIN)
+                .build();
+    }
+
+    public static Review mapAddReviewRequestDtoToReview(AddreviewRequestDto dto){
+        return Review.builder()
+                .rate(dto.getRate())
+                .comment(dto.getComment())
                 .build();
     }
 
