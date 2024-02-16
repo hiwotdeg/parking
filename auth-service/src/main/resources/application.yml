@@ -24,12 +24,35 @@ eureka:
 
 server:
   port: 0
+  servlet:
+    context-path: /
+
+#openapi:
+#  service:
+#    title: price-service doc
+#    version: 1.0.0
+#    url: http://localhost:8008
+#springdoc:
+#  api-docs:
+#    path: /Auth-Service/v3/api-docs
+#  swagger-ui:
+#    path: /Auth-Service/swagger-ui.html
 
 management:
   tracing:
     sampling:
       probability: 1.0
-
+  endpoints:
+    web:
+      exposure:
+        include: openapi, swagger-ui, info, health
+springdoc:
+  cache:
+    disabled: true
+  swagger-ui:
+    path: auth/swagger-ui.html
+#  api-docs:
+#    path: auth/api-docs
 token:
   key: ${token.signing.key:Hr6RvNnuoWZ1KxlEYeh2RS/WcoLJZb0e4d/r9/kqajQ=}
 

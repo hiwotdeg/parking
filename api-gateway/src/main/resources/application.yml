@@ -21,6 +21,29 @@ spring:
           filters:
             - AuthenticationFilter
 
+        - id: Discovery-Server
+          uri: http://localhost:8761
+          predicates:
+            - Path=/eureka/web
+          filters:
+            - SetPath=/
+
+        - id: Discovery-Server-Static
+          uri: http://localhost:8761
+          predicates:
+            - Path=/eureka/**
+        - id: openapi
+          uri: http://localhost:${server.port}
+          predicates:
+            - Path=/v3/api-docs/**
+          filters:
+            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
+
+
+
+
+
+
 
 
   application:
@@ -34,7 +57,55 @@ eureka:
 
 server:
   port: 8008
+  servlet:
+    context-path: /
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: openapi, swagger-ui, info, health
+
+  tracing:
+    sampling:
+      probability: 1.0
 
 springdoc:
   swagger-ui:
-    path: /swagger-ui.html
+    urls:
+      - name: employee
+        url: /v3/api-docs/auth
+      - name: department
+        url: /v3/api-docs/department
+      - name: organization
+        url: /v3/api-docs/organization
+  cache:
+    disabled: true
+#  enable-native-support: true
+#  api-docs:
+#    enabled: true
+#  swagger-ui:
+#    enabled: true
+#    path: /swagger-ui.html
+#    config-url: /v3/api-docs/swagger-config
+#    urls:
+#      - url: /v3/api-docs
+#        name: Api Gateway
+##        primaryName: API Gateway Service
+#      - url: /Auth-Service/v3/api-docs
+#        name: Auth Service
+  show-actuator: true
+#        primaryName: Product Service
+##      - url: /price-service/v3/api-docs
+#        name: Price Service
+#        primaryName: Price Service
+
+
+
+#  endpoints:
+#    web:
+#      base-path: /gateway/actuator
+

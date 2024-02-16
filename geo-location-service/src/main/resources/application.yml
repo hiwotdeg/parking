@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: Geo-Location-Service
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0

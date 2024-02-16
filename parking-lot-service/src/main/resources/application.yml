@@ -12,12 +12,14 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-  mvc:
-    static-path-pattern: /image/**
-  web:
-    resources:
-      static-locations: file:C:/Users/Abine/OneDrive/Desktop/MyFiles/
 
+springdoc:
+  swagger-ui:
+    enabled: true
+  cache:
+    disabled: true
+  use-management-port: true
+  show-actuator: true
 
 #Service Discovery
 eureka:
@@ -27,4 +29,19 @@ eureka:
 
 server:
   port: 0
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+   health:
+    show-details: always
+
+  tracing:
+    sampling:
+      probability: 1.0
+
 

@@ -27,7 +27,19 @@ public class SecurityConfig {
 
     protected static final RequestMatcher[] UNAUTHORIZED_MATCHERS = {
             new AntPathRequestMatcher("/api/v1/parking-lot/provider",HttpMethod.POST.name()),
-            new AntPathRequestMatcher(" /api/v1/parking-lot/driver",HttpMethod.POST.name())
+            new AntPathRequestMatcher(" /api/v1/parking-lot/driver",HttpMethod.POST.name()),
+            new AntPathRequestMatcher("/actuator",HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/actuator/**",HttpMethod.GET.name()),
+
+    };
+
+    protected static final String [] SWAGGER_MATCHERS = {
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/swagger-ui.html",
+            "/swagger-ui.html/**",
+            "/actuator",
+            "/actuator/**"
     };
 
     protected static final RequestMatcher[] DRIVER_MATCHERS = {
@@ -51,6 +63,7 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request.requestMatchers(UNAUTHORIZED_MATCHERS).permitAll())
+                .authorizeHttpRequests(request -> request.requestMatchers(SWAGGER_MATCHERS).permitAll())
                 .authorizeHttpRequests(request -> request.requestMatchers(PROVIDER_MATCHERS).hasAuthority("PROVIDER"))
                 .authorizeHttpRequests(request -> request.requestMatchers(DRIVER_MATCHERS).hasAuthority("USER"))
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))

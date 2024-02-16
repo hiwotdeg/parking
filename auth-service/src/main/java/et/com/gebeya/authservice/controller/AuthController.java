@@ -9,6 +9,7 @@ import et.com.gebeya.authservice.dto.response_dto.AddUserResponse;
 import et.com.gebeya.authservice.dto.response_dto.OtpVerificationResponseDto;
 import et.com.gebeya.authservice.dto.response_dto.ValidationResponse;
 import et.com.gebeya.authservice.service.AuthenticationService;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,7 @@ public class AuthController {
 
     private final AuthenticationService authenticationService;
 
+    @Hidden
     @PostMapping("/validate")
     public ResponseEntity<ValidationResponse> validate(@RequestBody ValidationRequest request)
     {
@@ -41,6 +43,7 @@ public class AuthController {
         return authenticationService.otpVerification(request);
     }
 
+    @Hidden
     @PostMapping("/addUser")
     public ResponseEntity<AddUserResponse> addUser(@RequestBody AddUserRequest request)
     {
