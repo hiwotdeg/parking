@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: Payment-Service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/parking_lot
+    username: ${db.username:postgres}
+    password: ${db.password:panda@123}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
