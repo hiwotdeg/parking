@@ -16,5 +16,4 @@ public class OperationHourDto {
     private LocalTime startTime;
     private LocalTime endTIme;
     private BigDecimal price;
-    private Integer parkingLotId;
 }

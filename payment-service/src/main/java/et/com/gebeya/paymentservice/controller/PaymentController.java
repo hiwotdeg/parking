@@ -20,8 +20,8 @@ public class PaymentController {
 
 
 
-    @PostMapping("/pricing")
-    public ResponseEntity<Double> getPricing(@RequestBody PriceRequestDto request){
-        return ResponseEntity.ok(operationHourService.calculatePrice(request.getStartTime(), request.getEndTime(),request.getParkingLotId()));
-    }
+//    @PostMapping("/pricing")
+//    public ResponseEntity<Double> getPricing(@RequestBody PriceRequestDto request){
+//        return ResponseEntity.ok(operationHourService.calculatePrice(request.getStartTime(), request.getEndTime(),request.getParkingLotId()));
+//    }
 }

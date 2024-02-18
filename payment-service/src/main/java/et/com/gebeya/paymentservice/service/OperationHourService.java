@@ -1,6 +1,7 @@
 package et.com.gebeya.paymentservice.service;
 
 import et.com.gebeya.paymentservice.dto.request.AddOperationRequestDto;
+import et.com.gebeya.paymentservice.dto.response.OperationHourResponseDto;
 import et.com.gebeya.paymentservice.exception.ParkingLotIdNotFound;
 import et.com.gebeya.paymentservice.model.OperationHour;
 import et.com.gebeya.paymentservice.model.ParkingLot;
@@ -27,10 +28,10 @@ public class OperationHourService {
         return parkingLots.get(0);
     }
 
-    public void AddOperationHour(AddOperationRequestDto request) {
+    public List<OperationHourResponseDto> AddOperationHour(AddOperationRequestDto request) {
         ParkingLot parkingLot = getParkingLot(request.getParkingLotId());
-        List<OperationHour> operationHours = MappingUtil.addOperationRequestDtoToOperationHour(parkingLot, request);
-        operationHourRepository.saveAll(operationHours);
+        List<OperationHour> operationHours = MappingUtil.addOperationRequestDtoToOperationHour(parkingLot, request.getOperationHour());
+        return MappingUtil.listOfOperationHourToListOfOperationHourResponseDto(operationHourRepository.saveAll(operationHours));
     }
 
 
