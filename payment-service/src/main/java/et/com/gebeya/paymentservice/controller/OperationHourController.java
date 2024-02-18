@@ -20,6 +20,6 @@ public class OperationHourController {
 
     @PostMapping("/operation")
     public ResponseEntity<List<OperationHourResponseDto>> addOperation(@RequestBody AddOperationRequestDto request) {
-        return ResponseEntity.ok(operationHourService.AddOperationHour(request));
+        return ResponseEntity.ok(operationHourService.addOperationHour(request));
     }
 }

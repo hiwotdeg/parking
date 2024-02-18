@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -28,12 +27,11 @@ public class OperationHourService {
 
     private ParkingLot getParkingLot(Integer id) {
         List<ParkingLot> parkingLots = parkingLotRepository.findAll(ParkingLotSpecification.getParkingLotById(id));
-        if (parkingLots.isEmpty())
-            throw new ParkingLotIdNotFound("parking lot id not found");
+        if (parkingLots.isEmpty()) throw new ParkingLotIdNotFound("parking lot id not found");
         return parkingLots.get(0);
     }
 
-    public List<OperationHourResponseDto> AddOperationHour(AddOperationRequestDto request) {
+    public List<OperationHourResponseDto> addOperationHour(AddOperationRequestDto request) {
         ParkingLot parkingLot = getParkingLot(request.getParkingLotId());
         List<OperationHour> operationHours = MappingUtil.addOperationRequestDtoToOperationHour(parkingLot, request.getOperationHour());
         return MappingUtil.listOfOperationHourToListOfOperationHourResponseDto(operationHourRepository.saveAll(operationHours));
@@ -46,43 +44,34 @@ public class OperationHourService {
     }
 
 
-    public BigDecimal dynamicPricing(PriceRequestDto request){
+    public BigDecimal dynamicPricing(PriceRequestDto request) {
         List<OperationHour> operationHours = getOperationHoursById(request.getParkingLotId());
         BigDecimal totalPrice = BigDecimal.ZERO;
-        if(request.getStartTime().isAfter(request.getEndTime()))
-        {
-            LocalDateTime startTime = LocalDateTime.of(2024,1,1,request.getStartTime().getHour(),request.getStartTime().getMinute());
-            LocalDateTime endTime = LocalDateTime.of(2024,1,2,request.getEndTime().getHour(),request.getEndTime().getMinute());
-            for(OperationHour operationHour :  operationHours){
-                LocalDateTime operationStartTime = operationHour.getStartTime();
-                LocalDateTime operationEndTime = operationHour.getEndTime();
-                BigDecimal pricePerHour = operationHour.getPricePerHour();
-                if (operationStartTime.isBefore(endTime) && operationEndTime.isAfter(startTime)) {
-                    LocalDateTime overlapStartTime = operationStartTime.isAfter(startTime) ? operationStartTime : startTime;
-                    LocalDateTime overlapEndTime = operationEndTime.isBefore(endTime) ? operationEndTime : endTime;
-                    BigDecimal overlapPrice = priceCalculator(overlapStartTime, overlapEndTime, pricePerHour);
-                    totalPrice = totalPrice.add(overlapPrice);
-
-                }
-
-            }
+        if (request.getStartTime().isAfter(request.getEndTime())) {
+            LocalDateTime startTime = LocalDateTime.of(2024, 1, 1, request.getStartTime().getHour(), request.getStartTime().getMinute());
+            LocalDateTime endTime = LocalDateTime.of(2024, 1, 2, request.getEndTime().getHour(), request.getEndTime().getMinute());
+            totalPrice = getPrice(operationHours, totalPrice, startTime, endTime);
+        } else {
+            LocalDateTime startTime = LocalDateTime.of(2024, 1, 1, request.getStartTime().getHour(), request.getStartTime().getMinute());
+            LocalDateTime endTime = LocalDateTime.of(2024, 1, 1, request.getEndTime().getHour(), request.getEndTime().getMinute());
+            totalPrice = getPrice(operationHours, totalPrice, startTime, endTime);
         }
-        else{
-            LocalDateTime startTime = LocalDateTime.of(2024,1,1,request.getStartTime().getHour(),request.getStartTime().getMinute());
-            LocalDateTime endTime = LocalDateTime.of(2024,1,1,request.getEndTime().getHour(),request.getEndTime().getMinute());
-            for(OperationHour operationHour :  operationHours){
-                LocalDateTime operationStartTime = operationHour.getStartTime();
-                LocalDateTime operationEndTime = operationHour.getEndTime();
-                BigDecimal pricePerHour = operationHour.getPricePerHour();
-                if (operationStartTime.isBefore(endTime) && operationEndTime.isAfter(startTime)) {
-                    LocalDateTime overlapStartTime = operationStartTime.isAfter(startTime) ? operationStartTime : startTime;
-                    LocalDateTime overlapEndTime = operationEndTime.isBefore(endTime) ? operationEndTime : endTime;
-                    BigDecimal overlapPrice = priceCalculator(overlapStartTime, overlapEndTime, pricePerHour);
-                    totalPrice = totalPrice.add(overlapPrice);
+        return totalPrice;
+    }
 
-                }
+    private BigDecimal getPrice(List<OperationHour> operationHours, BigDecimal totalPrice, LocalDateTime startTime, LocalDateTime endTime) {
+        for (OperationHour operationHour : operationHours) {
+            LocalDateTime operationStartTime = operationHour.getStartTime();
+            LocalDateTime operationEndTime = operationHour.getEndTime();
+            BigDecimal pricePerHour = operationHour.getPricePerHour();
+            if (operationStartTime.isBefore(endTime) && operationEndTime.isAfter(startTime)) {
+                LocalDateTime overlapStartTime = operationStartTime.isAfter(startTime) ? operationStartTime : startTime;
+                LocalDateTime overlapEndTime = operationEndTime.isBefore(endTime) ? operationEndTime : endTime;
+                BigDecimal overlapPrice = priceCalculator(overlapStartTime, overlapEndTime, pricePerHour);
+                totalPrice = totalPrice.add(overlapPrice);
 
             }
+
         }
         return totalPrice;
     }
@@ -94,15 +83,12 @@ public class OperationHourService {
     }
 
 
-    private long durationCalculator(LocalDateTime startTime, LocalDateTime endTime){
+    private long durationCalculator(LocalDateTime startTime, LocalDateTime endTime) {
         long overlapDurationMinutes = Duration.between(startTime, endTime).toMinutes();
         long minute = overlapDurationMinutes % 60;
-        if (minute > 30)
-            return Duration.between(startTime, endTime).toHours() + 1;
-        else
-            return Duration.between(startTime, endTime).toHours();
+        if (minute > 30) return Duration.between(startTime, endTime).toHours() + 1;
+        else return Duration.between(startTime, endTime).toHours();
     }
-
 
 
 }
