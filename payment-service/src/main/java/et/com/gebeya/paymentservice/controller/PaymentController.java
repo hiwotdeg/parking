@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 @RestController
 @RequestMapping("/api/v1/payment")
@@ -20,8 +21,8 @@ public class PaymentController {
 
 
 
-//    @PostMapping("/pricing")
-//    public ResponseEntity<Double> getPricing(@RequestBody PriceRequestDto request){
-//        return ResponseEntity.ok(operationHourService.calculatePrice(request.getStartTime(), request.getEndTime(),request.getParkingLotId()));
-//    }
+    @PostMapping("/pricing")
+    public ResponseEntity<BigDecimal> getPricing(@RequestBody PriceRequestDto request){
+        return ResponseEntity.ok(operationHourService.dynamicPricing(request));
+    }
 }
