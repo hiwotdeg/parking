@@ -1,6 +1,6 @@
 package et.com.gebeya.parkinglotservice.service;
 
-import et.com.gebeya.parkinglotservice.dto.requestdto.AddreviewRequestDto;
+import et.com.gebeya.parkinglotservice.dto.requestdto.AddReviewRequestDto;
 import et.com.gebeya.parkinglotservice.exception.DriverIdNotFound;
 import et.com.gebeya.parkinglotservice.exception.ParkingLotIdNotFound;
 import et.com.gebeya.parkinglotservice.model.Driver;
@@ -22,7 +22,7 @@ public class ReviewService {
     private final DriverRepository driverRepository;
     private final ParkingLotRepository parkingLotRepository;
 
-    public Review createReviewForParkingLot(AddreviewRequestDto reviewRequest){
+    public Review createReviewForParkingLot(AddReviewRequestDto reviewRequest){
         Driver driver = getDriverById(reviewRequest.getDriverId());
         ParkingLot parkingLot = getParkingLotById(reviewRequest.getParkingLotId());
         Review review = MappingUtil.mapAddReviewRequestDtoToReview(reviewRequest);

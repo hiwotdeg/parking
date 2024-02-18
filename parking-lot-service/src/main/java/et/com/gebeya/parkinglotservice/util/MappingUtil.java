@@ -130,7 +130,7 @@ public static DriverResponseDto mapDriverToDriverResponseDto(Driver driver){
                 .build();
     }
 
-    public static Review mapAddReviewRequestDtoToReview(AddreviewRequestDto dto){
+    public static Review mapAddReviewRequestDtoToReview(AddReviewRequestDto dto){
         return Review.builder()
                 .rate(dto.getRate())
                 .comment(dto.getComment())
