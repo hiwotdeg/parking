@@ -1,13 +1,12 @@
 package et.com.gebeya.paymentservice.controller;
 
-import et.com.gebeya.paymentservice.dto.PriceRequestDto;
+import et.com.gebeya.paymentservice.dto.request.PriceRequestDto;
 import et.com.gebeya.paymentservice.model.OperationHour;
 import et.com.gebeya.paymentservice.service.OperationHourService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 @RestController
 @RequestMapping("/api/v1/payment")
@@ -19,8 +18,10 @@ public class PaymentController {
         return ResponseEntity.ok(operationHourService.getOperationHoursById(id));
     }
 
+
+
     @PostMapping("/pricing")
-    public ResponseEntity<BigDecimal> getPricing(@RequestBody PriceRequestDto request){
-        return ResponseEntity.ok(operationHourService.calculateDynamicPrice(request.getParkingLotId(), request.getEndTime()));
+    public ResponseEntity<Double> getPricing(@RequestBody PriceRequestDto request){
+        return ResponseEntity.ok(operationHourService.calculatePrice(request.getStartTime(), request.getEndTime(),request.getParkingLotId()));
     }
 }

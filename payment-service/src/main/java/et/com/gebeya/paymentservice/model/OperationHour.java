@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @AllArgsConstructor
@@ -19,9 +21,9 @@ public class OperationHour {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private LocalTime startTime;
-    private LocalTime endTime;
-    private float pricePerHour;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private BigDecimal pricePerHour;
     @ManyToOne()
     @JoinColumn(name = "parking_lot_id")
     @JsonIgnore
