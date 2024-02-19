@@ -1,4 +1,4 @@
-package et.com.gebeya.parkinglotservice.security;
+package et.com.gebeya.paymentservice.security;
 
 import lombok.Getter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -10,18 +10,13 @@ public class RoleHeaderAuthenticationToken extends AbstractAuthenticationToken {
 
     public RoleHeaderAuthenticationToken(String headerRole, String roleId) {
         super(null);
-        if(roleId==null && headerRole==null)
-        {
-            this.roleId=0;
-            this.headerRole="ADMIN";
 
-        }
-        else{
-            this.headerRole = headerRole;
-            assert roleId != null;
-            this.roleId= Integer.valueOf(roleId);
-            setAuthenticated(false);
-        }
+        this.headerRole = headerRole;
+        assert roleId != null;
+        this.roleId = Integer.valueOf(roleId);
+        setAuthenticated(false);
+
+
     }
 
     @Override
@@ -34,4 +29,5 @@ public class RoleHeaderAuthenticationToken extends AbstractAuthenticationToken {
         return headerRole;
     }
 
+    // Getters for headerRole and authorities
 }

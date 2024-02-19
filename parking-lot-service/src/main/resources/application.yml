@@ -13,14 +13,16 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
+#springdoc:
+#  swagger-ui:
+#    enabled: true
+#  cache:
+#    disabled: true
+#  use-management-port: true
+#  show-actuator: true
 springdoc:
-  swagger-ui:
-    enabled: true
-  cache:
-    disabled: true
-  use-management-port: true
-  show-actuator: true
-
+  api-docs:
+    path: /v3/api-docs/parking-lot
 #Service Discovery
 eureka:
   client:
