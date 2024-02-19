@@ -19,10 +19,19 @@ public class RouteValidator {
             "/actuator/info",
             "/gateway/actuator",
             "/gateway/actuator/**",
-            "/actuator/**",
-            "webjars/**",
+            "/v2/api-docs",
+            "/v3/api-docs",
+            "/v3/api-docs/**",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
             "/swagger-ui/**",
-            "/v3/**"
+            "/webjars/**",
+            "/swagger-ui.html",
+            "/actuator",
+            "/actuator/**",
+            "/v3/api-docs/parking-lot"
     );
 
     public Predicate<ServerHttpRequest> isSecured =

@@ -17,7 +17,7 @@ spring:
         - id: Parking-Lot-Service
           uri: lb://Parking-Lot-Service
           predicates:
-            - Path=/api/v1/parking-lot/**
+            - Path=/api/v1/parking-lot/**, /v3/api-docs/parking-lot
           filters:
             - AuthenticationFilter
 
@@ -32,12 +32,12 @@ spring:
           uri: http://localhost:8761
           predicates:
             - Path=/eureka/**
-        - id: openapi
-          uri: http://localhost:${server.port}
-          predicates:
-            - Path=/v3/api-docs/**
-          filters:
-            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
+#        - id: openapi
+#          uri: http://localhost:${server.port}
+#          predicates:
+#            - Path=/v3/api-docs/**
+#          filters:
+#            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
 
 
 
@@ -76,14 +76,18 @@ management:
 springdoc:
   swagger-ui:
     urls:
-      - name: employee
-        url: /v3/api-docs/auth
-      - name: department
-        url: /v3/api-docs/department
-      - name: organization
-        url: /v3/api-docs/organization
+      - name: parking lot service
+        url: /v3/api-docs/parking-lot
+      - name: auth service
+        url: /v3/api-docs/auth-service
+
   cache:
     disabled: true
+
+services:
+  uri:
+    parking-lot-service: lb://Parking-Lot-Service/
+    auth-service: lb://Auth-Service/
 #  enable-native-support: true
 #  api-docs:
 #    enabled: true
