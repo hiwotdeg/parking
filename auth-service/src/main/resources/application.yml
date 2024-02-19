@@ -45,14 +45,14 @@ management:
   endpoints:
     web:
       exposure:
-        include: openapi, swagger-ui, info, health
+        include: "*"
+
 springdoc:
-  cache:
-    disabled: true
-  swagger-ui:
-    path: auth/swagger-ui.html
+  api-docs:
+    path: /v3/api-docs/auth
 #  api-docs:
 #    path: auth/api-docs
+
 token:
   key: ${token.signing.key:Hr6RvNnuoWZ1KxlEYeh2RS/WcoLJZb0e4d/r9/kqajQ=}
 
