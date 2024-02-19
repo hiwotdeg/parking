@@ -20,7 +20,9 @@ spring:
 #    disabled: true
 #  use-management-port: true
 #  show-actuator: true
-
+springdoc:
+  api-docs:
+    path: /v3/api-docs/parking-lot
 #Service Discovery
 eureka:
   client:
