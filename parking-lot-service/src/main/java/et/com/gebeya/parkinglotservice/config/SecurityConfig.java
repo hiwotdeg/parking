@@ -26,8 +26,8 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfig {
 
     protected static final RequestMatcher[] UNAUTHORIZED_MATCHERS = {
-            new AntPathRequestMatcher("/api/v1/parking-lot/provider",HttpMethod.POST.name()),
-            new AntPathRequestMatcher(" /api/v1/parking-lot/driver",HttpMethod.POST.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/providers",HttpMethod.POST.name()),
+            new AntPathRequestMatcher(" /api/v1/parking-lot/drivers",HttpMethod.POST.name()),
             new AntPathRequestMatcher("/actuator",HttpMethod.GET.name()),
             new AntPathRequestMatcher("/actuator/**",HttpMethod.GET.name()),
 
@@ -49,18 +49,18 @@ public class SecurityConfig {
     };
 
     protected static final RequestMatcher[] DRIVER_MATCHERS = {
-            new AntPathRequestMatcher("/api/v1/parking-lot/provider/**", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/driver/**", HttpMethod.GET.name()),
-            new AntPathRequestMatcher(" /api/v1/parking-lot/driver/**",HttpMethod.PATCH.name()),
-            new AntPathRequestMatcher(" /api/v1/parking-lot/driver",HttpMethod.POST.name()),
-            new AntPathRequestMatcher(" /api/v1/parking-lot/lot/**",HttpMethod.GET.name())
+            new AntPathRequestMatcher("/api/v1/parking-lot/providers/**", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/drivers/**", HttpMethod.GET.name()),
+            new AntPathRequestMatcher(" /api/v1/parking-lot/drivers/**",HttpMethod.PATCH.name()),
+            new AntPathRequestMatcher(" /api/v1/parking-lot/drivers",HttpMethod.POST.name()),
+            new AntPathRequestMatcher(" /api/v1/parking-lot/lots/**",HttpMethod.GET.name())
 
     };
 
     protected static final String [] PROVIDER_MATCHERS = {
 
-            "/api/v1/parking-lot/provider/**",
-            "/api/v1/parking-lot/provider"
+            "/api/v1/parking-lot/providers/**",
+            "/api/v1/parking-lot/providers"
     };
 
     @Bean

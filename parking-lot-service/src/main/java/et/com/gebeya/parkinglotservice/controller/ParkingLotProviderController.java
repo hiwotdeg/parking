@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.*;
 public class ParkingLotProviderController {
     private final ParkingLotProviderService parkingLotProviderService;
 
-    @PostMapping("/provider")
+    @PostMapping("/providers")
     public ResponseEntity<AddUserResponse> registerParkingLotProvider(@RequestBody AddProviderDto dto){
         return ResponseEntity.ok(parkingLotProviderService.registerParkingLotProvider(dto));
     }
-    @PatchMapping("/provider/{id}")
+    @PatchMapping("/providers/{id}")
     public ResponseEntity<ProviderResponseDto> updateParkingLotProvider(@RequestBody UpdateProviderRequestDto dto, @PathVariable("id") Integer id){
         return ResponseEntity.ok(parkingLotProviderService.updateParkingLotProvider(dto,id));
     }
-    @GetMapping("/provider/{id}")
+    @GetMapping("/providers/{id}")
     public ResponseEntity<ProviderResponseDto> getParkingLotProviderById(@PathVariable("id") Integer id){
         return ResponseEntity.ok(parkingLotProviderService.getParkingLotProviderById(id));
     }

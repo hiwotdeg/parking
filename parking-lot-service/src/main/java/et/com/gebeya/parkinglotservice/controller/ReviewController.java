@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/review")
+@RequestMapping("/api/v1/parking-lot")
 public class ReviewController {
     private final ReviewService reviewService;
 
-    @PostMapping("/")
+    @PostMapping("/review")
     public ResponseEntity<?> addReview(@RequestBody AddReviewRequestDto addReviewRequestDto){
         return ResponseEntity.ok(reviewService.createReviewForParkingLot(addReviewRequestDto));
     }
