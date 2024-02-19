@@ -84,10 +84,7 @@ springdoc:
   cache:
     disabled: true
 
-services:
-  uri:
-    parking-lot-service: lb://Parking-Lot-Service/
-    auth-service: lb://Auth-Service/
+
 #  enable-native-support: true
 #  api-docs:
 #    enabled: true
