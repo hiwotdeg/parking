@@ -32,19 +32,6 @@ spring:
           uri: http://localhost:8761
           predicates:
             - Path=/eureka/**
-#        - id: openapi
-#          uri: http://localhost:${server.port}
-#          predicates:
-#            - Path=/v3/api-docs/**
-#          filters:
-#            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
-
-
-
-
-
-
-
 
   application:
     name: Api-Gateway
@@ -83,30 +70,6 @@ springdoc:
 
   cache:
     disabled: true
-
-
-#  enable-native-support: true
-#  api-docs:
-#    enabled: true
-#  swagger-ui:
-#    enabled: true
-#    path: /swagger-ui.html
-#    config-url: /v3/api-docs/swagger-config
-#    urls:
-#      - url: /v3/api-docs
-#        name: Api Gateway
-##        primaryName: API Gateway Service
-#      - url: /Auth-Service/v3/api-docs
-#        name: Auth Service
   show-actuator: true
-#        primaryName: Product Service
-##      - url: /price-service/v3/api-docs
-#        name: Price Service
-#        primaryName: Price Service
 
-
-
-#  endpoints:
-#    web:
-#      base-path: /gateway/actuator
 
