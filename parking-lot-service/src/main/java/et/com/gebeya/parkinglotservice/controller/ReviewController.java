@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReviewController {
     private final ReviewService reviewService;
 
-    @PostMapping("/review")
+    @PostMapping("/reviews")
     public ResponseEntity<?> addReview(@RequestBody AddReviewRequestDto addReviewRequestDto){
         return ResponseEntity.ok(reviewService.createReviewForParkingLot(addReviewRequestDto));
     }
