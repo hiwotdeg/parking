@@ -17,14 +17,17 @@ public class ParkingLotProviderController {
     private final ParkingLotProviderService parkingLotProviderService;
 
     @PostMapping("/providers")
+    @CrossOrigin
     public ResponseEntity<AddUserResponse> registerParkingLotProvider(@RequestBody AddProviderDto dto){
         return ResponseEntity.ok(parkingLotProviderService.registerParkingLotProvider(dto));
     }
     @PatchMapping("/providers/{id}")
+    @CrossOrigin
     public ResponseEntity<ProviderResponseDto> updateParkingLotProvider(@RequestBody UpdateProviderRequestDto dto, @PathVariable("id") Integer id){
         return ResponseEntity.ok(parkingLotProviderService.updateParkingLotProvider(dto,id));
     }
     @GetMapping("/providers/{id}")
+    @CrossOrigin
     public ResponseEntity<ProviderResponseDto> getParkingLotProviderById(@PathVariable("id") Integer id){
         return ResponseEntity.ok(parkingLotProviderService.getParkingLotProviderById(id));
     }

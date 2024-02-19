@@ -6,10 +6,7 @@ import et.com.gebeya.parkinglotservice.dto.responsedto.OperationHourResponseDto;
 import et.com.gebeya.parkinglotservice.service.OperationHourService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,6 +17,7 @@ public class OperationHourController {
     private final OperationHourService operationHourService;
 
     @PostMapping("/operation-hours")
+    @CrossOrigin
     public ResponseEntity<List<OperationHourResponseDto>> addOperation(@RequestBody AddOperationRequestDto request) {
         return ResponseEntity.ok(operationHourService.addOperationHour(request));
     }

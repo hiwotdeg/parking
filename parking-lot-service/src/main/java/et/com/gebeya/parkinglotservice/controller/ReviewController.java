@@ -4,10 +4,7 @@ import et.com.gebeya.parkinglotservice.dto.requestdto.AddReviewRequestDto;
 import et.com.gebeya.parkinglotservice.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,6 +13,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping("/reviews")
+    @CrossOrigin
     public ResponseEntity<?> addReview(@RequestBody AddReviewRequestDto addReviewRequestDto){
         return ResponseEntity.ok(reviewService.createReviewForParkingLot(addReviewRequestDto));
     }
