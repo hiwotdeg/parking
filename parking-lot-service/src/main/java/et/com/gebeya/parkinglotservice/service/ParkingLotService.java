@@ -20,7 +20,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static et.com.gebeya.parkinglotservice.util.Constant.ADD_LOCATION;
 import static et.com.gebeya.parkinglotservice.util.Constant.DELETE_LOCATION;
@@ -69,12 +72,14 @@ public class ParkingLotService {
     }
 
     @Transactional
-    public Object deleteParkingLot(Integer id){
+    public Map<String, String> deleteParkingLot(Integer id){
         ParkingLot parkingLot = getParkingLot(id);
         parkingLot.setIsActive(false);
         parkingLotRepository.save(parkingLot);
         deleteLocationRequestDtoKafkaTemplate.send(DELETE_LOCATION, DeleteLocationRequestDto.builder().id(id).build());
-        return new Object();
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "parking lot deleted successfully");
+        return response;
     }
     private ParkingLot getParkingLot(Integer id){
         List<ParkingLot> parkingLots = parkingLotRepository.findAll(ParkingLotSpecification.getParkingLotById(id));

@@ -28,7 +28,8 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfig {
 
 
-    private static final RequestMatcher[] ENDPOINTS = {new AntPathRequestMatcher("/api/v1/parking-lot/providers", HttpMethod.POST.name()),          //0
+    private static final RequestMatcher[] ENDPOINTS = {
+            new AntPathRequestMatcher("/api/v1/parking-lot/providers", HttpMethod.POST.name()),          //0
             new AntPathRequestMatcher("/api/v1/parking-lot/providers/**", HttpMethod.PATCH.name()),     //1
             new AntPathRequestMatcher("/api/v1/parking-lot/providers/**", HttpMethod.GET.name()),       //2
             new AntPathRequestMatcher("/api/v1/parking-lot/providers", HttpMethod.DELETE.name()),       //3
@@ -39,7 +40,7 @@ public class SecurityConfig {
             new AntPathRequestMatcher("/api/v1/parking-lot/lots/**", HttpMethod.GET.name()),            //8
             new AntPathRequestMatcher("/api/v1/parking-lot/lots/**", HttpMethod.PATCH.name()),           //9
             new AntPathRequestMatcher("/api/v1/parking-lot/lots", HttpMethod.POST.name()),               //10
-            new AntPathRequestMatcher("/api/v1/parking-lot/lots", HttpMethod.DELETE.name()),             //11
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/**", HttpMethod.DELETE.name()),             //11
             new AntPathRequestMatcher("/api/v1/parking-lot/reviews/**", HttpMethod.GET.name()),          //12
             new AntPathRequestMatcher("/api/v1/parking-lot/reviews", HttpMethod.POST.name()),            //13
             new AntPathRequestMatcher("/api/v1/parking-lot/reviews/**", HttpMethod.PATCH.name()),        //14
