@@ -13,7 +13,6 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping("/reviews")
-    @CrossOrigin
     public ResponseEntity<?> addReview(@RequestBody AddReviewRequestDto addReviewRequestDto){
         return ResponseEntity.ok(reviewService.createReviewForParkingLot(addReviewRequestDto));
     }

@@ -29,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    @CrossOrigin
+    @CrossOrigin("http://localhost:8008")
     public ResponseEntity<Object> login(@RequestBody UsersCredential credential)
     {
         return authenticationService.signIn(credential);

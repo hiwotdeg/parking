@@ -46,6 +46,7 @@ server:
   port: 8008
   servlet:
     context-path: /
+  forward-headers-strategy: framework
 
 management:
   endpoint:

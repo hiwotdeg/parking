@@ -17,7 +17,6 @@ public class OperationHourController {
     private final OperationHourService operationHourService;
 
     @PostMapping("/operation-hours")
-    @CrossOrigin
     public ResponseEntity<List<OperationHourResponseDto>> addOperation(@RequestBody AddOperationRequestDto request) {
         return ResponseEntity.ok(operationHourService.addOperationHour(request));
     }

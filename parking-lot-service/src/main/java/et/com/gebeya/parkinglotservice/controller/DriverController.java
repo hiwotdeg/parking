@@ -7,6 +7,8 @@ import et.com.gebeya.parkinglotservice.dto.responsedto.DriverResponseDto;
 import et.com.gebeya.parkinglotservice.service.DriverService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,17 +17,15 @@ import org.springframework.web.bind.annotation.*;
 public class DriverController {
     private final DriverService driverService;
     @PostMapping("/drivers")
-    @CrossOrigin
     public ResponseEntity<AddUserResponse> registerDriver(@RequestBody AddDriverRequestDto dto){
         return ResponseEntity.ok(driverService.registerDriver(dto));
     }
     @PatchMapping("/drivers/{id}")
-    @CrossOrigin
     public ResponseEntity<DriverResponseDto> updateDriver(@RequestBody UpdateDriverRequestDto dto,@PathVariable("id") Integer id){
         return ResponseEntity.ok(driverService.updateDriver(dto,id));
     }
     @GetMapping("/drivers/{id}")
-    @CrossOrigin
+
     public ResponseEntity<DriverResponseDto> getDriverById(@PathVariable Integer id){
         return ResponseEntity.ok(driverService.getDriverById(id));
     }

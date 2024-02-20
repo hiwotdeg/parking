@@ -15,19 +15,16 @@ public class ParkingLotController {
     private final ParkingLotService parkingLotService;
 
     @PostMapping("/lots")
-    @CrossOrigin
     public ResponseEntity<ParkingLotResponseDto> addParkingLot(@RequestBody AddParkingLotDto request){
         return ResponseEntity.ok(parkingLotService.addParkingLot(request));
     }
 
     @PatchMapping ("/lots/{id}")
-    @CrossOrigin
     public ResponseEntity<ParkingLotResponseDto> updateParkingLot(@RequestBody UpdateParkingLotDto request,@PathVariable("id") Integer id){
         return ResponseEntity.ok(parkingLotService.updateParkingLot(request,id));
     }
 
     @GetMapping("/lots/{id}")
-    @CrossOrigin
     public ResponseEntity<ParkingLotResponseDto> getParkingLot(@PathVariable("id") Integer id){
         return ResponseEntity.ok(parkingLotService.getParkingLotById(id));
     }
