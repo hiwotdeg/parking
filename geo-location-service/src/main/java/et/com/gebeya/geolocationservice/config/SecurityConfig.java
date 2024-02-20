@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,14 +24,21 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
-    protected static final String [] SWAGGER_MATCHERS = {
-            "/swagger-ui/**",
+    protected static final String[] SWAGGER_MATCHERS = {
+            "/v2/api-docs",
+            "/v3/api-docs",
             "/v3/api-docs/**",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui/**",
+            "/webjars/**",
             "/swagger-ui.html",
-            "/swagger-ui.html/**",
             "/actuator",
-            "/actuator/**",
+            "/actuator/**"
     };
 
     protected static final RequestMatcher[] DRIVER_MATCHERS = {
