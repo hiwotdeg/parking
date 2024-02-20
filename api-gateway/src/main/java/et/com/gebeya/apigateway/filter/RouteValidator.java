@@ -29,7 +29,8 @@ public class RouteValidator {
             "/swagger-ui.html",
             "/actuator",
             "/actuator/**",
-            "/v3/api-docs/parking-lot"
+            "/v3/api-docs/parking-lot",
+            "/v3/api-docs/geo-location"
     );
 
     public Predicate<ServerHttpRequest> isSecured =
