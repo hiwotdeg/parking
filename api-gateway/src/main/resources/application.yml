@@ -28,6 +28,11 @@ spring:
           filters:
             - AuthenticationFilter
 
+        - id: Payment-Service
+          uri: lb://Payment-Service
+          predicates:
+            - Path=/api/v1/payment/**, /v3/api-docs/payment
+
         - id: Discovery-Server
           uri: http://localhost:8761
           predicates:
@@ -77,6 +82,8 @@ springdoc:
         url: /v3/api-docs/auth
       - name: geo location service
         url: /v3/api-docs/geo-location
+      - name: payment service
+        url: /v3/api-docs/payment
 
   cache:
     disabled: true
