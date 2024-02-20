@@ -5,6 +5,7 @@ import et.com.gebeya.parkinglotservice.dto.requestdto.AddParkingLotDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.DeleteLocationRequestDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ParkingLotResponseDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateParkingLotDto;
+import et.com.gebeya.parkinglotservice.exception.MoreThanOneProviderException;
 import et.com.gebeya.parkinglotservice.exception.ParkingLotIdNotFound;
 import et.com.gebeya.parkinglotservice.exception.ProviderIdNotFound;
 import et.com.gebeya.parkinglotservice.model.ParkingLot;
@@ -14,6 +15,7 @@ import et.com.gebeya.parkinglotservice.repository.ParkingLotRepository;
 import et.com.gebeya.parkinglotservice.repository.specification.ParkingLotProviderSpecification;
 import et.com.gebeya.parkinglotservice.repository.specification.ParkingLotSpecification;
 import et.com.gebeya.parkinglotservice.util.MappingUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,13 +32,15 @@ public class ParkingLotService {
     private final ParkingLotProviderRepository parkingLotProviderRepository;
     private final KafkaTemplate<String, DeleteLocationRequestDto> deleteLocationRequestDtoKafkaTemplate;
     private final KafkaTemplate<String, AddLocationRequestDto> addLocationRequestDtoKafkaTemplate;
-
+    @Transactional
     public ParkingLotResponseDto addParkingLot(AddParkingLotDto dto) {
         ParkingLot parkingLot = MappingUtil.mapAddParkingLotToParkingLot(dto);
         parkingLot.setRating(5.0f);
         parkingLot.setAvailableSlot(parkingLot.getCapacity());
         Integer id = (Integer)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         parkingLot.setProvider(getProvider(id));
+        if(!parkingLotRepository.findByProviderId(parkingLot.getProvider().getId()).isEmpty())
+            throw new MoreThanOneProviderException("one provider can add one parking lot only");
         parkingLot = parkingLotRepository.save(parkingLot);
         AddLocationRequestDto addLocationRequestDto = AddLocationRequestDto.builder()
                 .id(parkingLot.getId())
@@ -46,7 +50,7 @@ public class ParkingLotService {
         addLocationRequestDtoKafkaTemplate.send(ADD_LOCATION,addLocationRequestDto);
         return MappingUtil.parkingLotResponse(parkingLot);
     }
-
+    @Transactional
     public ParkingLotResponseDto updateParkingLot(UpdateParkingLotDto dto, Integer id) {
         ParkingLot parkingLot = getParkingLot(id);
         parkingLot = parkingLotRepository.save(MappingUtil.updateParkingLot(parkingLot, dto));
@@ -64,7 +68,7 @@ public class ParkingLotService {
         return MappingUtil.parkingLotResponse(parkingLot);
     }
 
-
+    @Transactional
     public Object deleteParkingLot(Integer id){
         ParkingLot parkingLot = getParkingLot(id);
         parkingLot.setIsActive(false);
