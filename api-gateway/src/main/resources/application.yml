@@ -17,7 +17,7 @@ spring:
         - id: Geo-Location-Service
           uri: lb://Geo-Location-Service
           predicates:
-            - Path=/api/v1/api/v1/geo-location/**, /v3/api-docs/geo-location
+            - Path=/api/v1/geo-location/**, /v3/api-docs/geo-location
           filters:
             - AuthenticationFilter
 
