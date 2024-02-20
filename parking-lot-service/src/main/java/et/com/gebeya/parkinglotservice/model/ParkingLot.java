@@ -31,6 +31,8 @@ public class ParkingLot {
     private ParkingType parkingType;
     private Float rating;
     private Boolean isActive;
+    @OneToOne()
+    private ParkingLotProvider provider;
     @CreationTimestamp
     private Instant createdOn;
     @UpdateTimestamp

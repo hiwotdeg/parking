@@ -29,4 +29,9 @@ public class ParkingLotController {
         return ResponseEntity.ok(parkingLotService.getParkingLotById(id));
     }
 
+    @DeleteMapping ("/lots/{id}")
+    public ResponseEntity<Object> deleteParkingLot(@PathVariable("id") Integer id){
+        return ResponseEntity.ok(parkingLotService.deleteParkingLot(id));
+    }
+
 }
