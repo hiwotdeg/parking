@@ -3,8 +3,8 @@ package et.com.gebeya.parkinglotservice.service;
 import et.com.gebeya.parkinglotservice.dto.requestdto.AddLocationRequestDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.AddParkingLotDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.DeleteLocationRequestDto;
-import et.com.gebeya.parkinglotservice.dto.responsedto.ParkingLotResponseDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateParkingLotDto;
+import et.com.gebeya.parkinglotservice.dto.responsedto.ParkingLotResponseDto;
 import et.com.gebeya.parkinglotservice.exception.MoreThanOneProviderException;
 import et.com.gebeya.parkinglotservice.exception.ParkingLotIdNotFound;
 import et.com.gebeya.parkinglotservice.exception.ProviderIdNotFound;
@@ -35,14 +35,16 @@ public class ParkingLotService {
     private final ParkingLotProviderRepository parkingLotProviderRepository;
     private final KafkaTemplate<String, DeleteLocationRequestDto> deleteLocationRequestDtoKafkaTemplate;
     private final KafkaTemplate<String, AddLocationRequestDto> addLocationRequestDtoKafkaTemplate;
+
     @Transactional
     public ParkingLotResponseDto addParkingLot(AddParkingLotDto dto) {
         ParkingLot parkingLot = MappingUtil.mapAddParkingLotToParkingLot(dto);
         parkingLot.setRating(5.0f);
         parkingLot.setAvailableSlot(parkingLot.getCapacity());
-        Integer id = (Integer)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        parkingLot.setProvider(getProvider(id));
-        if(!parkingLotRepository.findByProviderId(parkingLot.getProvider().getId()).isEmpty())
+        Integer id = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        parkingLot.setParkingLotProvider(getProvider(id));
+//        if(!parkingLotRepository.findByProviderId(parkingLot.getProvider().getId()).isEmpty())
+        if (!parkingLotRepository.findAll(ParkingLotSpecification.getParkingLotByProviderId(parkingLot.getParkingLotProvider().getId())).isEmpty())
             throw new MoreThanOneProviderException("one provider can add one parking lot only");
         parkingLot = parkingLotRepository.save(parkingLot);
         AddLocationRequestDto addLocationRequestDto = AddLocationRequestDto.builder()
@@ -50,9 +52,10 @@ public class ParkingLotService {
                 .longitude(parkingLot.getLongitude())
                 .latitude(parkingLot.getLatitude())
                 .build();
-        addLocationRequestDtoKafkaTemplate.send(ADD_LOCATION,addLocationRequestDto);
+        addLocationRequestDtoKafkaTemplate.send(ADD_LOCATION, addLocationRequestDto);
         return MappingUtil.parkingLotResponse(parkingLot);
     }
+
     @Transactional
     public ParkingLotResponseDto updateParkingLot(UpdateParkingLotDto dto, Integer id) {
         ParkingLot parkingLot = getParkingLot(id);
@@ -62,17 +65,17 @@ public class ParkingLotService {
                 .longitude(parkingLot.getLongitude())
                 .latitude(parkingLot.getLatitude())
                 .build();
-        addLocationRequestDtoKafkaTemplate.send(ADD_LOCATION,addLocationRequestDto);
+        addLocationRequestDtoKafkaTemplate.send(ADD_LOCATION, addLocationRequestDto);
         return MappingUtil.parkingLotResponse(parkingLot);
     }
 
-    public ParkingLotResponseDto getParkingLotById(Integer id){
+    public ParkingLotResponseDto getParkingLotById(Integer id) {
         ParkingLot parkingLot = getParkingLot(id);
         return MappingUtil.parkingLotResponse(parkingLot);
     }
 
     @Transactional
-    public Map<String, String> deleteParkingLot(Integer id){
+    public Map<String, String> deleteParkingLot(Integer id) {
         ParkingLot parkingLot = getParkingLot(id);
         parkingLot.setIsActive(false);
         parkingLotRepository.save(parkingLot);
@@ -81,17 +84,19 @@ public class ParkingLotService {
         response.put("message", "parking lot deleted successfully");
         return response;
     }
-    private ParkingLot getParkingLot(Integer id){
+
+    private ParkingLot getParkingLot(Integer id) {
         List<ParkingLot> parkingLots = parkingLotRepository.findAll(ParkingLotSpecification.getParkingLotById(id));
-        if(parkingLots.isEmpty())
+        if (parkingLots.isEmpty())
             throw new ParkingLotIdNotFound("parking lot id not found");
         return parkingLots.get(0);
     }
 
-    private ParkingLotProvider getProvider(Integer id){
+    private ParkingLotProvider getProvider(Integer id) {
         List<ParkingLotProvider> providers = parkingLotProviderRepository.findAll(ParkingLotProviderSpecification.getProviderById(id));
-        if(providers.isEmpty())
+        if (providers.isEmpty())
             throw new ProviderIdNotFound("provider id not found");
+        System.out.println(providers.get(0));
         return providers.get(0);
     }
 

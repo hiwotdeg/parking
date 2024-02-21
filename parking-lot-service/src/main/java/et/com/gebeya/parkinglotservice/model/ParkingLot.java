@@ -31,8 +31,9 @@ public class ParkingLot {
     private ParkingType parkingType;
     private Float rating;
     private Boolean isActive;
-    @OneToOne()
-    private ParkingLotProvider provider;
+    @ManyToOne()
+    @JoinColumn(name = "provider_id")
+    private ParkingLotProvider parkingLotProvider;
     @CreationTimestamp
     private Instant createdOn;
     @UpdateTimestamp

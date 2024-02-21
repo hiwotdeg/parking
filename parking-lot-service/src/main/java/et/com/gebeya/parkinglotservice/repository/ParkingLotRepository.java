@@ -7,5 +7,4 @@ import java.util.List;
 
 
 public interface ParkingLotRepository extends JpaRepository<ParkingLot,Integer>, JpaSpecificationExecutor<ParkingLot> {
-    List<ParkingLot> findByProviderId(Integer id);
 }
