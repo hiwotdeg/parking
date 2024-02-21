@@ -20,4 +20,9 @@ public class OperationHourController {
     public ResponseEntity<List<OperationHourResponseDto>> addOperation(@RequestBody AddOperationRequestDto request) {
         return ResponseEntity.ok(operationHourService.addOperationHour(request));
     }
+
+    @GetMapping("/operation-hours/{id}")
+    public ResponseEntity<List<OperationHourResponseDto>> getOperationHourById(@PathVariable("id") Integer id){
+        return ResponseEntity.ok(operationHourService.getOperationHoursById(id));
+    }
 }

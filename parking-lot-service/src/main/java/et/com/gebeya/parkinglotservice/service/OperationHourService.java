@@ -38,9 +38,9 @@ public class OperationHourService {
     }
 
 
-    public List<OperationHour> getOperationHoursById(Integer id) {
-        return operationHourRepository.findAll(OperationHourSpecification.hasParkingLotId(id));
-
+    public List<OperationHourResponseDto> getOperationHoursById(Integer id) {
+        List<OperationHour> operationHours = operationHourRepository.findAll(OperationHourSpecification.hasParkingLotId(id));
+        return MappingUtil.listOfOperationHourToListOfOperationHourResponseDto(operationHours);
     }
 
 
