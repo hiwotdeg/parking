@@ -3,7 +3,6 @@ package et.com.gebeya.paymentservice.service;
 import et.com.gebeya.paymentservice.dto.request.PriceRequestDto;
 import et.com.gebeya.paymentservice.model.OperationHour;
 import et.com.gebeya.paymentservice.repository.OperationHourRepository;
-import et.com.gebeya.paymentservice.repository.ParkingLotRepository;
 import et.com.gebeya.paymentservice.repository.specification.OperationHourSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,16 +10,15 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class OperationHourService {
+public class PaymentService {
     private final OperationHourRepository operationHourRepository;
-    private final ParkingLotRepository parkingLotRepository;
 
-
-    public List<OperationHour> getOperationHoursById(Integer id) {
+    List<OperationHour> getOperationHoursById(Integer id) {
         return operationHourRepository.findAll(OperationHourSpecification.hasParkingLotId(id));
 
     }
@@ -28,14 +26,16 @@ public class OperationHourService {
 
     public BigDecimal dynamicPricing(PriceRequestDto request) {
         List<OperationHour> operationHours = getOperationHoursById(request.getParkingLotId());
+        LocalTime initialTime = LocalTime.now();
+        LocalTime finalTime = LocalTime.now().plusHours(request.getDuration().getHour()).plusMinutes(request.getDuration().getMinute());
         BigDecimal totalPrice = BigDecimal.ZERO;
-        if (request.getStartTime().isAfter(request.getEndTime())) {
-            LocalDateTime startTime = LocalDateTime.of(2024, 1, 1, request.getStartTime().getHour(), request.getStartTime().getMinute());
-            LocalDateTime endTime = LocalDateTime.of(2024, 1, 2, request.getEndTime().getHour(), request.getEndTime().getMinute());
+        if (initialTime.isAfter(finalTime)) {
+            LocalDateTime startTime = LocalDateTime.of(2024, 1, 1, initialTime.getHour(), initialTime.getMinute());
+            LocalDateTime endTime = LocalDateTime.of(2024, 1, 2, finalTime.getHour(), finalTime.getMinute());
             totalPrice = getPrice(operationHours, totalPrice, startTime, endTime);
         } else {
-            LocalDateTime startTime = LocalDateTime.of(2024, 1, 1, request.getStartTime().getHour(), request.getStartTime().getMinute());
-            LocalDateTime endTime = LocalDateTime.of(2024, 1, 1, request.getEndTime().getHour(), request.getEndTime().getMinute());
+            LocalDateTime startTime = LocalDateTime.of(2024, 1, 1, initialTime.getHour(), initialTime.getMinute());
+            LocalDateTime endTime = LocalDateTime.of(2024, 1, 1, finalTime.getHour(), finalTime.getMinute());
             totalPrice = getPrice(operationHours, totalPrice, startTime, endTime);
         }
         return totalPrice;

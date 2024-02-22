@@ -6,13 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
 public class PriceRequestDto {
     private Integer parkingLotId;
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private LocalTime duration;
 }
+
