@@ -25,7 +25,7 @@ public class Users extends BaseModel implements UserDetails {
 //    @NotBlank(message = "UserName is mandatory")
     @Column(name = "phonenumber")
     private String userName;
-//    @Size(min = 6, max = 16)
+    //    @Size(min = 6, max = 16)
     @Column(name = "password")
     private String password;
     @Enumerated(EnumType.STRING)
