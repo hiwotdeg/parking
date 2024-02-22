@@ -10,6 +10,7 @@ import et.com.gebeya.parkinglotservice.exception.ParkingLotIdNotFound;
 import et.com.gebeya.parkinglotservice.exception.ProviderIdNotFound;
 import et.com.gebeya.parkinglotservice.model.ParkingLot;
 import et.com.gebeya.parkinglotservice.model.ParkingLotProvider;
+import et.com.gebeya.parkinglotservice.repository.ParkingLotImageRepository;
 import et.com.gebeya.parkinglotservice.repository.ParkingLotProviderRepository;
 import et.com.gebeya.parkinglotservice.repository.ParkingLotRepository;
 import et.com.gebeya.parkinglotservice.repository.specification.ParkingLotProviderSpecification;
@@ -33,6 +34,7 @@ import static et.com.gebeya.parkinglotservice.util.Constant.DELETE_LOCATION;
 public class ParkingLotService {
     private final ParkingLotRepository parkingLotRepository;
     private final ParkingLotProviderRepository parkingLotProviderRepository;
+    private final ParkingLotImageRepository parkingLotImageRepository;
     private final KafkaTemplate<String, DeleteLocationRequestDto> deleteLocationRequestDtoKafkaTemplate;
     private final KafkaTemplate<String, AddLocationRequestDto> addLocationRequestDtoKafkaTemplate;
 
@@ -43,7 +45,6 @@ public class ParkingLotService {
         parkingLot.setAvailableSlot(parkingLot.getCapacity());
         Integer id = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         parkingLot.setParkingLotProvider(getProvider(id));
-//        if(!parkingLotRepository.findByProviderId(parkingLot.getProvider().getId()).isEmpty())
         if (!parkingLotRepository.findAll(ParkingLotSpecification.getParkingLotByProviderId(parkingLot.getParkingLotProvider().getId())).isEmpty())
             throw new MoreThanOneProviderException("one provider can add one parking lot only");
         parkingLot = parkingLotRepository.save(parkingLot);
@@ -96,7 +97,6 @@ public class ParkingLotService {
         List<ParkingLotProvider> providers = parkingLotProviderRepository.findAll(ParkingLotProviderSpecification.getProviderById(id));
         if (providers.isEmpty())
             throw new ProviderIdNotFound("provider id not found");
-        System.out.println(providers.get(0));
         return providers.get(0);
     }
 

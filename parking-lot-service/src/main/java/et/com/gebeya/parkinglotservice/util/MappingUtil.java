@@ -82,14 +82,20 @@ public class MappingUtil {
                 .isActive(true)
                 .latitude(parkingLotRequest.getLatitude())
                 .longitude(parkingLotRequest.getLongitude())
+                .parkingLotImageLink(mapStringToParkingLotImage(parkingLotRequest.getImageUrl()))
                 .capacity(parkingLotRequest.getCapacity())
-                .imageUrl(parkingLotRequest.getImageUrl())
                 .parkingType(parkingLotRequest.getParkingType()).build();
     }
 
+    private static List<ParkingLotImage> mapStringToParkingLotImage(List<String> images)
+    {
+        List<ParkingLotImage> imageList = new ArrayList<>();
+        images.forEach(request->imageList.add(ParkingLotImage.builder().imageUrl(request).build()));
+        return imageList;
+    }
     public static ParkingLot updateParkingLot(ParkingLot parkingLot, UpdateParkingLotDto dto) {
-        if (dto.getImageUrl() != null)
-            parkingLot.setImageUrl(dto.getImageUrl());
+//        if (!dto.getImageUrl().isEmpty())
+//            parkingLot.setParkingLotImageLink(mapStringToParkingLotImage(dto.getImageUrl()));
         if (dto.getAvailableSlot() != null)
             parkingLot.setAvailableSlot(dto.getAvailableSlot());
         if (dto.getName() != null)
@@ -114,7 +120,7 @@ public class MappingUtil {
                 .latitude(parkingLot.getLatitude())
                 .longitude(parkingLot.getLongitude())
                 .capacity(parkingLot.getCapacity())
-                .imageUrl(parkingLot.getImageUrl())
+                .images(mapParkingLotImageToString(parkingLot.getParkingLotImageLink()))
                 .availableSlot(parkingLot.getAvailableSlot())
                 .parkingType(parkingLot.getParkingType())
                 .rating(parkingLot.getRating())
@@ -122,6 +128,12 @@ public class MappingUtil {
 
     }
 
+    private static List<String> mapParkingLotImageToString(List<ParkingLotImage> parkingLotImages)
+    {
+        List<String> images = new ArrayList<>();
+        parkingLotImages.forEach(request->images.add(request.getImageUrl()));
+        return images;
+    }
     public static ParkingLotProvider mapAddProviderDtoToParkingLotProvider(AddProviderDto dto) {
         return ParkingLotProvider.builder().firstName(dto.getFirstName())
                 .lastName(dto.getLastName())

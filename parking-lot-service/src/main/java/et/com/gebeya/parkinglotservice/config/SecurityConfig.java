@@ -52,28 +52,6 @@ public class SecurityConfig {
 
     };
 
-//    private static final String[] ENDPOINTS_STRING = {"/api/v1/parking-lot/providers",            //0
-//            "/api/v1/parking-lot/providers/**",         //1
-//            "/api/v1/parking-lot/providers/**",//2
-//            "/api/v1/parking-lot/providers",//3
-//            "/api/v1/parking-lot/drivers",//4
-//            "/api/v1/parking-lot/drivers/**",//5
-//            "/api/v1/parking-lot/drivers/**",//6
-//            "/api/v1/parking-lot/drivers",//7
-//            "/api/v1/parking-lot/lots/**",//8
-//            "/api/v1/parking-lot/lots/**",//9
-//            "/api/v1/parking-lot/lots",//10
-//            "/api/v1/parking-lot/lots",//11
-//            "/api/v1/parking-lot/reviews/**",//12
-//            "/api/v1/parking-lot/reviews",//13
-//            "/api/v1/parking-lot/reviews/**",//14
-//            "/api/v1/parking-lot/reviews",//15
-//            "/api/v1/parking-lot/operation-hours",//16
-//            "/api/v1/parking-lot/operation-hours/**", //17
-//            "/api/v1/parking-lot/operation-hours/**",//18
-//            "/api/v1/parking-lot/operation-hours",  //19
-//
-//    };
 
     protected static final RequestMatcher[] UNAUTHORIZED_MATCHERS = {
             ENDPOINTS[0],

@@ -2,7 +2,7 @@ package et.com.gebeya.parkinglotservice.dto.requestdto;
 
 import et.com.gebeya.parkinglotservice.enums.ParkingType;
 import lombok.*;
-
+import java.util.List;
 @Builder
 @Data
 @AllArgsConstructor
@@ -13,7 +13,7 @@ public class UpdateParkingLotDto {
     private Double latitude;
     private Double longitude;
     private Integer capacity;
-    private String imageUrl;
+//    private List<String> imageUrl;
     private Integer availableSlot;
     private ParkingType parkingType;
 }

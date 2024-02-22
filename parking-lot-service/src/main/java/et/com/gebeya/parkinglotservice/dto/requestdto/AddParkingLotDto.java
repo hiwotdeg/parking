@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -17,5 +17,5 @@ public class AddParkingLotDto {
     private Double longitude;
     private Integer capacity;
     private ParkingType parkingType;
-    private String imageUrl;
+    private List<String> imageUrl;
 }
