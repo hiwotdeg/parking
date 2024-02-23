@@ -45,6 +45,11 @@ spring:
           predicates:
             - Path=/eureka/**
 
+        - id: Notification-Service
+          uri: ws://localhost:8181
+          predicates:
+            - Path=/notification-ws/**
+
   application:
     name: Api-Gateway
 
