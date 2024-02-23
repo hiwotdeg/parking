@@ -24,7 +24,7 @@ import java.util.Optional;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class CustomChannelInterceptor implements HandshakeInterceptor {
+public class NotificationChannelInterceptor implements HandshakeInterceptor {
 
     private final WebClient.Builder webClientBuilder;
 

@@ -12,14 +12,12 @@ import org.springframework.web.socket.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class CustomHandler implements WebSocketHandler {
+public class NotificationHandler implements WebSocketHandler {
     private static Map<String, WebSocketSession> sessions= new ConcurrentHashMap<>();
     private final RedisService redisService;
     @Override
