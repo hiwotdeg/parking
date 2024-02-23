@@ -141,6 +141,13 @@ public class MappingUtil {
                 .build();
     }
 
+    public static Review mapUpdateRequestDtoToReview(UpdateReviewRequestDto dto){
+        return Review.builder()
+                .rate(dto.getRate())
+                .comment(dto.getComment())
+                .build();
+    }
+
     public static ProviderResponseDto mapParkingLotProviderToProviderResponseDto(ParkingLotProvider provider) {
         return ProviderResponseDto.builder()
                 .id(provider.getId())
