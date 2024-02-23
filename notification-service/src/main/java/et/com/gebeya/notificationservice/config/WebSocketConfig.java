@@ -14,9 +14,10 @@ import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketConfigurer {
     private final CustomChannelInterceptor customChannelInterceptor;
+    private final CustomHandler customHandler;
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new CustomHandler(), "/notification-ws").setAllowedOrigins("*")
+        registry.addHandler(customHandler, "/notification-ws").setAllowedOrigins("*")
                 .addInterceptors(customChannelInterceptor)
                 .setHandshakeHandler(new DefaultHandshakeHandler());
     }

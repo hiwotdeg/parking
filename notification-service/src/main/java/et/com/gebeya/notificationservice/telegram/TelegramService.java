@@ -1,5 +1,6 @@
 package et.com.gebeya.notificationservice.telegram;
 
+import et.com.gebeya.notificationservice.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

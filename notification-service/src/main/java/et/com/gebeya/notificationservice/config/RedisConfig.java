@@ -1,10 +1,12 @@
-package et.com.gebeya.notificationservice.telegram;
+package et.com.gebeya.notificationservice.config;
 
+import et.com.gebeya.notificationservice.dto.MessageDto;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -32,5 +34,19 @@ public class RedisConfig {
 
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
+    }
+
+    @Bean
+    public RedisTemplate<String, MessageDto> pushNotificationTemplate(){
+        RedisTemplate<String, MessageDto> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(jedisConnectionFactory());
+        RedisSerializer<String> keySerializer = new StringRedisSerializer();
+        redisTemplate.setKeySerializer(keySerializer);
+        redisTemplate.setHashKeySerializer(keySerializer);
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(MessageDto.class));
+        redisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<>(MessageDto.class));
+        redisTemplate.afterPropertiesSet();
+        return redisTemplate;
+
     }
 }

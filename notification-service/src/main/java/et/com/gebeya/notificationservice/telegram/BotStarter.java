@@ -1,6 +1,7 @@
 package et.com.gebeya.notificationservice.telegram;
 
 
+import et.com.gebeya.notificationservice.service.RedisService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
