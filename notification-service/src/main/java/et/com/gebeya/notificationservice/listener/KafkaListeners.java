@@ -27,12 +27,11 @@ public class KafkaListeners {
         smsService.sendOtp(dto);
     }
 
-    @KafkaListener(topics = NOTIFICATION_TOPIC, groupId = "group5", containerFactory = " ")
+    @KafkaListener(topics = NOTIFICATION_TOPIC, groupId = "group4", containerFactory = "pushNotificationListenerFactory")
     void messageListener(MessageDto dto)
     {
         log.info(dto.toString());
         messageService.sendPushNotification(dto);
-
     }
 }
 

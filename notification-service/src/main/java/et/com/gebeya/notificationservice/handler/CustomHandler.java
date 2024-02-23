@@ -76,6 +76,7 @@ public class CustomHandler implements WebSocketHandler {
             }
             else{
                 session.sendMessage(new TextMessage(jsonMessage));
+                redisService.deleteKey(messageDto.getReceiverId());
             }
         }
         catch (IOException exception)

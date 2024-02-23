@@ -31,7 +31,8 @@ public class RouteValidator {
             "/actuator/**",
             "/v3/api-docs/parking-lot",
             "/v3/api-docs/geo-location",
-            "/v3/api-docs/payment"
+            "/v3/api-docs/payment",
+            "/api/v1/parking-lot/sendMessage"
     );
 
     public Predicate<ServerHttpRequest> isSecured =

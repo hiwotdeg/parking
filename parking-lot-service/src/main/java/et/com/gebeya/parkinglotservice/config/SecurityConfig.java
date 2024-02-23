@@ -56,6 +56,7 @@ public class SecurityConfig {
     protected static final RequestMatcher[] UNAUTHORIZED_MATCHERS = {
             ENDPOINTS[0],
             ENDPOINTS[4],
+            new AntPathRequestMatcher("/api/v1/parking-lot/sendMessage", HttpMethod.POST.name()),  //19
             new AntPathRequestMatcher("/actuator", HttpMethod.GET.name()),
             new AntPathRequestMatcher("/actuator/**", HttpMethod.GET.name()),
 

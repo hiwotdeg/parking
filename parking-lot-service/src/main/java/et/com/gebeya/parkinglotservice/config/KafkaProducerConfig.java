@@ -2,6 +2,7 @@ package et.com.gebeya.parkinglotservice.config;
 
 import et.com.gebeya.parkinglotservice.dto.requestdto.AddLocationRequestDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.DeleteLocationRequestDto;
+import et.com.gebeya.parkinglotservice.dto.requestdto.MessageDto;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,6 +68,16 @@ public class KafkaProducerConfig {
     @Bean
     public KafkaTemplate<String, DeleteLocationRequestDto> deleteLocationKafkaTemplate() {
         return new KafkaTemplate<>(deleteLocationProducerFactory());
+    }
+
+    @Bean
+    public ProducerFactory<String, MessageDto> pushNotificationProducerFactory() {
+        return new DefaultKafkaProducerFactory<>(dtoProducerConfig());
+    }
+
+    @Bean
+    public KafkaTemplate<String, MessageDto> pushNotificationKafkaTemplate() {
+        return new KafkaTemplate<>(pushNotificationProducerFactory());
     }
 
 }

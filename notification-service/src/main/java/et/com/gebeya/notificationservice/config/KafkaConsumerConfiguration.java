@@ -1,5 +1,6 @@
 package et.com.gebeya.notificationservice.config;
 
+import et.com.gebeya.notificationservice.dto.MessageDto;
 import et.com.gebeya.notificationservice.dto.Otpdto;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -33,39 +34,41 @@ public class KafkaConsumerConfiguration {
     public ConsumerFactory<String, String> stringConsumerFactory() {
         return new DefaultKafkaConsumerFactory<>(consumerConfig());
     }
+
+    @Bean
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> factory(ConsumerFactory<String, String> consumerFactory) {
+        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory);
+        return factory;
+    }
+
     @Bean
     public ConsumerFactory<String, Otpdto> messageConsumerFactory() {
-        JsonDeserializer<Otpdto> jsonDeserializer =
-                new JsonDeserializer<>(Otpdto.class, false);
+        JsonDeserializer<Otpdto> jsonDeserializer = new JsonDeserializer<>(Otpdto.class, false);
         jsonDeserializer.addTrustedPackages("*");
-
-        return new DefaultKafkaConsumerFactory<>(consumerConfig(),
-                new StringDeserializer(),
-                new ErrorHandlingDeserializer<>(jsonDeserializer)
-        );
+        return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(), new ErrorHandlingDeserializer<>(jsonDeserializer));
     }
 
-    @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>>
-    factory(ConsumerFactory<String, String> consumerFactory) {
-        ConcurrentKafkaListenerContainerFactory<String, String> factory =
-                new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory);
-
-        return factory;
-    }
 
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Otpdto>>
-    messagedtoListenerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Otpdto> factory
-                = new ConcurrentKafkaListenerContainerFactory<>();
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Otpdto>> messagedtoListenerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Otpdto> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(messageConsumerFactory());
-
         return factory;
     }
 
+    @Bean
+    public ConsumerFactory<String, MessageDto> pushNotificationConsumerFactory(){
+        JsonDeserializer<MessageDto> jsonDeserializer = new JsonDeserializer<>(MessageDto.class, false);
+        jsonDeserializer.addTrustedPackages("*");
+        return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(), new ErrorHandlingDeserializer<>(jsonDeserializer));
+    }
 
-
+    @Bean
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, MessageDto>> pushNotificationListenerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, MessageDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(pushNotificationConsumerFactory());
+        return factory;
+    }
 
 }
