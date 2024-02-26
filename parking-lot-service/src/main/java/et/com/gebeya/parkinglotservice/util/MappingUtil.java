@@ -224,6 +224,12 @@ public class MappingUtil {
                 .build();
     }
 
+    public static List<VehicleResponseDto> vehicleToListOfVehicleResponseDto(List<Vehicle> vehicles){
+        List<VehicleResponseDto> vehicleResponseDtoList = new ArrayList<>();
+        vehicles.forEach(vehicle -> vehicleResponseDtoList.add(vehicleToVehicleResponseDto(vehicle)));
+        return vehicleResponseDtoList;
+    }
+
     public static Vehicle vehicleRequestDtoToVehicle(VehicleRequestDto vehicle) {
         return Vehicle.builder()
                 .name(vehicle.getName())

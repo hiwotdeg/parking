@@ -55,5 +55,19 @@ public class VehicleService {
         return vehicle.get(0);
     }
 
+    public List<VehicleResponseDto> getVehiclesByDriverId(){
+        Integer driverId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Vehicle> vehicle = vehicleRepository.findAll(VehicleSpecification.getVehicleByDriverId(driverId));
+        return MappingUtil.vehicleToListOfVehicleResponseDto(vehicle);
+    }
+
+
+    public VehicleResponseDto getVehiclesByVehicleId(Integer id){
+        List<Vehicle> vehicle = vehicleRepository.findAll(VehicleSpecification.getVehicleById(id));
+        if(vehicle.isEmpty())
+            throw new VehicleIdNotFound("Vehicle is not found");
+        return MappingUtil.vehicleToVehicleResponseDto(vehicle.get(0));
+    }
+
 
 }
