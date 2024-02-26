@@ -176,17 +176,18 @@ public class MappingUtil {
     }
 
     private static OperationHour operationHourDtoDtoToOperationHour(ParkingLot parkingLot, OperationHourDto dto) {
+        LocalTime endTime = dto.getEndTIme().minusMinutes(1);
         if (dto.getStartTime().getHour() > dto.getEndTIme().getHour()) {
             return OperationHour.builder().pricePerHour(dto.getPrice())
                     .startTime(LocalDateTime.of(2024, 1, 1, dto.getStartTime().getHour(), dto.getStartTime().getMinute()))
-                    .endTime(LocalDateTime.of(2024, 1, 2, dto.getEndTIme().getHour(), dto.getEndTIme().getMinute()))
+                    .endTime(LocalDateTime.of(2024, 1, 2, endTime.getHour(), endTime.getMinute()))
                     .pricePerHour(dto.getPrice())
                     .parkingLot(parkingLot)
                     .build();
         } else {
             return OperationHour.builder().pricePerHour(dto.getPrice())
                     .startTime(LocalDateTime.of(2024, 1, 1, dto.getStartTime().getHour(), dto.getStartTime().getMinute()))
-                    .endTime(LocalDateTime.of(2024, 1, 1, dto.getEndTIme().getHour(), dto.getEndTIme().getMinute()))
+                    .endTime(LocalDateTime.of(2024, 1, 1, endTime.getHour(), endTime.getMinute()))
                     .pricePerHour(dto.getPrice())
                     .parkingLot(parkingLot)
                     .build();
