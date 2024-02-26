@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/parking-lot")
 @RequiredArgsConstructor
@@ -30,6 +32,11 @@ public class VehicleController {
     @GetMapping("/vehicles/{id}")
     public ResponseEntity<VehicleResponseDto> getVehicleByVehicleId(@PathVariable("id") Integer id){
         return ResponseEntity.ok(vehicleService.getVehiclesByVehicleId(id));
+    }
+
+    @DeleteMapping("/vehicles/{id}")
+    public ResponseEntity<Map<String, String>> deleteVehicleById(@PathVariable("id") Integer id){
+        return ResponseEntity.ok(vehicleService.deleteVehicleById(id));
     }
 
 
