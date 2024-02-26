@@ -49,6 +49,7 @@ public class SecurityConfig {
             new AntPathRequestMatcher("/api/v1/parking-lot/operation-hours/**", HttpMethod.GET.name()),  //17
             new AntPathRequestMatcher("/api/v1/parking-lot/operation-hours/**", HttpMethod.PATCH.name()),//18
             new AntPathRequestMatcher("/api/v1/parking-lot/operation-hours", HttpMethod.DELETE.name()),  //19
+            new AntPathRequestMatcher("/api/v1/parking-lot/vehicles",HttpMethod.POST.name())             //20
 
     };
 
@@ -81,6 +82,7 @@ public class SecurityConfig {
             ENDPOINTS[6],
             ENDPOINTS[7],
             ENDPOINTS[13],
+            ENDPOINTS[20]
 
     };
 

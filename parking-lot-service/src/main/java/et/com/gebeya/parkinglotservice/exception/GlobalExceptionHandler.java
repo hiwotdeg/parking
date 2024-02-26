@@ -46,7 +46,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DriverIdNotFound.class)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> handleException(DriverIdNotFound e) {
+    public ResponseEntity<Map<String, Object>> handleDriverIdNotFoundException(DriverIdNotFound e) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(VehicleIdNotFound.class)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> handleVehicleIdNotFoundException(VehicleIdNotFound e) {
         Map<String, Object> errorResponse = new HashMap<>();
         errorResponse.put("message", e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);

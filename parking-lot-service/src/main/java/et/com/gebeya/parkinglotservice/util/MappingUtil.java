@@ -1,10 +1,7 @@
 package et.com.gebeya.parkinglotservice.util;
 
 import et.com.gebeya.parkinglotservice.dto.requestdto.*;
-import et.com.gebeya.parkinglotservice.dto.responsedto.DriverResponseDto;
-import et.com.gebeya.parkinglotservice.dto.responsedto.OperationHourResponseDto;
-import et.com.gebeya.parkinglotservice.dto.responsedto.ParkingLotResponseDto;
-import et.com.gebeya.parkinglotservice.dto.responsedto.ProviderResponseDto;
+import et.com.gebeya.parkinglotservice.dto.responsedto.*;
 import et.com.gebeya.parkinglotservice.enums.Authority;
 import et.com.gebeya.parkinglotservice.enums.ParkingLotRole;
 import et.com.gebeya.parkinglotservice.model.*;
@@ -87,12 +84,12 @@ public class MappingUtil {
                 .parkingType(parkingLotRequest.getParkingType()).build();
     }
 
-    private static List<ParkingLotImage> mapStringToParkingLotImage(List<String> images)
-    {
+    private static List<ParkingLotImage> mapStringToParkingLotImage(List<String> images) {
         List<ParkingLotImage> imageList = new ArrayList<>();
-        images.forEach(request->imageList.add(ParkingLotImage.builder().imageUrl(request).build()));
+        images.forEach(request -> imageList.add(ParkingLotImage.builder().imageUrl(request).build()));
         return imageList;
     }
+
     public static ParkingLot updateParkingLot(ParkingLot parkingLot, UpdateParkingLotDto dto) {
 //        if (!dto.getImageUrl().isEmpty())
 //            parkingLot.setParkingLotImageLink(mapStringToParkingLotImage(dto.getImageUrl()));
@@ -128,12 +125,12 @@ public class MappingUtil {
 
     }
 
-    private static List<String> mapParkingLotImageToString(List<ParkingLotImage> parkingLotImages)
-    {
+    private static List<String> mapParkingLotImageToString(List<ParkingLotImage> parkingLotImages) {
         List<String> images = new ArrayList<>();
-        parkingLotImages.forEach(request->images.add(request.getImageUrl()));
+        parkingLotImages.forEach(request -> images.add(request.getImageUrl()));
         return images;
     }
+
     public static ParkingLotProvider mapAddProviderDtoToParkingLotProvider(AddProviderDto dto) {
         return ParkingLotProvider.builder().firstName(dto.getFirstName())
                 .lastName(dto.getLastName())
@@ -215,5 +212,37 @@ public class MappingUtil {
                 .startTime(LocalTime.of(operationHour.getStartTime().getHour(), operationHour.getStartTime().getMinute()))
                 .endTime(LocalTime.of(operationHour.getEndTime().getHour(), operationHour.getEndTime().getMinute()))
                 .build();
+    }
+
+    public static VehicleResponseDto vehicleToVehicleResponseDto(Vehicle vehicle) {
+        return VehicleResponseDto.builder()
+                .id(vehicle.getId())
+                .name(vehicle.getName())
+                .model(vehicle.getModel())
+                .year(vehicle.getYear())
+                .plate(vehicle.getPlate())
+                .build();
+    }
+
+    public static Vehicle vehicleRequestDtoToVehicle(VehicleRequestDto vehicle) {
+        return Vehicle.builder()
+                .name(vehicle.getName())
+                .model(vehicle.getModel())
+                .year(vehicle.getYear())
+                .plate(vehicle.getPlate())
+                .isActive(true)
+                .build();
+    }
+
+    public static Vehicle updateVehicle(VehicleRequestDto dto, Vehicle vehicle) {
+        if (dto.getName() != null)
+            vehicle.setName(dto.getName());
+        if (dto.getYear() != null)
+            vehicle.setYear(dto.getYear());
+        if (dto.getModel() != null)
+            vehicle.setModel(dto.getModel());
+        if (dto.getPlate() != null)
+            vehicle.setPlate(dto.getPlate());
+        return vehicle;
     }
 }
