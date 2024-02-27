@@ -46,6 +46,13 @@ public class ReviewService {
         return MappingUtil.reviewResponse(review);
     }
 
+    public void updateOverallRatingForParkingLot(Integer parkingLotId){
+        ParkingLot parkingLot = new ParkingLot();
+        Float averageRating = reviewRepository.calculateAverageRatingByParkingLotId(parkingLotId);
+        parkingLot.setRating(averageRating);
+        parkingLotRepository.save(parkingLot);
+    }
+
 
     public Driver getDriverById(Integer id){
         Optional<Driver> driverOptional = driverRepository.findById(id);
