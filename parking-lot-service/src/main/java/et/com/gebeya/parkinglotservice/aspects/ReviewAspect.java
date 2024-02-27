@@ -4,6 +4,7 @@ import et.com.gebeya.parkinglotservice.dto.requestdto.AddReviewRequestDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ReviewResponseDto;
 import et.com.gebeya.parkinglotservice.repository.ParkingLotProviderRepository;
 import et.com.gebeya.parkinglotservice.repository.ParkingLotRepository;
+import et.com.gebeya.parkinglotservice.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.Joinpoint;
@@ -18,14 +19,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class ReviewAspect {
-    private ParkingLotRepository parkingLotRepository;
-    private ParkingLotProviderRepository parkingLotProviderRepository;
+    private final ReviewService reviewService;
 
 
     @AfterReturning(pointcut = "execution(* et.com.gebeya.parkinglotservice.service.ReviewService.createReviewForParkingLot(..)) || execution(* et.com.gebeya.parkinglotservice.service.ReviewService.updateReviewForParkingLot(..))", returning = "result")
     public void afterReviewServiceUpdateAndCreate(JoinPoint joinPoint, Object result) {
         Object[] args = joinPoint.getArgs();
         AddReviewRequestDto reviewRequest = (AddReviewRequestDto) args[0];
+        reviewService.updateOverallRatingForParkingLot(reviewRequest.getParkingLotId());
         log.info("log from the review aspect {}",reviewRequest.toString());
         log.info("the parking lot Id is {}",reviewRequest.getParkingLotId());
     }
