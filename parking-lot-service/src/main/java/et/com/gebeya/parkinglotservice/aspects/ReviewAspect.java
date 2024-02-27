@@ -27,5 +27,6 @@ public class ReviewAspect {
         Object[] args = joinPoint.getArgs();
         AddReviewRequestDto reviewRequest = (AddReviewRequestDto) args[0];
         log.info("log from the review aspect {}",reviewRequest.toString());
+        log.info("the parking lot Id is {}",reviewRequest.getParkingLotId());
     }
 }
