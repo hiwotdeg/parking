@@ -2,6 +2,7 @@ package et.com.gebeya.parkinglotservice.service;
 
 
 import et.com.gebeya.parkinglotservice.dto.requestdto.AddOperationRequestDto;
+import et.com.gebeya.parkinglotservice.dto.requestdto.OperationHourDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.OperationHourResponseDto;
 import et.com.gebeya.parkinglotservice.exception.ParkingLotIdNotFound;
 import et.com.gebeya.parkinglotservice.model.OperationHour;
@@ -31,11 +32,13 @@ public class OperationHourService {
         return parkingLots.get(0);
     }
 
-    public List<OperationHourResponseDto> addOperationHour(AddOperationRequestDto request) {
-        ParkingLot parkingLot = getParkingLot(request.getParkingLotId());
-        List<OperationHour> operationHours = MappingUtil.addOperationRequestDtoToOperationHour(parkingLot, request.getOperationHour());
+    public List<OperationHourResponseDto> addOperationHour(List<OperationHourDto> request, Integer parkingId) {
+        ParkingLot parkingLot = getParkingLot(parkingId);
+        List<OperationHour> operationHours = MappingUtil.addOperationRequestDtoToOperationHour(parkingLot, request);
         return MappingUtil.listOfOperationHourToListOfOperationHourResponseDto(operationHourRepository.saveAll(operationHours));
     }
+
+//    public OperationHourResponseDto updateOperationHour()
 
 
     public List<OperationHourResponseDto> getOperationHoursById(Integer id) {
