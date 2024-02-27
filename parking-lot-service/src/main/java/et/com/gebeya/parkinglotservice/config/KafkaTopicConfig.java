@@ -23,4 +23,10 @@ public class KafkaTopicConfig {
                 .build();
     }
 
+    @Bean
+    public NewTopic pushNotificationTopic() {
+        return TopicBuilder.name(PUSH_NOTIFICATION)
+                .build();
+    }
+
 }

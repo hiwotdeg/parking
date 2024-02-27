@@ -19,6 +19,15 @@ public class GlobalExceptionHandler {
         errorResponse.put("message", exception.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
+
+    @ExceptionHandler(JsonParsingException.class)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> handleJsonParsingException(JsonParsingException exception) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("message", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, Object>> handleRuntimeException(RuntimeException exception) {
         Map<String, Object> errorResponse = new HashMap<>();

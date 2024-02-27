@@ -7,12 +7,10 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Builder
-public class AddLocationDto {
+@Data
+public class ParkingLotDto {
     private Integer id;
     private String title;
     private String address;
-    private Double latitude;
-    private Double longitude;
 }

@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 public class AddLocationRequestDto {
     private Integer id;
+    private String title;
+    private String address;
     private Double latitude;
     private Double longitude;
 }
