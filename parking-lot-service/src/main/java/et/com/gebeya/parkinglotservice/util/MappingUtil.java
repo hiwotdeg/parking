@@ -1,10 +1,7 @@
 package et.com.gebeya.parkinglotservice.util;
 
 import et.com.gebeya.parkinglotservice.dto.requestdto.*;
-import et.com.gebeya.parkinglotservice.dto.responsedto.DriverResponseDto;
-import et.com.gebeya.parkinglotservice.dto.responsedto.OperationHourResponseDto;
-import et.com.gebeya.parkinglotservice.dto.responsedto.ParkingLotResponseDto;
-import et.com.gebeya.parkinglotservice.dto.responsedto.ProviderResponseDto;
+import et.com.gebeya.parkinglotservice.dto.responsedto.*;
 import et.com.gebeya.parkinglotservice.enums.Authority;
 import et.com.gebeya.parkinglotservice.enums.ParkingLotRole;
 import et.com.gebeya.parkinglotservice.model.*;
@@ -141,6 +138,21 @@ public class MappingUtil {
                 .build();
     }
 
+    public static Review mapUpdateRequestDtoToReview(Review review, UpdateReviewRequestDto dto){
+        if(dto.getComment() != null)
+            review.setComment(dto.getComment());
+        if(dto.getRate() != null)
+            review.setRate(dto.getRate());
+        return review;
+
+    }
+
+    public static ReviewResponseDto reviewResponse(Review review){
+        return ReviewResponseDto.builder()
+                .comment(review.getComment())
+                .rate(review.getRate())
+                .build();
+    }
     public static ProviderResponseDto mapParkingLotProviderToProviderResponseDto(ParkingLotProvider provider) {
         return ProviderResponseDto.builder()
                 .id(provider.getId())
