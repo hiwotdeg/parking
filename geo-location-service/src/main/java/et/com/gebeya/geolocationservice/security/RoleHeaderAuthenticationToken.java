@@ -10,12 +10,11 @@ public class RoleHeaderAuthenticationToken extends AbstractAuthenticationToken {
 
     public RoleHeaderAuthenticationToken(String headerRole, String roleId) {
         super(null);
-
-        this.headerRole = headerRole;
-        assert roleId != null;
-        this.roleId = Integer.valueOf(roleId);
-        setAuthenticated(false);
-
+        if(headerRole!=null && roleId!=null){
+            this.headerRole = headerRole;
+            this.roleId = Integer.valueOf(roleId);
+            setAuthenticated(false);
+        }
 
     }
 
@@ -29,5 +28,4 @@ public class RoleHeaderAuthenticationToken extends AbstractAuthenticationToken {
         return headerRole;
     }
 
-    // Getters for headerRole and authorities
 }
