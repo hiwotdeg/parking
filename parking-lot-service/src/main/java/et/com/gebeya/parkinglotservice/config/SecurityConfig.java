@@ -30,31 +30,31 @@ public class SecurityConfig {
 
     private static final RequestMatcher[] ENDPOINTS = {
             new AntPathRequestMatcher("/api/v1/parking-lot/providers", HttpMethod.POST.name()),          //0
-            new AntPathRequestMatcher("/api/v1/parking-lot/providers/**", HttpMethod.PATCH.name()),      //1
-            new AntPathRequestMatcher("/api/v1/parking-lot/providers/**", HttpMethod.GET.name()),        //2
+            new AntPathRequestMatcher("/api/v1/parking-lot/providers/*", HttpMethod.PATCH.name()),      //1
+            new AntPathRequestMatcher("/api/v1/parking-lot/providers/*", HttpMethod.GET.name()),        //2
             new AntPathRequestMatcher("/api/v1/parking-lot/providers", HttpMethod.DELETE.name()),        //3
             new AntPathRequestMatcher("/api/v1/parking-lot/drivers", HttpMethod.POST.name()),            //4
-            new AntPathRequestMatcher("/api/v1/parking-lot/drivers/**", HttpMethod.GET.name()),          //5
-            new AntPathRequestMatcher("/api/v1/parking-lot/drivers/**", HttpMethod.PATCH.name()),        //6
+            new AntPathRequestMatcher("/api/v1/parking-lot/drivers/*", HttpMethod.GET.name()),          //5
+            new AntPathRequestMatcher("/api/v1/parking-lot/drivers/*", HttpMethod.PATCH.name()),        //6
             new AntPathRequestMatcher("/api/v1/parking-lot/drivers", HttpMethod.DELETE.name()),          //7
-            new AntPathRequestMatcher("/api/v1/parking-lot/lots/**", HttpMethod.GET.name()),             //8
-            new AntPathRequestMatcher("/api/v1/parking-lot/lots/**", HttpMethod.PATCH.name()),           //9
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*", HttpMethod.GET.name()),             //8
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*", HttpMethod.PATCH.name()),           //9
             new AntPathRequestMatcher("/api/v1/parking-lot/lots", HttpMethod.POST.name()),               //10
-            new AntPathRequestMatcher("/api/v1/parking-lot/lots/**", HttpMethod.DELETE.name()),          //11
-            new AntPathRequestMatcher("/api/v1/parking-lot/reviews/**", HttpMethod.GET.name()),          //12
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*", HttpMethod.DELETE.name()),          //11
+            new AntPathRequestMatcher("/api/v1/parking-lot/reviews/*", HttpMethod.GET.name()),          //12
             new AntPathRequestMatcher("/api/v1/parking-lot/reviews", HttpMethod.POST.name()),            //13
-            new AntPathRequestMatcher("/api/v1/parking-lot/reviews/**", HttpMethod.PATCH.name()),        //14
+            new AntPathRequestMatcher("/api/v1/parking-lot/reviews/*", HttpMethod.PATCH.name()),        //14
             new AntPathRequestMatcher("/api/v1/parking-lot/reviews", HttpMethod.DELETE.name()),          //15
-            new AntPathRequestMatcher("/api/v1/parking-lot/operation-hours", HttpMethod.POST.name()),    //16
-            new AntPathRequestMatcher("/api/v1/parking-lot/operation-hours/**", HttpMethod.GET.name()),  //17
-            new AntPathRequestMatcher("/api/v1/parking-lot/operation-hours/**", HttpMethod.PATCH.name()),//18
-            new AntPathRequestMatcher("/api/v1/parking-lot/operation-hours", HttpMethod.DELETE.name()),  //19
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*/operation-hours", HttpMethod.POST.name()),    //16
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*/operation-hours", HttpMethod.GET.name()),  //17
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*/operation-hours/*", HttpMethod.GET.name()),//18
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*/operation-hours/*", HttpMethod.DELETE.name()),  //19
             new AntPathRequestMatcher("/api/v1/parking-lot/vehicles",HttpMethod.POST.name()),            //20
             new AntPathRequestMatcher("/api/v1/parking-lot/vehicles",HttpMethod.GET.name()),             //21
-            new AntPathRequestMatcher("/api/v1/parking-lot/vehicles/**",HttpMethod.GET.name()),          //22
-            new AntPathRequestMatcher("/api/v1/parking-lot/vehicles/**",HttpMethod.PATCH.name()),        //23
-            new AntPathRequestMatcher("/api/v1/parking-lot/vehicles/**",HttpMethod.DELETE.name()),        //24
-            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*/operation-hours",HttpMethod.POST.name())
+            new AntPathRequestMatcher("/api/v1/parking-lot/vehicles/*",HttpMethod.GET.name()),          //22
+            new AntPathRequestMatcher("/api/v1/parking-lot/vehicles/*",HttpMethod.PATCH.name()),        //23
+            new AntPathRequestMatcher("/api/v1/parking-lot/vehicles/*",HttpMethod.DELETE.name()),        //24
+
 
     };
 
@@ -101,9 +101,8 @@ public class SecurityConfig {
             ENDPOINTS[10],
             ENDPOINTS[11],
             ENDPOINTS[16],
-            ENDPOINTS[18],
             ENDPOINTS[19],
-            ENDPOINTS[25]
+
     };
 
     protected static final RequestMatcher[] DRIVER_AND_PROVIDER_MATCHERS = {
@@ -111,7 +110,8 @@ public class SecurityConfig {
             ENDPOINTS[5],
             ENDPOINTS[8],
             ENDPOINTS[12],
-            ENDPOINTS[17]
+            ENDPOINTS[17],
+            ENDPOINTS[18],
     };
 
     @Bean

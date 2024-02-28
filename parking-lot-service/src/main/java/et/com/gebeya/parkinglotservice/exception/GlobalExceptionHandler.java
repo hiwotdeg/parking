@@ -29,6 +29,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
+    @ExceptionHandler(OperationHourIdNotFound.class)
+    public ResponseEntity<Map<String, Object>> handleOperationHourIdNotFoundException(OperationHourIdNotFound exception) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("message", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
     @ExceptionHandler(WebClientResponseException.class)
     public ResponseEntity<Map<String, Object>> handleWebClientResponseException(WebClientResponseException exception) {
         Map<String, Object> errorResponse = new HashMap<>();

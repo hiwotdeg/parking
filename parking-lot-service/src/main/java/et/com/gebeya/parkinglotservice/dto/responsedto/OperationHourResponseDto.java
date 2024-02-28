@@ -13,6 +13,7 @@ import java.time.LocalTime;
 @Builder
 @Data
 public class OperationHourResponseDto {
+    private Integer id;
     private LocalTime startTime;
     private LocalTime endTime;
     private BigDecimal price;

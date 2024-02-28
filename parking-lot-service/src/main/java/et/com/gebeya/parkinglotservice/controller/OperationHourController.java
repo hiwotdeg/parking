@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/parking-lot")
@@ -17,15 +18,23 @@ import java.util.List;
 public class OperationHourController {
     private final OperationHourService operationHourService;
 
-    @PostMapping("/lots/{parkingId}/operation-hours")
-    public ResponseEntity<List<OperationHourResponseDto>> addOperation(@RequestBody List<OperationHourDto> request, @PathVariable("parkingId")Integer parkingId) {
+    @PostMapping("/lots/{parkingLotId}/operation-hours")
+    public ResponseEntity<List<OperationHourResponseDto>> addOperation(@RequestBody List<OperationHourDto> request, @PathVariable("parkingLotId")Integer parkingId) {
         return ResponseEntity.ok(operationHourService.addOperationHour(request, parkingId));
     }
 
-    @PatchMapping("")
+    @GetMapping("/lots/{parkingLotId}/operation-hours")
+    public ResponseEntity<List<OperationHourResponseDto>> getOperationHourById(@PathVariable("parkingLotId") Integer parkingId){
+        return ResponseEntity.ok(operationHourService.getOperationHoursByParkingLotId(parkingId));
+    }
 
-    @GetMapping("/operation-hours/{id}")
-    public ResponseEntity<List<OperationHourResponseDto>> getOperationHourById(@PathVariable("id") Integer id){
-        return ResponseEntity.ok(operationHourService.getOperationHoursById(id));
+    @GetMapping("/lots/{parkingLotId}/operation-hours/{operationHourId}")
+    public ResponseEntity<OperationHourResponseDto> getOperationHourById(@PathVariable("parkingLotId") Integer parkingId, @PathVariable("operationHourId") Integer operationHourId){
+        return ResponseEntity.ok(operationHourService.getOperationHoursByOperationHourId(parkingId,operationHourId));
+    }
+
+    @DeleteMapping("/lots/{parkingLotId}/operation-hours/{operationHourId}")
+    public ResponseEntity<Map<String, String>> deleteOperation (@PathVariable("parkingLotId" ) Integer parkingId, @PathVariable("operationHourId") Integer operationId){
+        return ResponseEntity.ok(operationHourService.deleteOperationHour(parkingId, operationId));
     }
 }

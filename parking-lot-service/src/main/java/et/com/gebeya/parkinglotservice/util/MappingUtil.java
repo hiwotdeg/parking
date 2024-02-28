@@ -207,8 +207,9 @@ public class MappingUtil {
         return operationHourList;
     }
 
-    private static OperationHourResponseDto operationHourToOperationHourResponseDto(OperationHour operationHour) {
+    public static OperationHourResponseDto operationHourToOperationHourResponseDto(OperationHour operationHour) {
         return OperationHourResponseDto.builder()
+                .id(operationHour.getId())
                 .price(operationHour.getPricePerHour())
                 .startTime(LocalTime.of(operationHour.getStartTime().getHour(), operationHour.getStartTime().getMinute()))
                 .endTime(LocalTime.of(operationHour.getEndTime().getHour(), operationHour.getEndTime().getMinute()))
@@ -252,4 +253,6 @@ public class MappingUtil {
             vehicle.setPlate(dto.getPlate());
         return vehicle;
     }
+
+
 }
