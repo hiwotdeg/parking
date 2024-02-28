@@ -1,4 +1,4 @@
-package et.com.gebeya.parkinglotservice.dto.requestdto;
+package et.com.gebeya.parkinglotservice.dto.responsedto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-public class AddReviewRequestDto {
+public class ReviewResponseDto {
+    private Integer reviewId;
     private Float rate;
     private String comment;
 }

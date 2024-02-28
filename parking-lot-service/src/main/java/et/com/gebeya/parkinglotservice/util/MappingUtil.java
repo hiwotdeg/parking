@@ -1,10 +1,7 @@
 package et.com.gebeya.parkinglotservice.util;
 
 import et.com.gebeya.parkinglotservice.dto.requestdto.*;
-import et.com.gebeya.parkinglotservice.dto.responsedto.DriverResponseDto;
-import et.com.gebeya.parkinglotservice.dto.responsedto.OperationHourResponseDto;
-import et.com.gebeya.parkinglotservice.dto.responsedto.ParkingLotResponseDto;
-import et.com.gebeya.parkinglotservice.dto.responsedto.ProviderResponseDto;
+import et.com.gebeya.parkinglotservice.dto.responsedto.*;
 import et.com.gebeya.parkinglotservice.enums.Authority;
 import et.com.gebeya.parkinglotservice.enums.ParkingLotRole;
 import et.com.gebeya.parkinglotservice.model.*;
@@ -94,8 +91,6 @@ public class MappingUtil {
         return imageList;
     }
     public static ParkingLot updateParkingLot(ParkingLot parkingLot, UpdateParkingLotDto dto) {
-//        if (!dto.getImageUrl().isEmpty())
-//            parkingLot.setParkingLotImageLink(mapStringToParkingLotImage(dto.getImageUrl()));
         if (dto.getAvailableSlot() != null)
             parkingLot.setAvailableSlot(dto.getAvailableSlot());
         if (dto.getName() != null)
@@ -149,17 +144,27 @@ public class MappingUtil {
     public static Review mapAddReviewRequestDtoToReview(AddReviewRequestDto dto) {
         return Review.builder()
                 .rate(dto.getRate())
+                .isActive(true)
                 .comment(dto.getComment())
                 .build();
     }
 
-    public static Review mapUpdateRequestDtoToReview(UpdateReviewRequestDto dto){
-        return Review.builder()
-                .rate(dto.getRate())
-                .comment(dto.getComment())
-                .build();
+    public static Review mapUpdateRequestDtoToReview(Review review, UpdateReviewRequestDto dto){
+        if(dto.getComment() != null)
+            review.setComment(dto.getComment());
+        if(dto.getRate() != null)
+            review.setRate(dto.getRate());
+        return review;
+
     }
 
+    public static ReviewResponseDto reviewResponse(Review review){
+        return ReviewResponseDto.builder()
+                .reviewId(review.getId())
+                .comment(review.getComment())
+                .rate(review.getRate())
+                .build();
+    }
     public static ProviderResponseDto mapParkingLotProviderToProviderResponseDto(ParkingLotProvider provider) {
         return ProviderResponseDto.builder()
                 .id(provider.getId())
@@ -223,4 +228,27 @@ public class MappingUtil {
                 .endTime(LocalTime.of(operationHour.getEndTime().getHour(), operationHour.getEndTime().getMinute()))
                 .build();
     }
+
+    public static List<ReviewSearch> listOfReviewToListOfReviewSearch(List<Review> reviews){
+        List<ReviewSearch> reviewSearchList = new ArrayList<>();
+        reviews.forEach(review -> reviewSearchList.add(reviewToReviewSearch(review)));
+        return reviewSearchList;
+    }
+
+    private static ReviewSearch reviewToReviewSearch(Review review){
+        ReviewDriver reviewDriver = ReviewDriver.builder()
+                .id(review.getDriverId().getId())
+                .firstName(review.getDriverId().getFirstName())
+                .lastName(review.getDriverId().getLastName())
+                .build();
+        return ReviewSearch.builder()
+                .id(review.getId())
+                .createdAt(review.getCreatedOn())
+                .updatedAt(review.getUpdatedOn())
+                .comment(review.getComment())
+                .rate(review.getRate())
+                .driver(reviewDriver)
+                .build();
+    }
+
 }

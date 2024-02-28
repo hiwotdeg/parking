@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-public class AddReviewRequestDto {
-    private Float rate;
-    private String comment;
+public class ReviewSearchRequestDto {
+    private Integer driverId;
+    private Integer reviewId;
+
 }
