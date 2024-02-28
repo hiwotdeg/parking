@@ -134,6 +134,7 @@ public class MappingUtil {
     public static Review mapAddReviewRequestDtoToReview(AddReviewRequestDto dto) {
         return Review.builder()
                 .rate(dto.getRate())
+                .isActive(true)
                 .comment(dto.getComment())
                 .build();
     }
