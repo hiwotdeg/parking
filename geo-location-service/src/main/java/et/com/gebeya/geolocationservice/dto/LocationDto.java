@@ -4,15 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import redis.clients.jedis.GeoCoordinate;
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Builder
-public class AddLocationDto {
+@Data
+public class LocationDto {
     private Integer id;
     private String title;
-    private String address;
-    private Double latitude;
-    private Double longitude;
+    private String description;
+    private Double distance;
+    private GeoCoordinate coordinate;
+
+
 }

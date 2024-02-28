@@ -84,12 +84,12 @@ public class MappingUtil {
                 .parkingType(parkingLotRequest.getParkingType()).build();
     }
 
-    private static List<ParkingLotImage> mapStringToParkingLotImage(List<String> images)
-    {
+    private static List<ParkingLotImage> mapStringToParkingLotImage(List<String> images) {
         List<ParkingLotImage> imageList = new ArrayList<>();
-        images.forEach(request->imageList.add(ParkingLotImage.builder().imageUrl(request).build()));
+        images.forEach(request -> imageList.add(ParkingLotImage.builder().imageUrl(request).build()));
         return imageList;
     }
+
     public static ParkingLot updateParkingLot(ParkingLot parkingLot, UpdateParkingLotDto dto) {
         if (dto.getAvailableSlot() != null)
             parkingLot.setAvailableSlot(dto.getAvailableSlot());
@@ -123,12 +123,12 @@ public class MappingUtil {
 
     }
 
-    private static List<String> mapParkingLotImageToString(List<ParkingLotImage> parkingLotImages)
-    {
+    private static List<String> mapParkingLotImageToString(List<ParkingLotImage> parkingLotImages) {
         List<String> images = new ArrayList<>();
-        parkingLotImages.forEach(request->images.add(request.getImageUrl()));
+        parkingLotImages.forEach(request -> images.add(request.getImageUrl()));
         return images;
     }
+
     public static ParkingLotProvider mapAddProviderDtoToParkingLotProvider(AddProviderDto dto) {
         return ParkingLotProvider.builder().firstName(dto.getFirstName())
                 .lastName(dto.getLastName())
@@ -191,17 +191,18 @@ public class MappingUtil {
     }
 
     private static OperationHour operationHourDtoDtoToOperationHour(ParkingLot parkingLot, OperationHourDto dto) {
+        LocalTime endTime = dto.getEndTIme().minusMinutes(1);
         if (dto.getStartTime().getHour() > dto.getEndTIme().getHour()) {
             return OperationHour.builder().pricePerHour(dto.getPrice())
                     .startTime(LocalDateTime.of(2024, 1, 1, dto.getStartTime().getHour(), dto.getStartTime().getMinute()))
-                    .endTime(LocalDateTime.of(2024, 1, 2, dto.getEndTIme().getHour(), dto.getEndTIme().getMinute()))
+                    .endTime(LocalDateTime.of(2024, 1, 2, endTime.getHour(), endTime.getMinute()))
                     .pricePerHour(dto.getPrice())
                     .parkingLot(parkingLot)
                     .build();
         } else {
             return OperationHour.builder().pricePerHour(dto.getPrice())
                     .startTime(LocalDateTime.of(2024, 1, 1, dto.getStartTime().getHour(), dto.getStartTime().getMinute()))
-                    .endTime(LocalDateTime.of(2024, 1, 1, dto.getEndTIme().getHour(), dto.getEndTIme().getMinute()))
+                    .endTime(LocalDateTime.of(2024, 1, 1, endTime.getHour(), endTime.getMinute()))
                     .pricePerHour(dto.getPrice())
                     .parkingLot(parkingLot)
                     .build();
@@ -221,8 +222,9 @@ public class MappingUtil {
         return operationHourList;
     }
 
-    private static OperationHourResponseDto operationHourToOperationHourResponseDto(OperationHour operationHour) {
+    public static OperationHourResponseDto operationHourToOperationHourResponseDto(OperationHour operationHour) {
         return OperationHourResponseDto.builder()
+                .id(operationHour.getId())
                 .price(operationHour.getPricePerHour())
                 .startTime(LocalTime.of(operationHour.getStartTime().getHour(), operationHour.getStartTime().getMinute()))
                 .endTime(LocalTime.of(operationHour.getEndTime().getHour(), operationHour.getEndTime().getMinute()))
@@ -250,5 +252,45 @@ public class MappingUtil {
                 .driver(reviewDriver)
                 .build();
     }
+
+
+    public static VehicleResponseDto vehicleToVehicleResponseDto(Vehicle vehicle) {
+        return VehicleResponseDto.builder()
+                .id(vehicle.getId())
+                .name(vehicle.getName())
+                .model(vehicle.getModel())
+                .year(vehicle.getYear())
+                .plate(vehicle.getPlate())
+                .build();
+    }
+
+    public static List<VehicleResponseDto> vehicleToListOfVehicleResponseDto(List<Vehicle> vehicles){
+        List<VehicleResponseDto> vehicleResponseDtoList = new ArrayList<>();
+        vehicles.forEach(vehicle -> vehicleResponseDtoList.add(vehicleToVehicleResponseDto(vehicle)));
+        return vehicleResponseDtoList;
+    }
+
+    public static Vehicle vehicleRequestDtoToVehicle(VehicleRequestDto vehicle) {
+        return Vehicle.builder()
+                .name(vehicle.getName())
+                .model(vehicle.getModel())
+                .year(vehicle.getYear())
+                .plate(vehicle.getPlate())
+                .isActive(true)
+                .build();
+    }
+
+    public static Vehicle updateVehicle(VehicleRequestDto dto, Vehicle vehicle) {
+        if (dto.getName() != null)
+            vehicle.setName(dto.getName());
+        if (dto.getYear() != null)
+            vehicle.setYear(dto.getYear());
+        if (dto.getModel() != null)
+            vehicle.setModel(dto.getModel());
+        if (dto.getPlate() != null)
+            vehicle.setPlate(dto.getPlate());
+        return vehicle;
+    }
+
 
 }

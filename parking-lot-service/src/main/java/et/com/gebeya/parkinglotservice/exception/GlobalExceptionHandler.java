@@ -3,6 +3,7 @@ package et.com.gebeya.parkinglotservice.exception;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -59,6 +60,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
+    @ExceptionHandler(OperationHourIdNotFound.class)
+    public ResponseEntity<Map<String, Object>> handleOperationHourIdNotFoundException(OperationHourIdNotFound exception) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("message", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
     @ExceptionHandler(WebClientResponseException.class)
     public ResponseEntity<Map<String, Object>> handleWebClientResponseException(WebClientResponseException exception) {
         Map<String, Object> errorResponse = new HashMap<>();
@@ -85,6 +93,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MultipleReviewException.class)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> handleMultipleReviewExceptionException(MultipleReviewException e) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(VehicleIdNotFound.class)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> handleVehicleIdNotFoundException(VehicleIdNotFound e) {
         Map<String, Object> errorResponse = new HashMap<>();
         errorResponse.put("message", e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);

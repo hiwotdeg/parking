@@ -1,4 +1,4 @@
-package et.com.gebeya.parkinglotservice.dto.responsedto;
+package et.com.gebeya.parkinglotservice.dto.requestdto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,14 +7,13 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
-public class OperationHourResponseDto {
-    private Integer id;
+public class UpdateOperationRequestDto {
+    private Integer parkingLotId;
     private LocalTime startTime;
-    private LocalTime endTime;
+    private LocalTime endTIme;
     private BigDecimal price;
 }

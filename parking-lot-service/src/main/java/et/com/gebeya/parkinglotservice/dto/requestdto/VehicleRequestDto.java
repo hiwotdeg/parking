@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-public class AddLocationRequestDto {
-    private Integer id;
-    private String title;
-    private String address;
-    private Double latitude;
-    private Double longitude;
+public class VehicleRequestDto {
+    private String name;
+    private String model;
+    private Integer year;
+    private String plate;
 }

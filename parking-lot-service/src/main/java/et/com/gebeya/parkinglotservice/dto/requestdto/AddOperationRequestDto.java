@@ -12,6 +12,6 @@ import java.util.List;
 @Builder
 @Data
 public class AddOperationRequestDto {
-    private Integer parkingLotId;
+//    private Integer parkingLotId;
     private List<OperationHourDto> operationHour;
 }

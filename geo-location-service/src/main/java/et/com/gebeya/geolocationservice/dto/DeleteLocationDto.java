@@ -11,4 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DeleteLocationDto {
     private Integer id;
+    private String title;
+    private String address;
 }

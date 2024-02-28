@@ -5,16 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.time.LocalTime;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
-public class OperationHourResponseDto {
+public class VehicleResponseDto {
     private Integer id;
-    private LocalTime startTime;
-    private LocalTime endTime;
-    private BigDecimal price;
+    private String name;
+    private String model;
+    private Integer year;
+    private String plate;
 }

@@ -1,6 +1,7 @@
 package et.com.gebeya.geolocationservice.controller;
 
 import et.com.gebeya.geolocationservice.dto.GetLocationRequest;
+import et.com.gebeya.geolocationservice.dto.LocationDto;
 import et.com.gebeya.geolocationservice.service.LocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class LocationController {
     private final LocationService locationService;
 
     @GetMapping("/get-parking-lots")
-    public ResponseEntity<List<GeoRadiusResponse>> getLocation(@ModelAttribute GetLocationRequest request){
+    public ResponseEntity<List<LocationDto>> getLocation(@ModelAttribute GetLocationRequest request){
         return ResponseEntity.ok(locationService.getPointsWithinRadius(request));
     }
 }

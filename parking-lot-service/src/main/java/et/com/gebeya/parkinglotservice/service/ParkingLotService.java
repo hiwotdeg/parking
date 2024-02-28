@@ -50,6 +50,8 @@ public class ParkingLotService {
         parkingLot = parkingLotRepository.save(parkingLot);
         AddLocationRequestDto addLocationRequestDto = AddLocationRequestDto.builder()
                 .id(parkingLot.getId())
+                .title(parkingLot.getName())
+                .address(parkingLot.getAddress())
                 .longitude(parkingLot.getLongitude())
                 .latitude(parkingLot.getLatitude())
                 .build();
@@ -63,6 +65,8 @@ public class ParkingLotService {
         parkingLot = parkingLotRepository.save(MappingUtil.updateParkingLot(parkingLot, dto));
         AddLocationRequestDto addLocationRequestDto = AddLocationRequestDto.builder()
                 .id(parkingLot.getId())
+                .title(parkingLot.getName())
+                .address(parkingLot.getAddress())
                 .longitude(parkingLot.getLongitude())
                 .latitude(parkingLot.getLatitude())
                 .build();
@@ -80,7 +84,11 @@ public class ParkingLotService {
         ParkingLot parkingLot = getParkingLot(id);
         parkingLot.setIsActive(false);
         parkingLotRepository.save(parkingLot);
-        deleteLocationRequestDtoKafkaTemplate.send(DELETE_LOCATION, DeleteLocationRequestDto.builder().id(id).build());
+        DeleteLocationRequestDto deleteLocationRequestDto = DeleteLocationRequestDto.builder()
+                .id(parkingLot.getId())
+                .title(parkingLot.getName())
+                .address(parkingLot.getAddress()).build();
+        deleteLocationRequestDtoKafkaTemplate.send(DELETE_LOCATION, deleteLocationRequestDto);
         Map<String, String> response = new HashMap<>();
         response.put("message", "parking lot deleted successfully");
         return response;
