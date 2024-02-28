@@ -1,8 +1,10 @@
 package et.com.gebeya.parkinglotservice.controller;
 
 import et.com.gebeya.parkinglotservice.dto.requestdto.AddReviewRequestDto;
+import et.com.gebeya.parkinglotservice.dto.requestdto.ReviewSearchRequestDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateReviewRequestDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ReviewResponseDto;
+import et.com.gebeya.parkinglotservice.dto.responsedto.ReviewSearch;
 import et.com.gebeya.parkinglotservice.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +30,13 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.updateReviewForParkingLot(updateReviewRequestDto,parkingLotId,reviewId));
     }
 
-    @DeleteMapping("/lot/{parkingLotId}/reviews/{reviewId}")
+    @DeleteMapping("/lots/{parkingLotId}/reviews/{reviewId}")
     public ResponseEntity<Map<String,String>> deleteReview(@PathVariable("parkingLotId") Integer parkingLotId, @PathVariable("reviewId") Integer reviewId){
         return ResponseEntity.ok(reviewService.deleteReview(parkingLotId,reviewId));
     }
 
+    @GetMapping("/lots/{parkingLotId}/reviews")
+    public ResponseEntity<List<ReviewSearch>> getReviews(@PathVariable("parkingLotId") Integer parkingLotId, @ModelAttribute ReviewSearchRequestDto reviewSearchRequestDto){
+        return ResponseEntity.ok(reviewService.getReviews(reviewSearchRequestDto,parkingLotId));
+    }
 }

@@ -218,4 +218,27 @@ public class MappingUtil {
                 .endTime(LocalTime.of(operationHour.getEndTime().getHour(), operationHour.getEndTime().getMinute()))
                 .build();
     }
+
+    public static List<ReviewSearch> listOfReviewToListOfReviewSearch(List<Review> reviews){
+        List<ReviewSearch> reviewSearchList = new ArrayList<>();
+        reviews.forEach(review -> reviewSearchList.add(reviewToReviewSearch(review)));
+        return reviewSearchList;
+    }
+
+    private static ReviewSearch reviewToReviewSearch(Review review){
+        ReviewDriver reviewDriver = ReviewDriver.builder()
+                .id(review.getDriverId().getId())
+                .firstName(review.getDriverId().getFirstName())
+                .lastName(review.getDriverId().getLastName())
+                .build();
+        return ReviewSearch.builder()
+                .id(review.getId())
+                .createdAt(review.getCreatedOn())
+                .updatedAt(review.getUpdatedOn())
+                .comment(review.getComment())
+                .rate(review.getRate())
+                .driver(reviewDriver)
+                .build();
+    }
+
 }
