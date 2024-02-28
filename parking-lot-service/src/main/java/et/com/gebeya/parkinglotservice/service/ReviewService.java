@@ -25,9 +25,10 @@ public class ReviewService {
     private final DriverRepository driverRepository;
     private final ParkingLotRepository parkingLotRepository;
 
-    public ReviewResponseDto createReviewForParkingLot(AddReviewRequestDto reviewRequest){
-        Driver driver = getDriverById(reviewRequest.getDriverId());
-        ParkingLot parkingLot = getParkingLotById(reviewRequest.getParkingLotId());
+    public ReviewResponseDto createReviewForParkingLot(AddReviewRequestDto reviewRequest, Integer parkingLotId){
+        Integer driverId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Driver driver = getDriverById(driverId);
+        ParkingLot parkingLot = getParkingLotById(parkingLotId);
         Review review = MappingUtil.mapAddReviewRequestDtoToReview(reviewRequest);
         review.setDriverId(driver);
         review.setParkingLot(parkingLot);
@@ -47,7 +48,7 @@ public class ReviewService {
     }
 
     public void updateOverallRatingForParkingLot(Integer parkingLotId){
-        ParkingLot parkingLot = new ParkingLot();
+        ParkingLot parkingLot = getParkingLotById(parkingLotId);
         Float averageRating = reviewRepository.calculateAverageRatingByParkingLotId(parkingLotId);
         parkingLot.setRating(averageRating);
         parkingLotRepository.save(parkingLot);
@@ -65,5 +66,7 @@ public class ReviewService {
         if(parkingLotOptional.isPresent()) return parkingLotOptional.get();
         throw new ParkingLotIdNotFound("Parking lot not found");
     }
+
+
 
 }

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class ReviewResponseDto {
+    private Integer reviewId;
     private Float rate;
     private String comment;
 }

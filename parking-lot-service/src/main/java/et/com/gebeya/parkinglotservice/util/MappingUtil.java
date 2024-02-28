@@ -149,6 +149,7 @@ public class MappingUtil {
 
     public static ReviewResponseDto reviewResponse(Review review){
         return ReviewResponseDto.builder()
+                .reviewId(review.getId())
                 .comment(review.getComment())
                 .rate(review.getRate())
                 .build();

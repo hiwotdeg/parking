@@ -25,9 +25,8 @@ public class ReviewAspect {
     @AfterReturning(pointcut = "execution(* et.com.gebeya.parkinglotservice.service.ReviewService.createReviewForParkingLot(..)) || execution(* et.com.gebeya.parkinglotservice.service.ReviewService.updateReviewForParkingLot(..))", returning = "result")
     public void afterReviewServiceUpdateAndCreate(JoinPoint joinPoint, Object result) {
         Object[] args = joinPoint.getArgs();
-        AddReviewRequestDto reviewRequest = (AddReviewRequestDto) args[0];
-        reviewService.updateOverallRatingForParkingLot(reviewRequest.getParkingLotId());
-        log.info("log from the review aspect {}",reviewRequest.toString());
-        log.info("the parking lot Id is {}",reviewRequest.getParkingLotId());
+        Integer parkingLotId =  (Integer) args[1];
+        reviewService.updateOverallRatingForParkingLot(parkingLotId);
+        log.info("the parking lot Id is {}",parkingLotId);
     }
 }
