@@ -12,6 +12,6 @@ import java.math.BigDecimal;
 @Builder
 @Data
 public class BalanceRequestDto {
-    private String userId;
-    private BigDecimal balance;
+    private Integer userId;
+    private BigDecimal amount;
 }

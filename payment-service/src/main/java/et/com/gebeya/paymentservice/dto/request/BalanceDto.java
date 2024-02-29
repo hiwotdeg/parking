@@ -1,4 +1,4 @@
-package et.com.gebeya.paymentservice.dto.response;
+package et.com.gebeya.paymentservice.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 @Data
-public class CreateBalanceResponse {
+public class BalanceDto {
     private String userId;
     private BigDecimal balance;
 }
