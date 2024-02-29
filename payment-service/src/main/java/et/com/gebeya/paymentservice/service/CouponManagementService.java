@@ -12,27 +12,29 @@ public class CouponManagementService {
     private final BalanceService balanceService;
 
     public BalanceResponseDto createBalanceForDriver(BalanceRequestDto dto){
-        String driverId = "DRIVER"+dto.getUserId();
+        String driverId = "DRIVER_"+dto.getUserId();
         BalanceDto balanceDto = BalanceDto.builder().userId(driverId).build();
         return balanceService.createBalance(balanceDto);
     }
 
     public BalanceResponseDto createBalanceForProvider(BalanceRequestDto dto){
-        String providerId = "PROVIDER"+dto.getUserId();
+        String providerId = "PROVIDER_"+dto.getUserId();
         BalanceDto balanceDto = BalanceDto.builder().userId(providerId).build();
         return balanceService.createBalance(balanceDto);
     }
 
     public BalanceResponseDto withdrawalBalanceForProvider(BalanceRequestDto dto){
-        String providerId = "PROVIDER"+dto.getUserId();
+        String providerId = "PROVIDER_"+dto.getUserId();
         BalanceDto balanceDto = BalanceDto.builder().balance(dto.getAmount()).userId(providerId).build();
         return balanceService.withdrawalBalance(balanceDto);
     }
 
     public BalanceResponseDto depositBalanceForDriver(BalanceRequestDto dto){
-        String driverId = "DRIVER"+dto.getUserId();
+        String driverId = "DRIVER_"+dto.getUserId();
         BalanceDto balanceDto = BalanceDto.builder().balance(dto.getAmount()).userId(driverId).build();
         return balanceService.depositBalance(balanceDto);
     }
+
+
 
 }

@@ -39,7 +39,12 @@ public class SecurityConfig {
             "/webjars/**",
             "/swagger-ui.html",
             "/actuator",
-            "/actuator/**"
+            "/actuator/**",
+            "/api/v1/payment/driver",
+            "/api/v1/payment/provider",
+            "/api/v1/payment/withdrawal",
+            "/api/v1/payment/deposit"
+
     };
 
     protected static final RequestMatcher[] DRIVER_MATCHERS = {
