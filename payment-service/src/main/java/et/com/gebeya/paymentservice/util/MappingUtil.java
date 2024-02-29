@@ -10,7 +10,7 @@ public class MappingUtil {
     private MappingUtil() {
     }
     public static Balance mapBalanceRequestDtoToBalance(BalanceDto dto){
-        return Balance.builder().userId(dto.getUserId()).isActive(true).amount(BigDecimal.valueOf(0.0)).build();
+        return Balance.builder().userId(dto.getUserId()).isActive(true).amount(dto.getBalance()).build();
     }
 
     public static BalanceResponseDto mapBalanceToBalanceResponseDto(Balance balance){

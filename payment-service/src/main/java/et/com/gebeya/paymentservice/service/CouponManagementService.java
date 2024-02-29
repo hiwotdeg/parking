@@ -6,8 +6,6 @@ import et.com.gebeya.paymentservice.dto.response.BalanceResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-
 @Service
 @RequiredArgsConstructor
 public class CouponManagementService {
@@ -29,6 +27,12 @@ public class CouponManagementService {
         String providerId = "PROVIDER"+dto.getUserId();
         BalanceDto balanceDto = BalanceDto.builder().balance(dto.getAmount()).userId(providerId).build();
         return balanceService.withdrawalBalance(balanceDto);
+    }
+
+    public BalanceResponseDto depositBalanceForDriver(BalanceRequestDto dto){
+        String driverId = "DRIVER"+dto.getUserId();
+        BalanceDto balanceDto = BalanceDto.builder().balance(dto.getAmount()).userId(driverId).build();
+        return balanceService.depositBalance(balanceDto);
     }
 
 }

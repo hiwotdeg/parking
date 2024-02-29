@@ -21,13 +21,15 @@ public class BalanceService {
 
     BalanceResponseDto createBalance(BalanceDto balanceDto) {
         Balance balance = MappingUtil.mapBalanceRequestDtoToBalance(balanceDto);
+        balance.setAmount(BigDecimal.valueOf(0.0));
         balance = balanceRepository.save(balance);
         return MappingUtil.mapBalanceToBalanceResponseDto(balance);
     }
 
     BalanceResponseDto withdrawalBalance(BalanceDto balanceDto) {
         List<Balance> list = balanceRepository.findAll(BalanceSpecification.getBalanceByUserId(balanceDto.getUserId()));
-        if (list.isEmpty()) throw new AccountBlocked("Your Account is blocked. please contact the admins");
+        if (list.isEmpty())
+            throw new AccountBlocked("Your Account is blocked. please contact the admins");
         else if (balanceDto.getBalance().compareTo(BigDecimal.valueOf(100)) < 0)
             throw new InSufficientAmount("The minimum withdrawal amount is 100");
         else if (list.get(0).getAmount().compareTo(balanceDto.getBalance()) < 0)
@@ -36,6 +38,15 @@ public class BalanceService {
         return MappingUtil.mapBalanceToBalanceResponseDto(balanceRepository.save(list.get(0)));
 
     }
+
+    BalanceResponseDto depositBalance(BalanceDto balanceDto){
+        List<Balance> list = balanceRepository.findAll(BalanceSpecification.getBalanceByUserId(balanceDto.getUserId()));
+        if (list.isEmpty())
+            throw new AccountBlocked("Your Account is blocked. please contact the admins");
+        list.get(0).setAmount(list.get(0).getAmount().add(balanceDto.getBalance()));
+        return MappingUtil.mapBalanceToBalanceResponseDto(balanceRepository.save(list.get(0)));
+    }
+
 
 
 }

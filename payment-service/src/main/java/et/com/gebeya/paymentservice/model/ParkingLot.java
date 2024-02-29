@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,11 +27,16 @@ public class ParkingLot {
     private Double latitude;
     private Double longitude;
     private Integer capacity;
-    private String imageUrl;
     private Integer availableSlot;
     private ParkingType parkingType;
     private Float rating;
     private Boolean isActive;
+    @ManyToOne()
+    @JoinColumn(name = "provider_id")
+    private ParkingLotProvider parkingLotProvider;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "parking_lot_id")
+    private List<ParkingLotImage> parkingLotImageLink;
     @CreationTimestamp
     private Instant createdOn;
     @UpdateTimestamp
