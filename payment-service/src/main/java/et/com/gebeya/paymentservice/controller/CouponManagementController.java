@@ -1,6 +1,7 @@
 package et.com.gebeya.paymentservice.controller;
 
 import et.com.gebeya.paymentservice.dto.request.BalanceRequestDto;
+import et.com.gebeya.paymentservice.dto.request.TransferBalanceRequestDto;
 import et.com.gebeya.paymentservice.dto.response.BalanceResponseDto;
 import et.com.gebeya.paymentservice.service.CouponManagementService;
 import lombok.RequiredArgsConstructor;
@@ -31,5 +32,9 @@ public class CouponManagementController {
     @PostMapping("/deposit")
     public ResponseEntity<BalanceResponseDto> depositBalanceForDriver(@RequestBody BalanceRequestDto dto){
         return ResponseEntity.ok(couponManagementService.depositBalanceForDriver(dto));
+    }
+    @PostMapping("/transfer")
+    public ResponseEntity<BalanceResponseDto> transferBalance(@RequestBody TransferBalanceRequestDto dto){
+        return ResponseEntity.ok(couponManagementService.transferBalance(dto));
     }
 }

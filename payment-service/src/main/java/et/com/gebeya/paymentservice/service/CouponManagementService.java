@@ -2,6 +2,8 @@ package et.com.gebeya.paymentservice.service;
 
 import et.com.gebeya.paymentservice.dto.request.BalanceDto;
 import et.com.gebeya.paymentservice.dto.request.BalanceRequestDto;
+import et.com.gebeya.paymentservice.dto.request.TransferBalanceDto;
+import et.com.gebeya.paymentservice.dto.request.TransferBalanceRequestDto;
 import et.com.gebeya.paymentservice.dto.response.BalanceResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,11 @@ public class CouponManagementService {
         return balanceService.depositBalance(balanceDto);
     }
 
-
+    public BalanceResponseDto transferBalance(TransferBalanceRequestDto dto){
+        String driverId = "DRIVER_"+dto.getDriverId();
+        String providerId = "PROVIDER_"+dto.getProviderId();
+        TransferBalanceDto transferBalanceDto = TransferBalanceDto.builder().driverId(driverId).providerId(providerId).amount(dto.getAmount()).build();
+        return balanceService.transferBalance(transferBalanceDto);
+    }
 
 }
