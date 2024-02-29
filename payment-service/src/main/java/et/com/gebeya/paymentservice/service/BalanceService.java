@@ -22,7 +22,7 @@ public class BalanceService {
     BalanceResponseDto createBalance(BalanceDto balanceDto) {
         Balance balance = MappingUtil.mapBalanceRequestDtoToBalance(balanceDto);
         balance = balanceRepository.save(balance);
-        return MappingUtil.mapBalanceToCreateBalanceResponseDto(balance);
+        return MappingUtil.mapBalanceToBalanceResponseDto(balance);
     }
 
     BalanceResponseDto withdrawalBalance(BalanceDto balanceDto) {
@@ -33,7 +33,7 @@ public class BalanceService {
         else if (list.get(0).getAmount().compareTo(balanceDto.getBalance()) < 0)
             throw new InSufficientAmount("Your Balance is inSufficient. please purchase coupon");
         list.get(0).setAmount(list.get(0).getAmount().subtract(balanceDto.getBalance()));
-        return MappingUtil.mapBalanceToCreateBalanceResponseDto(balanceRepository.save(list.get(0)));
+        return MappingUtil.mapBalanceToBalanceResponseDto(balanceRepository.save(list.get(0)));
 
     }
 

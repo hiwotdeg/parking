@@ -15,13 +15,13 @@ public class CouponManagementService {
 
     public BalanceResponseDto createBalanceForDriver(BalanceRequestDto dto){
         String driverId = "DRIVER"+dto.getUserId();
-        BalanceDto balanceDto = BalanceDto.builder().balance(BigDecimal.valueOf(0.0)).userId(driverId).build();
+        BalanceDto balanceDto = BalanceDto.builder().userId(driverId).build();
         return balanceService.createBalance(balanceDto);
     }
 
     public BalanceResponseDto createBalanceForProvider(BalanceRequestDto dto){
         String providerId = "PROVIDER"+dto.getUserId();
-        BalanceDto balanceDto = BalanceDto.builder().balance(BigDecimal.valueOf(0.0)).userId(providerId).build();
+        BalanceDto balanceDto = BalanceDto.builder().userId(providerId).build();
         return balanceService.createBalance(balanceDto);
     }
 
