@@ -32,6 +32,8 @@ spring:
           uri: lb://Payment-Service
           predicates:
             - Path=/api/v1/payment/**, /v3/api-docs/payment
+          filters:
+            - AuthenticationFilter
 
         - id: Discovery-Server
           uri: http://localhost:8761

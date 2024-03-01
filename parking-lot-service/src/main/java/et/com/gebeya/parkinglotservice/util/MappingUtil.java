@@ -60,7 +60,7 @@ public class MappingUtil {
     public static AddUserRequest mapCustomerToAddUserRequest(Driver driver) {
         return AddUserRequest.builder()
                 .phoneNo(driver.getPhoneNo())
-                .role(Authority.USER)
+                .role(Authority.DRIVER)
                 .roleId((driver.getId()))
                 .build();
     }
