@@ -51,7 +51,7 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request.requestMatchers(SWAGGER_MATCHERS).permitAll())
-                .authorizeHttpRequests(request -> request.requestMatchers(DRIVER_MATCHERS).hasAuthority("USER"))
+                .authorizeHttpRequests(request -> request.requestMatchers(DRIVER_MATCHERS).hasAuthority("DRIVER"))
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .exceptionHandling(handling -> {
                     handling.authenticationEntryPoint(unauthorizedEntryPoint());

@@ -66,7 +66,7 @@ public class AuthenticationService {
             } else {
 
                 if (users.get().getAuthorities().stream()
-                        .anyMatch(authority -> authority.getAuthority().equals(Authority.USER.name()))) {
+                        .anyMatch(authority -> authority.getAuthority().equals(Authority.DRIVER.name()))) {
                     redisService.deleteValue(request.getOtp());
                     String jwt = jwtService.generateToken(users.get());
                     OtpVerificationResponseDto response = OtpVerificationResponseDto.builder()

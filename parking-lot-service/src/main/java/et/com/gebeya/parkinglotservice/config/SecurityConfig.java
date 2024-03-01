@@ -125,7 +125,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request.requestMatchers(SWAGGER_MATCHERS).permitAll())
                 .authorizeHttpRequests(request -> request.requestMatchers(DRIVER_AND_PROVIDER_MATCHERS).hasAnyAuthority("ROLE_USER","ROLE_PROVIDER"))
                 .authorizeHttpRequests(request -> request.requestMatchers(PROVIDER_MATCHERS).hasAuthority("ROLE_PROVIDER"))
-                .authorizeHttpRequests(request -> request.requestMatchers(DRIVER_MATCHERS).hasAuthority("ROLE_USER"))
+                .authorizeHttpRequests(request -> request.requestMatchers(DRIVER_MATCHERS).hasAuthority("ROLE_DRIVER"))
 
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS)).exceptionHandling(handling -> {
                     handling.authenticationEntryPoint(unauthorizedEntryPoint());
