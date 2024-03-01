@@ -50,7 +50,7 @@ public class SecurityConfig {
     };
 
     protected static final RequestMatcher[] DRIVER_MATCHERS = {
-            new AntPathRequestMatcher("/api/v1/payment/pricing/**", HttpMethod.GET.name()),
+//            new AntPathRequestMatcher("/api/v1/payment/pricing/**", HttpMethod.GET.name()),
     };
 
     @Bean

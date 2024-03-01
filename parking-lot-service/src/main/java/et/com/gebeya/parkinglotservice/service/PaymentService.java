@@ -1,9 +1,12 @@
-package et.com.gebeya.paymentservice.service;
+package et.com.gebeya.parkinglotservice.service;
 
-import et.com.gebeya.paymentservice.dto.request.PriceRequestDto;
-import et.com.gebeya.paymentservice.model.OperationHour;
-import et.com.gebeya.paymentservice.repository.OperationHourRepository;
-import et.com.gebeya.paymentservice.repository.specification.OperationHourSpecification;
+import et.com.gebeya.parkinglotservice.dto.requestdto.PriceRequestDto;
+import et.com.gebeya.parkinglotservice.model.OperationHour;
+import et.com.gebeya.parkinglotservice.repository.OperationHourRepository;
+import et.com.gebeya.parkinglotservice.repository.specification.OperationHourSpecification;
+
+
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
