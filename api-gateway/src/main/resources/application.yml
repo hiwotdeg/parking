@@ -62,7 +62,7 @@ eureka:
 
 
 server:
-  port: 8008
+  port: 80
   servlet:
     context-path: /
   forward-headers-strategy: framework
