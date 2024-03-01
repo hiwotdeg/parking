@@ -123,7 +123,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request.requestMatchers(UNAUTHORIZED_MATCHERS).permitAll())
                 .authorizeHttpRequests(request -> request.requestMatchers(SWAGGER_MATCHERS).permitAll())
-                .authorizeHttpRequests(request -> request.requestMatchers(DRIVER_AND_PROVIDER_MATCHERS).hasAnyAuthority("ROLE_USER","ROLE_PROVIDER"))
+                .authorizeHttpRequests(request -> request.requestMatchers(DRIVER_AND_PROVIDER_MATCHERS).hasAnyAuthority("ROLE_DRIVER","ROLE_PROVIDER"))
                 .authorizeHttpRequests(request -> request.requestMatchers(PROVIDER_MATCHERS).hasAuthority("ROLE_PROVIDER"))
                 .authorizeHttpRequests(request -> request.requestMatchers(DRIVER_MATCHERS).hasAuthority("ROLE_DRIVER"))
 

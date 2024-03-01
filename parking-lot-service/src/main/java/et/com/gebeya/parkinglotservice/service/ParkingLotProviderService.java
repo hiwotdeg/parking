@@ -13,6 +13,7 @@ import et.com.gebeya.parkinglotservice.repository.specification.ParkingLotProvid
 import et.com.gebeya.parkinglotservice.util.MappingUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -53,6 +54,12 @@ public class ParkingLotProviderService {
     {
         ParkingLotProvider provider = getParkingLotProvider(id);
         return MappingUtil.mapParkingLotProviderToProviderResponseDto(provider);
+    }
+
+    public ProviderResponseDto getParkingLotProviderById()
+    {
+        Integer providerId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return getParkingLotProviderById(providerId);
     }
     private ParkingLotProvider getParkingLotProvider(Integer id){
         List<ParkingLotProvider> providers = parkingLotProviderRepository.findAll(ParkingLotProviderSpecification.getProviderById(id));

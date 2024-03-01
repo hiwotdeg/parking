@@ -14,6 +14,7 @@ import et.com.gebeya.parkinglotservice.util.MappingUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -53,6 +54,11 @@ public class DriverService {
     public DriverResponseDto getDriverById(Integer id) {
         Driver driver = getDriver(id);
         return MappingUtil.mapDriverToDriverResponseDto(driver);
+    }
+
+    public DriverResponseDto getDriverById(){
+        Integer driverId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return getDriverById(driverId);
     }
 
     private Driver getDriver(Integer id) {

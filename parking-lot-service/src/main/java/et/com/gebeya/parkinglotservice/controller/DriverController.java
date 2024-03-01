@@ -21,17 +21,16 @@ public class DriverController {
         return ResponseEntity.ok(driverService.registerDriver(dto));
     }
     @PatchMapping("/drivers/{id}")
-    public ResponseEntity<DriverResponseDto> updateDriver(@RequestBody UpdateDriverRequestDto dto,@PathVariable("id") Integer id){
+    public ResponseEntity<DriverResponseDto> updateDriver(@RequestBody UpdateDriverRequestDto dto, @PathVariable("id") Integer id){
         return ResponseEntity.ok(driverService.updateDriver(dto,id));
     }
     @GetMapping("/drivers/{id}")
-
-    public ResponseEntity<DriverResponseDto> getDriverById(@PathVariable Integer id){
+    public ResponseEntity<DriverResponseDto> getDriverById(@PathVariable("id") Integer id){
         return ResponseEntity.ok(driverService.getDriverById(id));
     }
+    @GetMapping("/drivers/")
+    public ResponseEntity<DriverResponseDto> getDriverById(){
+        return ResponseEntity.ok(driverService.getDriverById());
+    }
 
-//    @GetMapping("/driver/{id}")
-//    public ResponseEntity<String> test(@PathVariable Integer id){
-//        return ResponseEntity.ok("test 1 2 3 " + id);
-//    }
 }
