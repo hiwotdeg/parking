@@ -5,6 +5,7 @@ import et.com.gebeya.paymentservice.dto.request.BalanceRequestDto;
 import et.com.gebeya.paymentservice.dto.request.TransferBalanceDto;
 import et.com.gebeya.paymentservice.dto.request.TransferBalanceRequestDto;
 import et.com.gebeya.paymentservice.dto.response.BalanceResponseDto;
+import et.com.gebeya.paymentservice.util.IdConvertorUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,32 +15,32 @@ public class CouponManagementService {
     private final BalanceService balanceService;
 
     public BalanceResponseDto createBalanceForDriver(BalanceRequestDto dto){
-        String driverId = "DRIVER_"+dto.getUserId();
+        String driverId = IdConvertorUtil.driverConvertor(dto.getUserId());
         BalanceDto balanceDto = BalanceDto.builder().userId(driverId).build();
         return balanceService.createBalance(balanceDto);
     }
 
     public BalanceResponseDto createBalanceForProvider(BalanceRequestDto dto){
-        String providerId = "PROVIDER_"+dto.getUserId();
+        String providerId = IdConvertorUtil.providerConvertor(dto.getUserId());
         BalanceDto balanceDto = BalanceDto.builder().userId(providerId).build();
         return balanceService.createBalance(balanceDto);
     }
 
     public BalanceResponseDto withdrawalBalanceForProvider(BalanceRequestDto dto){
-        String providerId = "PROVIDER_"+dto.getUserId();
+        String providerId = IdConvertorUtil.providerConvertor(dto.getUserId());
         BalanceDto balanceDto = BalanceDto.builder().balance(dto.getAmount()).userId(providerId).build();
         return balanceService.withdrawalBalance(balanceDto);
     }
 
     public BalanceResponseDto depositBalanceForDriver(BalanceRequestDto dto){
-        String driverId = "DRIVER_"+dto.getUserId();
+        String driverId = IdConvertorUtil.driverConvertor(dto.getUserId());
         BalanceDto balanceDto = BalanceDto.builder().balance(dto.getAmount()).userId(driverId).build();
         return balanceService.depositBalance(balanceDto);
     }
 
     public BalanceResponseDto transferBalance(TransferBalanceRequestDto dto){
-        String driverId = "DRIVER_"+dto.getDriverId();
-        String providerId = "PROVIDER_"+dto.getProviderId();
+        String driverId = IdConvertorUtil.driverConvertor(dto.getDriverId());
+        String providerId = IdConvertorUtil.providerConvertor(dto.getProviderId());
         TransferBalanceDto transferBalanceDto = TransferBalanceDto.builder().driverId(driverId).providerId(providerId).amount(dto.getAmount()).build();
         return balanceService.transferBalance(transferBalanceDto);
     }
