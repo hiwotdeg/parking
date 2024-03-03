@@ -12,7 +12,6 @@ import java.time.LocalTime;
 @Builder
 @Data
 public class PriceRequestDto {
-    private Integer parkingLotId;
     private LocalTime duration;
 }
 

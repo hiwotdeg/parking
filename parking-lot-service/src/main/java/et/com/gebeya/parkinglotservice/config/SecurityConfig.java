@@ -92,7 +92,8 @@ public class SecurityConfig {
             ENDPOINTS[21],
             ENDPOINTS[22],
             ENDPOINTS[23],
-            ENDPOINTS[24]
+            ENDPOINTS[24],
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*/pricing/**", HttpMethod.GET.name()),
     };
 
     protected static final RequestMatcher[] PROVIDER_MATCHERS = {

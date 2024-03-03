@@ -27,8 +27,8 @@ public class PaymentService {
     }
 
 
-    public BigDecimal dynamicPricing(PriceRequestDto request) {
-        List<OperationHour> operationHours = getOperationHoursById(request.getParkingLotId());
+    public BigDecimal dynamicPricing(PriceRequestDto request, Integer parkingLotId) {
+        List<OperationHour> operationHours = getOperationHoursById(parkingLotId);
         LocalTime initialTime = LocalTime.now();
         LocalTime finalTime = LocalTime.now().plusHours(request.getDuration().getHour()).plusMinutes(request.getDuration().getMinute());
         BigDecimal totalPrice = BigDecimal.ZERO;

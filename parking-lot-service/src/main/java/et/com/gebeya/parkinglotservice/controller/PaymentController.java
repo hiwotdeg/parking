@@ -5,10 +5,7 @@ import et.com.gebeya.parkinglotservice.dto.requestdto.PriceRequestDto;
 import et.com.gebeya.parkinglotservice.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 
@@ -18,8 +15,8 @@ import java.math.BigDecimal;
 public class PaymentController {
     private final PaymentService paymentService;
 
-    @GetMapping("/pricing")
-    public ResponseEntity<BigDecimal> getPricing(@ModelAttribute PriceRequestDto request){
-        return ResponseEntity.ok(paymentService.dynamicPricing(request));
+    @GetMapping("/lots/{parkingLotId}/pricing")
+    public ResponseEntity<BigDecimal> getPricing(@ModelAttribute PriceRequestDto request, @PathVariable("parkingLotId")Integer parkingLotId){
+        return ResponseEntity.ok(paymentService.dynamicPricing(request,parkingLotId));
     }
 }
