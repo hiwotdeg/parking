@@ -1,5 +1,6 @@
 package et.com.gebeya.geolocationservice.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import redis.clients.jedis.Jedis;
@@ -7,12 +8,11 @@ import redis.clients.jedis.Jedis;
 @Configuration
 public class RedisConfig {
 
-//    @Value("${spring.redis.host}")
-    private String redisHost = "localhost";
+    @Value("${spring.data.redis.host}")
+    private String redisHost;
 
-//    @Value("${spring.redis.port}")
-    private int redisPort = 6379;
-
+    @Value("${spring.data.redis.port}")
+    private int redisPort;
 
 
     @Bean

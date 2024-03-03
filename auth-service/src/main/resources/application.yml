@@ -3,10 +3,13 @@ spring:
     name: Auth-Service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/parking_lot
-    username: ${db.username:postgres}
-    password: ${db.password:password}
-
+    url: ${DB.URL:jdbc:postgresql://localhost:5432/parking_lot}
+    username: ${DB.USERNAME:postgres}
+    password: ${DB.PASSWORD:password}
+  data:
+    redis:
+      host: ${REDIS.HOST:localhost}
+      port: ${REDIS.PORT:6379}
   jpa:
     hibernate:
       ddl-auto: update
@@ -15,28 +18,17 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA.URL:localhost:9092}
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: ${EUREKA.DEFAULT.ZONE.URL:http://localhost:8761/eureka}
 
 server:
-  port: 8080
+  port: ${AUTH.SERVICE.SERVER.PORT:8080}
   servlet:
     context-path: /
-
-#openapi:
-#  service:
-#    title: price-service doc
-#    version: 1.0.0
-#    url: http://localhost:8008
-#springdoc:
-#  api-docs:
-#    path: /Auth-Service/v3/api-docs
-#  swagger-ui:
-#    path: /Auth-Service/swagger-ui.html
 
 management:
   tracing:

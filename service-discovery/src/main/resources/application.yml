@@ -6,7 +6,7 @@ eureka:
     fetch-registry: false
 
 server:
-  port: 8761
+  port: ${SERVICE.DISCOVERY.SERVER.PORT:8761}
 
 spring:
   application:

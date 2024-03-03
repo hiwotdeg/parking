@@ -4,6 +4,7 @@ import et.com.gebeya.geolocationservice.dto.AddLocationDto;
 import et.com.gebeya.geolocationservice.dto.DeleteLocationDto;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -19,7 +20,12 @@ import java.util.Map;
 
 @Configuration
 public class KafkaConsumerConfiguration {
-    private final String bootstrapServer = "http://localhost:9092";
+
+    private final String bootstrapServer;
+
+    public KafkaConsumerConfiguration(@Value("${server.kafka.bootstrap-servers}") String bootstrapServer) {
+        this.bootstrapServer = bootstrapServer;
+    }
 
     public Map<String, Object> consumerConfig() {
         Map<String, Object> props = new HashMap<>();

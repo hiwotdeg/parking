@@ -3,9 +3,9 @@ spring:
     name: Payment-Service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/parking_lot
-    username: ${db.username:postgres}
-    password: ${db.password:password}
+    url: ${DB.URL:jdbc:postgresql://localhost:5432/parking_lot}
+    username: ${DB.USERNAME:postgres}
+    password: ${DB.PASSWORD:password}
   jpa:
     hibernate:
       ddl-auto: update
@@ -13,16 +13,16 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA.URL:localhost:9092}
 server:
-  port: 8083
+  port: ${PAYMENT.SERVICE.SERVER.PORT:8083}
   servlet:
     context-path: /
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: ${EUREKA.DEFAULT.ZONE.URL:http://localhost:8761/eureka}
 
 springdoc:
   api-docs:

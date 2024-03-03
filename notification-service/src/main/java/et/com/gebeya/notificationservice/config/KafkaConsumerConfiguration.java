@@ -4,6 +4,7 @@ import et.com.gebeya.notificationservice.dto.MessageDto;
 import et.com.gebeya.notificationservice.dto.Otpdto;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -19,8 +20,11 @@ import java.util.Map;
 
 @Configuration
 public class KafkaConsumerConfiguration {
-    //    @Value("${spring.kafka.bootstrap-servers}")
-    private String bootstrapServer = "http://localhost:9092";
+    private final String bootstrapServer;
+    public KafkaConsumerConfiguration( @Value("${spring.kafka.bootstrap-servers}") String kafkaUrl)
+    {
+        this.bootstrapServer=kafkaUrl;
+    }
 
     public Map<String, Object> consumerConfig() {
         Map<String, Object> props = new HashMap<>();
@@ -58,7 +62,7 @@ public class KafkaConsumerConfiguration {
     }
 
     @Bean
-    public ConsumerFactory<String, MessageDto> pushNotificationConsumerFactory(){
+    public ConsumerFactory<String, MessageDto> pushNotificationConsumerFactory() {
         JsonDeserializer<MessageDto> jsonDeserializer = new JsonDeserializer<>(MessageDto.class, false);
         jsonDeserializer.addTrustedPackages("*");
         return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(), new ErrorHandlingDeserializer<>(jsonDeserializer));

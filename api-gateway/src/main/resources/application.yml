@@ -58,11 +58,11 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone : http://localhost:8761/eureka
+      defaultZone : ${EUREKA.DEFAULT.ZONE.URL:http://localhost:8761/eureka}
 
 
 server:
-  port: 80
+  port: ${API.GATEWAY.SERVER.PORT:80}
   servlet:
     context-path: /
   forward-headers-strategy: framework
