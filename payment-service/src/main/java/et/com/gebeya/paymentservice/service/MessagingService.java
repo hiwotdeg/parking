@@ -30,4 +30,13 @@ public class MessagingService {
         messageDtoKafkaTemplate.send(PUSH_NOTIFICATION, messageDto);
     }
 
+    public void sendTransferMessageForCouponFromDriverToProvider(Integer dId,Integer pId,BigDecimal amount){
+        String providerId = IdConvertorUtil.providerConvertor(pId);
+        String driverId = IdConvertorUtil.driverConvertor(dId);
+        MessageDto providerMessage = MessageDto.builder().title("TRANSFER NOTIFICATION").type(PushNotificationType.PAYMENT.name()).body(MessagingUtil.providerTransferNotification(amount,driverId)).receiverId(providerId).build();
+        MessageDto driverMessage = MessageDto.builder().title("TRANSFER NOTIFICATION").type(PushNotificationType.PAYMENT.name()).body(MessagingUtil.driverTransferNotification(amount,providerId)).receiverId(driverId).build();
+        messageDtoKafkaTemplate.send(PUSH_NOTIFICATION,providerMessage);
+        messageDtoKafkaTemplate.send(PUSH_NOTIFICATION,driverMessage);
+    }
+
 }
