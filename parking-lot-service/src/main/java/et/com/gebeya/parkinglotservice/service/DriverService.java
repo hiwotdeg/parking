@@ -69,7 +69,7 @@ public class DriverService {
         return getDriverById(driverId);
     }
 
-    private Driver getDriver(Integer id) {
+    Driver getDriver(Integer id) {
         List<Driver> driver = driverRepository.findAll(DriverSpecification.getDriverById(id));
         if (driver.isEmpty())
             throw new DriverIdNotFound("Driver is not found");

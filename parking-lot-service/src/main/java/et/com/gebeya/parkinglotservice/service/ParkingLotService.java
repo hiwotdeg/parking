@@ -94,7 +94,7 @@ public class ParkingLotService {
         return response;
     }
 
-    private ParkingLot getParkingLot(Integer id) {
+    ParkingLot getParkingLot(Integer id) {
         List<ParkingLot> parkingLots = parkingLotRepository.findAll(ParkingLotSpecification.getParkingLotById(id));
         if (parkingLots.isEmpty())
             throw new ParkingLotIdNotFound("parking lot id not found");
@@ -107,5 +107,6 @@ public class ParkingLotService {
             throw new ProviderIdNotFound("provider id not found");
         return providers.get(0);
     }
+
 
 }

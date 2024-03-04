@@ -18,7 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class PaymentService {
+public class PricingService {
     private final OperationHourRepository operationHourRepository;
 
     List<OperationHour> getOperationHoursById(Integer id) {

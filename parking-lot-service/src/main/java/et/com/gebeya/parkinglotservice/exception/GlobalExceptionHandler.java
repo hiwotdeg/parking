@@ -1,7 +1,11 @@
 package et.com.gebeya.parkinglotservice.exception;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
@@ -10,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.HashMap;
@@ -17,7 +22,10 @@ import java.util.Map;
 
 @ControllerAdvice
 @Slf4j
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+
+    private final ObjectMapper objectMapper;
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, Object>> handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
@@ -76,12 +84,32 @@ public class GlobalExceptionHandler {
         errorResponse.put("message", exception.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
+    @ExceptionHandler(ParkingLotAvailabilityException.class)
+    public ResponseEntity<Map<String, Object>> handleParkingLotAvailabilityException(ParkingLotAvailabilityException exception) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("message", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
 
     @ExceptionHandler(WebClientResponseException.class)
     public ResponseEntity<Map<String, Object>> handleWebClientResponseException(WebClientResponseException exception) {
         Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", "error occurred. please try again later");
-        log.error(exception.getMessage());
+        log.error("Error from WebClient - Status {}, Body {}",exception.getStatusCode(),exception.getResponseBodyAsString());
+        try{
+            Map<String, Object> messageMap = objectMapper.readValue(exception.getResponseBodyAsString(), Map.class);
+            return ResponseEntity.status(exception.getStatusCode()).body(messageMap);
+        } catch (JsonProcessingException e) {
+            errorResponse.put("message", "error occurred. please try again later");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+
+    }
+
+    @ExceptionHandler(WebClientRequestException.class)
+    public ResponseEntity<Map<String, Object>> handleWebClientRequestException(WebClientRequestException exception) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        log.error("webclient request exception {}",exception.getMessage());
+        errorResponse.put("message", "we couldn't deliver our service at the moment. please try again later");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 

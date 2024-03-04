@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MessageController {
     private final MessageService messageService;
     @PostMapping("/sendMessage")
-    public ResponseEntity<String> sendMessage(@RequestBody AddMessage message){
-        return ResponseEntity.ok(messageService.sendMessage(message.getParkingLotId(),message.getMessage()));
+    public ResponseEntity<String> sendMessage(){
+        return ResponseEntity.ok(messageService.test());
     }
 }
