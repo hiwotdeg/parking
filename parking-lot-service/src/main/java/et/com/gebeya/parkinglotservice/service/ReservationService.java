@@ -20,6 +20,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +34,7 @@ public class ReservationService {
     private final WebClient.Builder webClientBuilder;
 
     @Transactional
-    public Reservation book(Integer parkingLotId, ReservationRequestDto dto) {
+    public Map<String,String> book(Integer parkingLotId, ReservationRequestDto dto) {
         Integer driverId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Driver driver = driverService.getDriver(driverId);
         ParkingLot parkingLot = parkingLotService.getParkingLot(parkingLotId);
@@ -46,7 +48,8 @@ public class ReservationService {
         Mono<BalanceResponseDto> balanceResponseDtoMono = transferBalance(transferBalanceRequestDto);
         BalanceResponseDto balanceResponseDto = balanceResponseDtoMono.block(); // Wait for the Mono to complete and get the result
         log.info("Response from the paymentService==> {}", balanceResponseDto);
-        return reservationRepository.save(reservation);
+        reservationRepository.save(reservation);
+        return Map.of("message","you have reserved a parking lot successfully");
 
     }
 

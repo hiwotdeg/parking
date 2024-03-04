@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalTime;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/parking-lot")
@@ -16,7 +17,7 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping("/lots/{parkingLotId}/reservations")
-    public ResponseEntity<Reservation> book(@RequestBody ReservationRequestDto requestDto, @PathVariable("parkingLotId") Integer parkingLotId){
+    public ResponseEntity<Map<String,String>> book(@RequestBody ReservationRequestDto requestDto, @PathVariable("parkingLotId") Integer parkingLotId){
         return ResponseEntity.ok(reservationService.book(parkingLotId,ReservationRequestDto.builder().stayingDuration(requestDto.getStayingDuration()).build()));
     }
 }
