@@ -5,6 +5,7 @@ import et.com.gebeya.parkinglotservice.dto.requestdto.BalanceRequestDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.MessageDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.AddUserResponse;
 import et.com.gebeya.parkinglotservice.dto.responsedto.BalanceResponseDto;
+import et.com.gebeya.parkinglotservice.enums.PushNotificationType;
 import et.com.gebeya.parkinglotservice.model.ParkingLot;
 import et.com.gebeya.parkinglotservice.repository.ParkingLotRepository;
 import et.com.gebeya.parkinglotservice.repository.specification.ParkingLotSpecification;
@@ -27,38 +28,21 @@ import static et.com.gebeya.parkinglotservice.util.Constant.PUSH_NOTIFICATION;
 @RequiredArgsConstructor
 @Slf4j
 public class MessageService {
-    private final WebClient.Builder webClientBuilder;
-    private final ParkingLotRepository parkingLotRepository;
     private final KafkaTemplate<String,MessageDto> messageDtoKafkaTemplate;
-    public String sendMessage(Integer id, String body){
-        List<ParkingLot> parkingLot = parkingLotRepository.findAll(ParkingLotSpecification.getParkingLotById(id));
-        if(!parkingLot.isEmpty())
-        {
-            Integer providerId = parkingLot.get(0).getParkingLotProvider().getId();
-            String receiverId = "PROVIDER_"+providerId;
-            MessageDto messageDto = MessageDto.builder().title("test").type("push_notification").body(body).receiverId(receiverId).build();
+    public void sendPushNotificationForProvider(Integer id, String body){
+            String providerId = "PROVIDER_"+id;
+            MessageDto messageDto = MessageDto.builder().title("BOOK NOTIFICATION").type(PushNotificationType.RESERVATION.name()).body(body).receiverId(providerId).build();
             messageDtoKafkaTemplate.send(PUSH_NOTIFICATION,messageDto);
-            return "message sent successfully";
-        }
-        return "parkingLot can not be found";
-    }
-    @Transactional
-    public String test(){
-        BalanceRequestDto balanceRequestDto = BalanceRequestDto.builder().amount(BigDecimal.valueOf(10000)).userId(1).build();
-        BalanceResponseDto tryWithdrawal = withdrawalBalance(balanceRequestDto);
-        log.info("test log information{}",tryWithdrawal.getBalance());
-        return tryWithdrawal.toString();
     }
 
-    private BalanceResponseDto withdrawalBalance(BalanceRequestDto balanceRequestDto){
-        return webClientBuilder.build().post()
-                .uri("http://PAYMENT-SERVICE/api/v1/payment/withdrawal")
-                .bodyValue(balanceRequestDto)
-                .retrieve()
-                .bodyToMono(BalanceResponseDto.class)
-                .block();
-
+    public void sendPushNotificationForDriver(Integer id, String body){
+        String providerId = "DRIVER"+id;
+        MessageDto messageDto = MessageDto.builder().title("BOOK NOTIFICATION").type(PushNotificationType.RESERVATION.name()).body(body).receiverId(providerId).build();
+        messageDtoKafkaTemplate.send(PUSH_NOTIFICATION,messageDto);
     }
+
+
+
 
 
 }
