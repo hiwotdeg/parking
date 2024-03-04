@@ -3,6 +3,7 @@ package et.com.gebeya.parkinglotservice.service;
 import et.com.gebeya.parkinglotservice.dto.requestdto.PriceRequestDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.ReservationRequestDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.TransferBalanceRequestDto;
+import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateParkingLotDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.BalanceResponseDto;
 import et.com.gebeya.parkinglotservice.exception.ParkingLotAvailabilityException;
 import et.com.gebeya.parkinglotservice.model.Driver;
@@ -56,5 +57,11 @@ public class ReservationService {
                 .bodyValue(transferBalanceRequestDto)
                 .retrieve()
                 .bodyToMono(BalanceResponseDto.class);
+    }
+
+    public void updateAvailableSlotOfParkingLot(Integer parkingLotId){
+        ParkingLot parkingLot = parkingLotService.getParkingLot(parkingLotId);
+        UpdateParkingLotDto updateParkingLotDto = UpdateParkingLotDto.builder().availableSlot(parkingLot.getAvailableSlot()-1).build();
+        parkingLotService.updateParkingLot(updateParkingLotDto,parkingLotId);
     }
 }
