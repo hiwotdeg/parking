@@ -101,6 +101,13 @@ public class ParkingLotService {
         return parkingLots.get(0);
     }
 
+    ParkingLot getParkingLoyByProviderId(Integer id) {
+        List<ParkingLot> parkingLots = parkingLotRepository.findAll(ParkingLotSpecification.getParkingLotByProviderId(id));
+        if (parkingLots.isEmpty())
+            throw new ParkingLotIdNotFound("parking lot id not found");
+        return parkingLots.get(0);
+    }
+
     private ParkingLotProvider getProvider(Integer id) {
         List<ParkingLotProvider> providers = parkingLotProviderRepository.findAll(ParkingLotProviderSpecification.getProviderById(id));
         if (providers.isEmpty())

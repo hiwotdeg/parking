@@ -105,7 +105,7 @@ public class SecurityConfig {
             ENDPOINTS[11],
             ENDPOINTS[16],
             ENDPOINTS[19],
-
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/reservations/**", HttpMethod.GET.name()),
     };
 
     protected static final RequestMatcher[] DRIVER_AND_PROVIDER_MATCHERS = {
