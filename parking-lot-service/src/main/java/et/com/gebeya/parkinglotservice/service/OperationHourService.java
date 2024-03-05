@@ -28,17 +28,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class OperationHourService {
     private final OperationHourRepository operationHourRepository;
-    private final ParkingLotRepository parkingLotRepository;
+    private final ParkingLotService parkingLotService;
 
-    private ParkingLot getParkingLot(Integer id) {
-        List<ParkingLot> parkingLots = parkingLotRepository.findAll(ParkingLotSpecification.getParkingLotById(id));
-        if (parkingLots.isEmpty()) throw new ParkingLotIdNotFound("parking lot id not found");
-        return parkingLots.get(0);
-    }
+
 
 
     public List<OperationHourResponseDto> addOperationHour(List<OperationHourDto> request, Integer parkingId) {
-        ParkingLot parkingLot = getParkingLot(parkingId);
+        ParkingLot parkingLot = parkingLotService.getParkingLot(parkingId);
         List<OperationHour> operationHours = MappingUtil.addOperationRequestDtoToOperationHour(parkingLot, request);
         return MappingUtil.listOfOperationHourToListOfOperationHourResponseDto(operationHourRepository.saveAll(operationHours));
     }
@@ -55,13 +51,18 @@ public class OperationHourService {
 
 
     public List<OperationHourResponseDto> getOperationHoursByParkingLotId(Integer id) {
-        List<OperationHour> operationHours = operationHourRepository.findAll(OperationHourSpecification.hasParkingLotId(id));
+        List<OperationHour> operationHours = getOperationByParkingLotId(id);
         return MappingUtil.listOfOperationHourToListOfOperationHourResponseDto(operationHours);
     }
 
     public OperationHourResponseDto getOperationHoursByOperationHourId(Integer parkingLotId,Integer operationHourId){
         List<OperationHour> operationHours = operationHourRepository.findAll(OperationHourSpecification.hasParkingLotAndOperationHourId(parkingLotId,operationHourId));
         return MappingUtil.operationHourToOperationHourResponseDto(operationHours.get(0));
+    }
+
+   List<OperationHour> getOperationByParkingLotId(Integer id){
+        parkingLotService.getParkingLot(id);
+        return operationHourRepository.findAll(OperationHourSpecification.hasParkingLotId(id));
     }
 
 
