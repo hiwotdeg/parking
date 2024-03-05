@@ -3,12 +3,12 @@ spring:
     name: Parking-Lot-Service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${DB.URL:jdbc:postgresql://localhost:5432/parking_lot_v2}
+    url: ${DB.URL:jdbc:postgresql://localhost:5432/parking_lot}
     username: ${DB.USERNAME:postgres}
     password: ${DB.PASSWORD:password}
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
