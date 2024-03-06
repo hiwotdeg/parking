@@ -2,6 +2,7 @@ package et.com.gebeya.paymentservice.service;
 
 import et.com.gebeya.paymentservice.dto.request.CreditOrDebitMessageDto;
 import et.com.gebeya.paymentservice.dto.request.MessageDto;
+import et.com.gebeya.paymentservice.dto.request.TransferMessageDto;
 import et.com.gebeya.paymentservice.enums.PushNotificationType;
 import et.com.gebeya.paymentservice.util.IdConvertorUtil;
 import et.com.gebeya.paymentservice.util.MessagingUtil;
@@ -37,11 +38,11 @@ public class MessagingService {
             sendDepositMessageForDriver(dto.getUserId(), dto.getAmount());
     }
 
-    public void sendTransferMessageForCouponFromDriverToProvider(Integer dId,Integer pId,BigDecimal amount){
-        String providerId = IdConvertorUtil.providerConvertor(pId);
-        String driverId = IdConvertorUtil.driverConvertor(dId);
-        MessageDto providerMessage = MessageDto.builder().title("TRANSFER NOTIFICATION").type(PushNotificationType.PAYMENT.name()).body(MessagingUtil.providerTransferNotification(amount,driverId)).receiverId(providerId).build();
-        MessageDto driverMessage = MessageDto.builder().title("TRANSFER NOTIFICATION").type(PushNotificationType.PAYMENT.name()).body(MessagingUtil.driverTransferNotification(amount,providerId)).receiverId(driverId).build();
+    public void sendTransferMessageForCouponFromDriverToProvider(TransferMessageDto dto){
+        String providerId = IdConvertorUtil.providerConvertor(dto.getProviderId());
+        String driverId = IdConvertorUtil.driverConvertor(dto.getDriverId());
+        MessageDto providerMessage = MessageDto.builder().title("TRANSFER NOTIFICATION").type(PushNotificationType.PAYMENT.name()).body(MessagingUtil.providerTransferNotification(dto.getAmount(),driverId)).receiverId(providerId).build();
+        MessageDto driverMessage = MessageDto.builder().title("TRANSFER NOTIFICATION").type(PushNotificationType.PAYMENT.name()).body(MessagingUtil.driverTransferNotification(dto.getAmount(),providerId)).receiverId(driverId).build();
         messageDtoKafkaTemplate.send(PUSH_NOTIFICATION,providerMessage);
         messageDtoKafkaTemplate.send(PUSH_NOTIFICATION,driverMessage);
     }
