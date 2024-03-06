@@ -27,16 +27,15 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ReviewService {
     private final ReviewRepository reviewRepository;
-    private final DriverRepository driverRepository;
-    private final ParkingLotRepository parkingLotRepository;
-
+    private final DriverService driverService;
+    private final ParkingLotService parkingLotService;
     public ReviewResponseDto createReviewForParkingLot(AddReviewRequestDto reviewRequest, Integer parkingLotId){
         Integer driverId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Review> reviews = reviewRepository.findAll(ReviewSpecification.getReviewByParkingLotAndDriver(parkingLotId,driverId));
         if(!reviews.isEmpty())
             throw new MultipleReviewException("a driver can give you only one review per parkingLot");
-        Driver driver = getDriverById(driverId);
-        ParkingLot parkingLot = getParkingLotById(parkingLotId);
+        Driver driver = driverService.getDriver(driverId);
+        ParkingLot parkingLot = parkingLotService.getParkingLot(parkingLotId);
         Review review = MappingUtil.mapAddReviewRequestDtoToReview(reviewRequest);
         review.setDriverId(driver);
         review.setParkingLot(parkingLot);
@@ -53,12 +52,6 @@ public class ReviewService {
         return MappingUtil.reviewResponse(reviewList);
     }
 
-    public void updateOverallRatingForParkingLot(Integer parkingLotId){
-        ParkingLot parkingLot = getParkingLotById(parkingLotId);
-        Float averageRating = reviewRepository.calculateAverageRatingByParkingLotId(parkingLotId);
-        parkingLot.setRating(averageRating);
-        parkingLotRepository.save(parkingLot);
-    }
 
     public Map<String,String> deleteReview(Integer parkingLotId, Integer reviewId){
         Integer driverId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -73,17 +66,7 @@ public class ReviewService {
     }
 
 
-    public Driver getDriverById(Integer id){
-        Optional<Driver> driverOptional = driverRepository.findById(id);
-        if(driverOptional.isPresent()) return driverOptional.get();
-        throw new DriverIdNotFound("Driver is not found");
-    }
 
-    public ParkingLot getParkingLotById(Integer id){
-        Optional<ParkingLot> parkingLotOptional = parkingLotRepository.findById(id);
-        if(parkingLotOptional.isPresent()) return parkingLotOptional.get();
-        throw new ParkingLotIdNotFound("Parking lot not found");
-    }
 
     public List<ReviewSearch> getReviews(ReviewSearchRequestDto reviewSearchRequestDto, Integer parkingLotId){
         List<Review> reviewList;

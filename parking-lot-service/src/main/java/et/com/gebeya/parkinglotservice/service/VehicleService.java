@@ -28,12 +28,12 @@ import static et.com.gebeya.parkinglotservice.util.Constant.DELETE_LOCATION;
 @RequiredArgsConstructor
 public class VehicleService {
     private final VehicleRepository vehicleRepository;
-    private final DriverRepository driverRepository;
+    private final DriverService driverService;
 
     public VehicleResponseDto addVehicle(VehicleRequestDto vehicleRequestDto) {
         Integer driverId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Vehicle vehicle = MappingUtil.vehicleRequestDtoToVehicle(vehicleRequestDto);
-        Driver driver = getDriver(driverId);
+        Driver driver = driverService.getDriver(driverId);
         vehicle.setDriver(driver);
         vehicle = vehicleRepository.save(vehicle);
         return MappingUtil.vehicleToVehicleResponseDto(vehicle);
@@ -44,15 +44,6 @@ public class VehicleService {
         vehicle = vehicleRepository.save(MappingUtil.updateVehicle(vehicleRequestDto, vehicle));
         return MappingUtil.vehicleToVehicleResponseDto(vehicle);
     }
-
-
-    private Driver getDriver(Integer id) {
-        List<Driver> driver = driverRepository.findAll(DriverSpecification.getDriverById(id));
-        if (driver.isEmpty())
-            throw new DriverIdNotFound("Driver is not found");
-        return driver.get(0);
-    }
-
 
     private Vehicle getVehicle(Integer id) {
         List<Vehicle> vehicle = vehicleRepository.findAll(VehicleSpecification.getVehicleById(id));
@@ -66,7 +57,6 @@ public class VehicleService {
         List<Vehicle> vehicle = vehicleRepository.findAll(VehicleSpecification.getVehicleByDriverId(driverId));
         return MappingUtil.vehicleToListOfVehicleResponseDto(vehicle);
     }
-
 
     public VehicleResponseDto getVehiclesByVehicleId(Integer id) {
         List<Vehicle> vehicle = vehicleRepository.findAll(VehicleSpecification.getVehicleById(id));
