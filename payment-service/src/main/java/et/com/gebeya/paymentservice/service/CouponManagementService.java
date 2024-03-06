@@ -4,14 +4,17 @@ import et.com.gebeya.paymentservice.dto.request.*;
 import et.com.gebeya.paymentservice.dto.response.BalanceResponseDto;
 import et.com.gebeya.paymentservice.util.IdConvertorUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import static et.com.gebeya.paymentservice.util.Constant.CREDIT_OR_DEBIT_MESSAGE;
 
 @Service
 @RequiredArgsConstructor
 public class CouponManagementService {
     private final BalanceService balanceService;
-
+    private final KafkaTemplate<String, CreditOrDebitMessageDto> creditOrDebitMessageDtoKafkaTemplate;
     public BalanceResponseDto createBalanceForDriver(BalanceRequestDto dto){
         String driverId = IdConvertorUtil.driverConvertor(dto.getUserId());
         BalanceDto balanceDto = BalanceDto.builder().userId(driverId).build();
@@ -28,13 +31,19 @@ public class CouponManagementService {
         UserDto userId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String providerId = userId.getRole()+"_"+userId.getId();
         BalanceDto balanceDto = BalanceDto.builder().balance(dto.getAmount()).userId(providerId).build();
-        return balanceService.withdrawalBalance(balanceDto);
+        BalanceResponseDto balanceResponseDto = balanceService.withdrawalBalance(balanceDto);
+        CreditOrDebitMessageDto creditOrDebitMessageDto = CreditOrDebitMessageDto.builder().amount(dto.getAmount()).userId(providerId).build();
+        creditOrDebitMessageDtoKafkaTemplate.send(CREDIT_OR_DEBIT_MESSAGE,creditOrDebitMessageDto);
+        return balanceResponseDto;
     }
 
     public BalanceResponseDto depositBalanceForDriver(BalanceRequestDto dto){
         String driverId = IdConvertorUtil.driverConvertor(dto.getUserId());
         BalanceDto balanceDto = BalanceDto.builder().balance(dto.getAmount()).userId(driverId).build();
-        return balanceService.depositBalance(balanceDto);
+        BalanceResponseDto balanceResponseDto = balanceService.depositBalance(balanceDto);
+        CreditOrDebitMessageDto creditOrDebitMessageDto = CreditOrDebitMessageDto.builder().amount(dto.getAmount()).userId(driverId).build();
+        creditOrDebitMessageDtoKafkaTemplate.send(CREDIT_OR_DEBIT_MESSAGE,creditOrDebitMessageDto);
+        return balanceResponseDto;
     }
 
     public BalanceResponseDto transferBalance(TransferBalanceRequestDto dto){

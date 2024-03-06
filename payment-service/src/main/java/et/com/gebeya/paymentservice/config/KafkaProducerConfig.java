@@ -1,5 +1,6 @@
 package et.com.gebeya.paymentservice.config;
 
+import et.com.gebeya.paymentservice.dto.request.CreditOrDebitMessageDto;
 import et.com.gebeya.paymentservice.dto.request.MessageDto;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -52,4 +53,15 @@ public class KafkaProducerConfig {
     public KafkaTemplate<String, MessageDto> pushNotificationKafkaTemplate() {
         return new KafkaTemplate<>(pushNotificationProducerFactory());
     }
+    @Bean
+    public ProducerFactory<String, CreditOrDebitMessageDto> creditOrDebitMessageProducerFactory() {
+        return new DefaultKafkaProducerFactory<>(dtoProducerConfig());
+    }
+
+    @Bean
+    public KafkaTemplate<String, CreditOrDebitMessageDto> creditOrDebitMessageKafkaTemplate() {
+        return new KafkaTemplate<>(creditOrDebitMessageProducerFactory());
+    }
+
+
 }
