@@ -57,12 +57,17 @@ public class BalanceService {
 
     }
 
+    BalanceResponseDto checkBalance(String id){
+        Balance balance = getUser(id);
+        return MappingUtil.mapBalanceToBalanceResponseDto(balance);
+    }
     private Balance getUser(String id){
         List<Balance> user = balanceRepository.findAll(BalanceSpecification.getBalanceByUserId(id));
         if(user.isEmpty())
             throw new AccountBlocked("Your Account is blocked. please contact the admins");
         return user.get(0);
     }
+
 
 
 }
