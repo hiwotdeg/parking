@@ -42,7 +42,6 @@ public class SecurityConfig {
             "/actuator/**",
             "/api/v1/payment/driver",
             "/api/v1/payment/provider",
-            "/api/v1/payment/withdrawal",
             "/api/v1/payment/deposit",
             "/api/v1/payment/transfer"
 
@@ -53,6 +52,10 @@ public class SecurityConfig {
             new AntPathRequestMatcher("/api/v1/payment/balance", HttpMethod.GET.name()),
     };
 
+    protected static final RequestMatcher[] PROVIDER_MATCHERS = {
+            new AntPathRequestMatcher("/api/v1/payment/withdrawal",HttpMethod.POST.name()),
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -60,6 +63,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request.requestMatchers(SWAGGER_MATCHERS).permitAll())
                 .authorizeHttpRequests(request -> request.requestMatchers(DRIVER_AND_PROVIDER_MATCHERS).hasAnyAuthority("DRIVER","PROVIDER"))
+                .authorizeHttpRequests(request-> request.requestMatchers(PROVIDER_MATCHERS).hasAuthority("PROVIDER"))
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .exceptionHandling(handling -> {
                     handling.authenticationEntryPoint(unauthorizedEntryPoint());

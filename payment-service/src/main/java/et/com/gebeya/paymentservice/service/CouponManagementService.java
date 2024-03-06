@@ -24,8 +24,9 @@ public class CouponManagementService {
         return balanceService.createBalance(balanceDto);
     }
 
-    public BalanceResponseDto withdrawalBalanceForProvider(BalanceRequestDto dto){
-        String providerId = IdConvertorUtil.providerConvertor(dto.getUserId());
+    public BalanceResponseDto withdrawalBalanceForProvider(WithdrawalRequestDto dto){
+        UserDto userId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String providerId = userId.getRole()+"_"+userId.getId();
         BalanceDto balanceDto = BalanceDto.builder().balance(dto.getAmount()).userId(providerId).build();
         return balanceService.withdrawalBalance(balanceDto);
     }
