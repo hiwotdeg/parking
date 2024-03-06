@@ -9,12 +9,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import static et.com.gebeya.paymentservice.util.Constant.CREDIT_OR_DEBIT_MESSAGE;
+import static et.com.gebeya.paymentservice.util.Constant.TRANSFER_MESSAGE;
 
 @Service
 @RequiredArgsConstructor
 public class CouponManagementService {
     private final BalanceService balanceService;
     private final KafkaTemplate<String, CreditOrDebitMessageDto> creditOrDebitMessageDtoKafkaTemplate;
+    private final KafkaTemplate<String,TransferMessageDto> transferMessageDtoKafkaTemplate;
     public BalanceResponseDto createBalanceForDriver(BalanceRequestDto dto){
         String driverId = IdConvertorUtil.driverConvertor(dto.getUserId());
         BalanceDto balanceDto = BalanceDto.builder().userId(driverId).build();
@@ -50,7 +52,10 @@ public class CouponManagementService {
         String driverId = IdConvertorUtil.driverConvertor(dto.getDriverId());
         String providerId = IdConvertorUtil.providerConvertor(dto.getProviderId());
         TransferBalanceDto transferBalanceDto = TransferBalanceDto.builder().driverId(driverId).providerId(providerId).amount(dto.getAmount()).build();
-        return balanceService.transferBalance(transferBalanceDto);
+        BalanceResponseDto balanceResponseDto = balanceService.transferBalance(transferBalanceDto);
+        TransferMessageDto transferMessageDto = TransferMessageDto.builder().driverId(dto.getDriverId()).providerId(dto.getProviderId()).amount(dto.getAmount()).build();
+        transferMessageDtoKafkaTemplate.send(TRANSFER_MESSAGE,transferMessageDto);
+        return balanceResponseDto;
     }
 
     public BalanceResponseDto checkBalance(){
