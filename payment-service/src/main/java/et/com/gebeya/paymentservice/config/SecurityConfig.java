@@ -49,8 +49,8 @@ public class SecurityConfig {
 
     };
 
-    protected static final RequestMatcher[] DRIVER_MATCHERS = {
-//            new AntPathRequestMatcher("/api/v1/payment/pricing/**", HttpMethod.GET.name()),
+    protected static final RequestMatcher[] DRIVER_AND_PROVIDER_MATCHERS = {
+            new AntPathRequestMatcher("/api/v1/payment/balance", HttpMethod.GET.name()),
     };
 
     @Bean
@@ -59,7 +59,7 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request.requestMatchers(SWAGGER_MATCHERS).permitAll())
-//                .authorizeHttpRequests(request -> request.requestMatchers(DRIVER_MATCHERS).hasAuthority("DRIVER"))
+                .authorizeHttpRequests(request -> request.requestMatchers(DRIVER_AND_PROVIDER_MATCHERS).hasAnyAuthority("DRIVER","PROVIDER"))
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .exceptionHandling(handling -> {
                     handling.authenticationEntryPoint(unauthorizedEntryPoint());
