@@ -16,21 +16,21 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class BalanceAspect {
     private final MessagingService messagingService;
-    @AfterReturning(pointcut = "execution(* et.com.gebeya.paymentservice.service.CouponManagementService.depositBalanceForDriver(..))",returning = "result")
-    public void afterCouponManagementServiceDepositBalanceForDriver(JoinPoint joinPoint, Object result){
-        Object[] args = joinPoint.getArgs();
-        BalanceRequestDto balanceRequestDto = (BalanceRequestDto) args[0];
-        log.info("afterCouponManagementServiceDepositBalanceForDriver aspect is working");
-        messagingService.sendDepositMessageForDriver(balanceRequestDto.getUserId(), balanceRequestDto.getAmount());
-    }
+//    @AfterReturning(pointcut = "execution(* et.com.gebeya.paymentservice.service.CouponManagementService.depositBalanceForDriver(..))",returning = "result")
+//    public void afterCouponManagementServiceDepositBalanceForDriver(JoinPoint joinPoint, Object result){
+//        Object[] args = joinPoint.getArgs();
+//        BalanceRequestDto balanceRequestDto = (BalanceRequestDto) args[0];
+//        log.info("afterCouponManagementServiceDepositBalanceForDriver aspect is working");
+//        messagingService.sendDepositMessageForDriver(balanceRequestDto.getUserId(), balanceRequestDto.getAmount());
+//    }
 
-    @AfterReturning(pointcut = "execution(* et.com.gebeya.paymentservice.service.CouponManagementService.withdrawalBalanceForProvider(..))",returning = "result")
-    public void afterCouponManagementServiceWithdrawalBalanceForProvider(JoinPoint joinPoint, Object result){
-        Object[] args = joinPoint.getArgs();
-        BalanceRequestDto balanceRequestDto = (BalanceRequestDto) args[0];
-        log.info("afterCouponManagementServiceWithdrawBalanceForProvider aspect is working");
-        messagingService.sendWithdrawalMessageForProvider(balanceRequestDto.getUserId(), balanceRequestDto.getAmount());
-    }
+//    @AfterReturning(pointcut = "execution(* et.com.gebeya.paymentservice.service.CouponManagementService.withdrawalBalanceForProvider(..))",returning = "result")
+//    public void afterCouponManagementServiceWithdrawalBalanceForProvider(JoinPoint joinPoint, Object result){
+//        Object[] args = joinPoint.getArgs();
+//        BalanceRequestDto balanceRequestDto = (BalanceRequestDto) args[0];
+//        log.info("afterCouponManagementServiceWithdrawBalanceForProvider aspect is working");
+//        messagingService.sendWithdrawalMessageForProvider(balanceRequestDto.getUserId(), balanceRequestDto.getAmount());
+//    }
 
     @AfterReturning(pointcut = "execution(* et.com.gebeya.paymentservice.service.CouponManagementService.transferBalance(..))",returning = "result")
     public void afterTransferBalance(JoinPoint joinPoint, Object result){

@@ -1,5 +1,6 @@
 package et.com.gebeya.paymentservice.service;
 
+import et.com.gebeya.paymentservice.dto.request.CreditOrDebitMessageDto;
 import et.com.gebeya.paymentservice.dto.request.MessageDto;
 import et.com.gebeya.paymentservice.enums.PushNotificationType;
 import et.com.gebeya.paymentservice.util.IdConvertorUtil;
@@ -18,16 +19,22 @@ import static et.com.gebeya.paymentservice.util.Constant.PUSH_NOTIFICATION;
 public class MessagingService {
     private final KafkaTemplate<String, MessageDto> messageDtoKafkaTemplate;
 
-    public void sendDepositMessageForDriver(Integer id, BigDecimal amount) {
-        String receiverId = IdConvertorUtil.driverConvertor(id);
+    private void sendDepositMessageForDriver(String receiverId, BigDecimal amount) {
         MessageDto messageDto = MessageDto.builder().title("DEPOSIT NOTIFICATION").type(PushNotificationType.PAYMENT.name()).body(MessagingUtil.driverDepositNotification(amount)).receiverId(receiverId).build();
         messageDtoKafkaTemplate.send(PUSH_NOTIFICATION, messageDto);
     }
 
-    public void sendWithdrawalMessageForProvider(Integer id, BigDecimal amount) {
-        String receiverId = IdConvertorUtil.providerConvertor(id);
+    private void sendWithdrawalMessageForProvider(String receiverId, BigDecimal amount) {
         MessageDto messageDto = MessageDto.builder().title("WITHDRAWAL NOTIFICATION").type(PushNotificationType.PAYMENT.name()).body(MessagingUtil.providerWithdrawalNotification(amount)).receiverId(receiverId).build();
         messageDtoKafkaTemplate.send(PUSH_NOTIFICATION, messageDto);
+    }
+
+    public void sendCreditOrDebitMessage(CreditOrDebitMessageDto dto){
+        String [] user = dto.getUserId().split("_");
+        if(user[0].equals("PROVIDER"))
+            sendWithdrawalMessageForProvider(dto.getUserId(), dto.getAmount());
+        else if(user[0].equals("DRIVER"))
+            sendDepositMessageForDriver(dto.getUserId(), dto.getAmount());
     }
 
     public void sendTransferMessageForCouponFromDriverToProvider(Integer dId,Integer pId,BigDecimal amount){
