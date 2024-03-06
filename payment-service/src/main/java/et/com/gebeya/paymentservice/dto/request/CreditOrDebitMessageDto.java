@@ -11,8 +11,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 @Data
-public class TransferMessageDto {
-    private Integer providerId;
-    private Integer driverId;
+public class CreditOrDebitMessageDto {
+    private String userId;
     private BigDecimal amount;
 }
