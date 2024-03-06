@@ -18,6 +18,7 @@ public class KafkaListeners {
     void creditOrDebitDtoListener(CreditOrDebitMessageDto dto) {
         messagingService.sendCreditOrDebitMessage(dto);
     }
+
     @KafkaListener(topics = TRANSFER_MESSAGE, groupId = "group6", containerFactory = "transferMessageListenerFactory")
     void transferMessageDtoListener(TransferMessageDto dto) {
         messagingService.sendTransferMessageForCouponFromDriverToProvider(dto);

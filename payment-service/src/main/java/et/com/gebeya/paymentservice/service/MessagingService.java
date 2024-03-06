@@ -19,17 +19,14 @@ import static et.com.gebeya.paymentservice.util.Constant.PUSH_NOTIFICATION;
 @RequiredArgsConstructor
 public class MessagingService {
     private final KafkaTemplate<String, MessageDto> messageDtoKafkaTemplate;
-
     private void sendDepositMessageForDriver(String receiverId, BigDecimal amount) {
         MessageDto messageDto = MessageDto.builder().title("DEPOSIT NOTIFICATION").type(PushNotificationType.PAYMENT.name()).body(MessagingUtil.driverDepositNotification(amount)).receiverId(receiverId).build();
         messageDtoKafkaTemplate.send(PUSH_NOTIFICATION, messageDto);
     }
-
     private void sendWithdrawalMessageForProvider(String receiverId, BigDecimal amount) {
         MessageDto messageDto = MessageDto.builder().title("WITHDRAWAL NOTIFICATION").type(PushNotificationType.PAYMENT.name()).body(MessagingUtil.providerWithdrawalNotification(amount)).receiverId(receiverId).build();
         messageDtoKafkaTemplate.send(PUSH_NOTIFICATION, messageDto);
     }
-
     public void sendCreditOrDebitMessage(CreditOrDebitMessageDto dto){
         String [] user = dto.getUserId().split("_");
         if(user[0].equals("PROVIDER"))
@@ -37,7 +34,6 @@ public class MessagingService {
         else if(user[0].equals("DRIVER"))
             sendDepositMessageForDriver(dto.getUserId(), dto.getAmount());
     }
-
     public void sendTransferMessageForCouponFromDriverToProvider(TransferMessageDto dto){
         String providerId = IdConvertorUtil.providerConvertor(dto.getProviderId());
         String driverId = IdConvertorUtil.driverConvertor(dto.getDriverId());

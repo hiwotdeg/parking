@@ -4,8 +4,6 @@ import et.com.gebeya.paymentservice.dto.request.BalanceDto;
 import et.com.gebeya.paymentservice.dto.response.BalanceResponseDto;
 import et.com.gebeya.paymentservice.model.Balance;
 
-import java.math.BigDecimal;
-
 public class MappingUtil {
     private MappingUtil() {
     }

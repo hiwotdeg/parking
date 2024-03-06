@@ -5,6 +5,8 @@ import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
 public class BalanceSpecification {
+    private BalanceSpecification(){
+    }
     public static Specification<Balance> getBalanceByUserId(String userId) {
         return (root, query, criteriaBuilder) -> {
             Predicate isActive = criteriaBuilder.notEqual(root.get("isActive"), false);

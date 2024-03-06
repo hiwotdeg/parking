@@ -18,14 +18,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BalanceService {
     private final BalanceRepository balanceRepository;
-
     BalanceResponseDto createBalance(BalanceDto balanceDto) {
         Balance balance = MappingUtil.mapBalanceRequestDtoToBalance(balanceDto);
         balance.setAmount(BigDecimal.valueOf(0.0));
         balance = balanceRepository.save(balance);
         return MappingUtil.mapBalanceToBalanceResponseDto(balance);
     }
-
     BalanceResponseDto withdrawalBalance(BalanceDto balanceDto) {
        Balance provider = getUser(balanceDto.getUserId());
         if (balanceDto.getBalance().compareTo(BigDecimal.valueOf(100)) < 0)
@@ -34,15 +32,12 @@ public class BalanceService {
             throw new InSufficientAmount("Your Balance is inSufficient. please purchase coupon");
         provider.setAmount(provider.getAmount().subtract(balanceDto.getBalance()));
         return MappingUtil.mapBalanceToBalanceResponseDto(balanceRepository.save(provider));
-
     }
-
     BalanceResponseDto depositBalance(BalanceDto balanceDto) {
         Balance driver = getUser(balanceDto.getUserId());
        driver.setAmount(driver.getAmount().add(balanceDto.getBalance()));
         return MappingUtil.mapBalanceToBalanceResponseDto(balanceRepository.save(driver));
     }
-
     BalanceResponseDto transferBalance(TransferBalanceDto transferBalanceDto) {
        Balance driver = getUser(transferBalanceDto.getDriverId());
        Balance provider = getUser(transferBalanceDto.getProviderId());
@@ -56,7 +51,6 @@ public class BalanceService {
         return MappingUtil.mapBalanceToBalanceResponseDto(balanceRepository.save(driver));
 
     }
-
     BalanceResponseDto checkBalance(String id){
         Balance balance = getUser(id);
         return MappingUtil.mapBalanceToBalanceResponseDto(balance);
