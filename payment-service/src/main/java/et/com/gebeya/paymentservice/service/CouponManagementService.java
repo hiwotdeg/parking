@@ -58,4 +58,9 @@ public class CouponManagementService {
         return balanceService.checkBalance(id);
     }
 
+    public BalanceResponseDto checkBalanceForDriver(Integer dId){
+        String driverId = IdConvertorUtil.driverConvertor(dId);
+        return balanceService.checkBalance(driverId);
+    }
+
 }
