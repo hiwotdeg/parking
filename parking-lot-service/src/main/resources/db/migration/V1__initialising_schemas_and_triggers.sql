@@ -65,14 +65,15 @@ create table parking_lot_provider
 
 create table reservation
 (
-    id                      serial not null,
-    created_on              timestamp(6) with time zone,
-    is_reservation_accepted boolean,
-    price                   numeric(38, 2),
-    staying_duration        time(6),
-    updated_on              timestamp(6) with time zone,
-    driver_id               integer,
-    parking_lot_id          integer,
+    id                 serial not null,
+    created_on         timestamp(6) with time zone,
+    is_active          boolean,
+    price              numeric(38, 2),
+    reservation_status smallint check (reservation_status between 0 and 2),
+    staying_duration   time(6),
+    updated_on         timestamp(6) with time zone,
+    driver_id          integer,
+    parking_lot_id     integer,
     primary key (id)
 );
 
@@ -168,26 +169,28 @@ alter table if exists vehicle
 
 
 CREATE OR REPLACE FUNCTION update_average_rating()
-  RETURNS TRIGGER AS
+    RETURNS TRIGGER AS
 $$
 DECLARE
-  avg_rating REAL;
+    avg_rating REAL;
 BEGIN
-SELECT AVG(review.rate) INTO avg_rating
-FROM review
-WHERE parking_lot_id = NEW.parking_lot_id;
+    SELECT AVG(review.rate)
+    INTO avg_rating
+    FROM review
+    WHERE parking_lot_id = NEW.parking_lot_id;
 
 
-UPDATE parking_lot
-SET rating = avg_rating
-WHERE id = NEW.parking_lot_id;
+    UPDATE parking_lot
+    SET rating = avg_rating
+    WHERE id = NEW.parking_lot_id;
 
-RETURN NULL;
+    RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+    LANGUAGE plpgsql;
 
 CREATE OR REPLACE TRIGGER update_rating_trigger
-    AFTER INSERT OR UPDATE OR DELETE ON review
+    AFTER INSERT OR UPDATE OR DELETE
+    ON review
     FOR EACH ROW
 EXECUTE FUNCTION update_average_rating();

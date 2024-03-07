@@ -1,5 +1,6 @@
 package et.com.gebeya.parkinglotservice.model;
 
+import et.com.gebeya.parkinglotservice.enums.ReservationStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +32,8 @@ public class Reservation {
     private ParkingLot parkingLot;
     private LocalTime stayingDuration;
     private BigDecimal price;
-    private Boolean isReservationAccepted;
+    private Boolean isActive;
+    private ReservationStatus reservationStatus;
     @CreationTimestamp
     private Instant createdOn;
     @UpdateTimestamp
