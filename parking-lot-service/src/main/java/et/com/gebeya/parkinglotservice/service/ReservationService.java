@@ -1,11 +1,9 @@
 package et.com.gebeya.parkinglotservice.service;
 
-import et.com.gebeya.parkinglotservice.dto.requestdto.PriceRequestDto;
-import et.com.gebeya.parkinglotservice.dto.requestdto.ReservationRequestDto;
-import et.com.gebeya.parkinglotservice.dto.requestdto.TransferBalanceRequestDto;
-import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateParkingLotDto;
+import et.com.gebeya.parkinglotservice.dto.requestdto.*;
 import et.com.gebeya.parkinglotservice.dto.responsedto.BalanceResponseDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ReservationResponseDto;
+import et.com.gebeya.parkinglotservice.exception.InsufficientBalance;
 import et.com.gebeya.parkinglotservice.exception.ParkingLotAvailabilityException;
 import et.com.gebeya.parkinglotservice.model.Driver;
 import et.com.gebeya.parkinglotservice.model.ParkingLot;
@@ -49,10 +47,11 @@ public class ReservationService {
         PriceRequestDto requestDto = PriceRequestDto.builder().duration(dto.getStayingDuration()).build();
         BigDecimal price = pricingService.dynamicPricing(requestDto, parkingLotId);
         Reservation reservation = Reservation.builder().price(price).parkingLot(parkingLot).driver(driver).stayingDuration(dto.getStayingDuration()).isReservationAccepted(true).build();
-        TransferBalanceRequestDto transferBalanceRequestDto = TransferBalanceRequestDto.builder().providerId(provider.getId()).driverId(driverId).amount(price).build();
-        Mono<BalanceResponseDto> balanceResponseDtoMono = transferBalance(transferBalanceRequestDto);
-        BalanceResponseDto balanceResponseDto = balanceResponseDtoMono.block(); // Wait for the Mono to complete and get the result
-        log.info("Response from the paymentService==> {}", balanceResponseDto);
+//        TransferBalanceRequestDto transferBalanceRequestDto = TransferBalanceRequestDto.builder().providerId(provider.getId()).driverId(driverId).amount(price).build();
+//        Mono<BalanceResponseDto> balanceResponseDtoMono = transferBalance(transferBalanceRequestDto);
+//        BalanceResponseDto balanceResponseDto = balanceResponseDtoMono.block();
+//        log.info("Response from the paymentService==> {}", balanceResponseDto);
+        checkBalanceForDriver(driverId,price);
         reservationRepository.save(reservation);
         notifyBooking(provider.getId(), driverId, parkingLot.getName(), dto.getStayingDuration());
         return Map.of("message", "you have reserved a parking lot successfully");
@@ -66,6 +65,21 @@ public class ReservationService {
                 .bodyValue(transferBalanceRequestDto)
                 .retrieve()
                 .bodyToMono(BalanceResponseDto.class);
+    }
+
+
+    private Mono<BalanceResponseDto> checkBalance(Integer driverId) {
+        return webClientBuilder.build().post()
+                .uri("http://PAYMENT-SERVICE/api/v1/payment/driver_balance/"+driverId)
+                .retrieve()
+                .bodyToMono(BalanceResponseDto.class);
+    }
+
+    private void checkBalanceForDriver(Integer driverId, BigDecimal desiredAmount){
+        BalanceResponseDto balanceResponseDto = checkBalance(driverId).block();
+        assert balanceResponseDto != null;
+        if(balanceResponseDto.getBalance().compareTo(desiredAmount)<0)
+            throw new InsufficientBalance("You have insufficient balance. please purchase coupons");
     }
 
     public void updateAvailableSlotOfParkingLot(Integer parkingLotId) {
@@ -83,7 +97,6 @@ public class ReservationService {
         Integer providerId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Reservation> reservationList = reservationRepository.findAll(ReservationSpecification.getReservationByProviderId(providerId));
         return MappingUtil.mapListOfReservationToReservationResponseDto(reservationList);
-
     }
 
 }
