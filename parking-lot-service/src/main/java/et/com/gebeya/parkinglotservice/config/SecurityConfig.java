@@ -72,6 +72,7 @@ public class SecurityConfig {
             new AntPathRequestMatcher("/api/v1/parking-lot/lots/*/operation-hours", HttpMethod.POST.name()),
             new AntPathRequestMatcher("/api/v1/parking-lot/lots/*/operation-hours/*", HttpMethod.DELETE.name()),
             new AntPathRequestMatcher("/api/v1/parking-lot/lots/reservations/**", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/reservations/*/requests",HttpMethod.POST.name())
     };
 
     protected static final RequestMatcher[] DRIVER_AND_PROVIDER_MATCHERS = {
