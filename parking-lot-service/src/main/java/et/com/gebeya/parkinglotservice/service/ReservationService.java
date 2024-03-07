@@ -3,8 +3,11 @@ package et.com.gebeya.parkinglotservice.service;
 import et.com.gebeya.parkinglotservice.dto.requestdto.*;
 import et.com.gebeya.parkinglotservice.dto.responsedto.BalanceResponseDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ReservationResponseDto;
+import et.com.gebeya.parkinglotservice.enums.ReservationStatus;
+import et.com.gebeya.parkinglotservice.exception.ActiveReservationNotFound;
 import et.com.gebeya.parkinglotservice.exception.InsufficientBalance;
 import et.com.gebeya.parkinglotservice.exception.ParkingLotAvailabilityException;
+import et.com.gebeya.parkinglotservice.exception.ReservationUpdateAfterFiveMinuteException;
 import et.com.gebeya.parkinglotservice.model.Driver;
 import et.com.gebeya.parkinglotservice.model.ParkingLot;
 import et.com.gebeya.parkinglotservice.model.ParkingLotProvider;
@@ -20,6 +23,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.math.BigDecimal;
 import java.time.LocalTime;
@@ -46,12 +52,8 @@ public class ReservationService {
         ParkingLotProvider provider = parkingLot.getParkingLotProvider();
         PriceRequestDto requestDto = PriceRequestDto.builder().duration(dto.getStayingDuration()).build();
         BigDecimal price = pricingService.dynamicPricing(requestDto, parkingLotId);
-        Reservation reservation = Reservation.builder().price(price).parkingLot(parkingLot).driver(driver).stayingDuration(dto.getStayingDuration()).isReservationAccepted(true).build();
-//        TransferBalanceRequestDto transferBalanceRequestDto = TransferBalanceRequestDto.builder().providerId(provider.getId()).driverId(driverId).amount(price).build();
-//        Mono<BalanceResponseDto> balanceResponseDtoMono = transferBalance(transferBalanceRequestDto);
-//        BalanceResponseDto balanceResponseDto = balanceResponseDtoMono.block();
-//        log.info("Response from the paymentService==> {}", balanceResponseDto);
-        checkBalanceForDriver(driverId,price);
+        Reservation reservation = Reservation.builder().price(price).parkingLot(parkingLot).driver(driver).stayingDuration(dto.getStayingDuration()).reservationStatus(ReservationStatus.PENDING).isActive(true).build();
+        checkBalanceForDriver(driverId, price);
         reservationRepository.save(reservation);
         notifyBooking(provider.getId(), driverId, parkingLot.getName(), dto.getStayingDuration());
         return Map.of("message", "you have reserved a parking lot successfully");
@@ -69,16 +71,16 @@ public class ReservationService {
 
 
     private Mono<BalanceResponseDto> checkBalance(Integer driverId) {
-        return webClientBuilder.build().post()
-                .uri("http://PAYMENT-SERVICE/api/v1/payment/driver_balance/"+driverId)
+        return webClientBuilder.build().get()
+                .uri("http://PAYMENT-SERVICE/api/v1/payment/driver_balance/" + driverId)
                 .retrieve()
                 .bodyToMono(BalanceResponseDto.class);
     }
 
-    private void checkBalanceForDriver(Integer driverId, BigDecimal desiredAmount){
+    private void checkBalanceForDriver(Integer driverId, BigDecimal desiredAmount) {
         BalanceResponseDto balanceResponseDto = checkBalance(driverId).block();
         assert balanceResponseDto != null;
-        if(balanceResponseDto.getBalance().compareTo(desiredAmount)<0)
+        if (balanceResponseDto.getBalance().compareTo(desiredAmount) < 0)
             throw new InsufficientBalance("You have insufficient balance. please purchase coupons");
     }
 
@@ -93,10 +95,50 @@ public class ReservationService {
         messageService.sendPushNotificationForProvider(providerId, MessagingUtil.providerWithdrawalNotification());
     }
 
-    public List<ReservationResponseDto> getReservationByProviderId(){
+    public List<ReservationResponseDto> getReservationByProviderId() {
         Integer providerId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Reservation> reservationList = reservationRepository.findAll(ReservationSpecification.getReservationByProviderId(providerId));
         return MappingUtil.mapListOfReservationToReservationResponseDto(reservationList);
     }
 
+    @Transactional
+    public ReservationResponseDto updateReservation(Integer reservationId, UpdateReservation updateReservation) {
+        Reservation reservation = getActiveReservationsById(reservationId);
+        if (isFiveMinutesDifference(reservation.getCreatedOn())) {
+            reservation.setReservationStatus(ReservationStatus.REJECTED);
+            reservationRepository.save(reservation);
+            throw new ReservationUpdateAfterFiveMinuteException("Reservation request must be accepted or rejected within 5 minutes of submission");
+        }
+        if (updateReservation.getReservationStatus().equals(ReservationStatus.ACCEPTED)) {
+            reservation.setReservationStatus(updateReservation.getReservationStatus());
+            ParkingLotProvider provider = reservation.getParkingLot().getParkingLotProvider();
+            TransferBalanceRequestDto transferBalanceRequestDto = TransferBalanceRequestDto.builder().providerId(provider.getId()).driverId(reservation.getDriver().getId()).amount(reservation.getPrice()).build();
+            Mono<BalanceResponseDto> balanceResponseDtoMono = transferBalance(transferBalanceRequestDto);
+            BalanceResponseDto balanceResponseDto = balanceResponseDtoMono.block();
+            log.info("Response from the paymentService==> {}", balanceResponseDto);
+            reservation = reservationRepository.save(reservation);
+            messageService.sendPushNotificationForDriver(reservation.getDriver().getId(), MessagingUtil.driverBookNotification(reservation.getParkingLot().getName(), reservation.getStayingDuration()));
+            return MappingUtil.mapReservationToReservationResponseDto(reservation);
+        }
+        else{
+            reservation.setReservationStatus(updateReservation.getReservationStatus());
+            reservation = reservationRepository.save(reservation);
+            return MappingUtil.mapReservationToReservationResponseDto(reservation);
+        }
+    }
+
+
+    private Reservation getActiveReservationsById(Integer id) {
+        List<Reservation> reservations = reservationRepository.findAll(ReservationSpecification.getReservationById(id));
+        if (reservations.isEmpty())
+            throw new ActiveReservationNotFound("Active Reservation not found");
+        return reservations.get(0);
+
+    }
+
+    private static boolean isFiveMinutesDifference(Instant givenInstant) {
+        Instant currentInstant = Instant.now();
+        Duration duration = Duration.between(givenInstant, currentInstant);
+        return duration.compareTo(Duration.ofMinutes(5)) >= 0;
+    }
 }
