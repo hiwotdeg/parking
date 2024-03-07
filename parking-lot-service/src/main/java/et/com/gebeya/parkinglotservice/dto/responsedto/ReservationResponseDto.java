@@ -1,5 +1,6 @@
 package et.com.gebeya.parkinglotservice.dto.responsedto;
 
+import et.com.gebeya.parkinglotservice.enums.ReservationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +20,7 @@ public class ReservationResponseDto {
     private Integer parkingLotId;
     private LocalTime stayingDuration;
     private BigDecimal price;
-    private Boolean isReservationAccepted;
+    private ReservationStatus reservationStatus;
+    private Boolean isActive;
     private Instant reservedAt;
 }

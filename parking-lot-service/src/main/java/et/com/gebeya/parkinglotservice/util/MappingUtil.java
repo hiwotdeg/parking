@@ -297,15 +297,16 @@ public class MappingUtil {
         reservationList.forEach(request->reservationResponseDtoList.add(mapReservationToReservationResponseDto(request)));
         return reservationResponseDtoList;
     }
-    private static ReservationResponseDto mapReservationToReservationResponseDto(Reservation reservation){
+    public static ReservationResponseDto mapReservationToReservationResponseDto(Reservation reservation){
         return ReservationResponseDto.builder()
                 .id(reservation.getId())
-                .isReservationAccepted(reservation.getIsReservationAccepted())
+                .reservationStatus(reservation.getReservationStatus())
                 .driverId(reservation.getDriver().getId())
                 .reservedAt(reservation.getCreatedOn())
                 .stayingDuration(reservation.getStayingDuration())
                 .parkingLotId(reservation.getParkingLot().getId())
                 .price(reservation.getPrice())
+                .isActive(reservation.getIsActive())
                 .build();
     }
 
