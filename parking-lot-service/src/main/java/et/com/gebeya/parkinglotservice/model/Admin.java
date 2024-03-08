@@ -23,7 +23,9 @@ public class Admin {
     private String firstName;
     private String middleName;
     private String lastName;
+    @Column(unique=true)
     private String phoneNo;
+    @Column(unique=true)
     private String email;
     private Boolean isActive;
     @CreationTimestamp
