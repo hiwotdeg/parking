@@ -187,6 +187,12 @@ public class MappingUtil {
                 .role(provider.getRole()).build();
     }
 
+    public static List<ProviderResponseDto> listOfProviderToListOfProviderResponseDto(List<ParkingLotProvider> providers){
+        List<ProviderResponseDto> providerResponseDtos = new ArrayList<>();
+        providers.forEach(parkingLotProvider -> providerResponseDtos.add(mapParkingLotProviderToProviderResponseDto(parkingLotProvider)));
+        return providerResponseDtos;
+    }
+
     public static ParkingLotProvider updateParkingLotProvider(UpdateProviderRequestDto dto, ParkingLotProvider provider) {
         if (dto.getFirstName() != null)
             provider.setFirstName(dto.getFirstName());

@@ -4,11 +4,13 @@ import et.com.gebeya.parkinglotservice.dto.requestdto.AddProviderDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateProviderRequestDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.AddUserResponse;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ProviderResponseDto;
-import et.com.gebeya.parkinglotservice.model.ParkingLotProvider;
 import et.com.gebeya.parkinglotservice.service.ParkingLotProviderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/parking-lot")
@@ -31,6 +33,10 @@ public class ParkingLotProviderController {
     @GetMapping("/providers/")
     public ResponseEntity<ProviderResponseDto> getParkingLotProviderById(){
         return ResponseEntity.ok(parkingLotProviderService.getParkingLotProviderById());
+    }
+    @GetMapping("/providers")
+    public ResponseEntity<List<ProviderResponseDto>> getAllProviders(@PageableDefault(page = 0, size = 10) Pageable pageable){
+        return ResponseEntity.ok(parkingLotProviderService.getAllProviders(pageable));
     }
 
 }

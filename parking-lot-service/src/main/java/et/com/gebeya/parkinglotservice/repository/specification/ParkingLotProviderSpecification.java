@@ -12,4 +12,8 @@ public class ParkingLotProviderSpecification {
             return criteriaBuilder.and(isActive, isProvider);
         };
     }
+    public static Specification<ParkingLotProvider> getAllProviders()
+    {
+        return ((root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get("isActive"),false));
+    }
 }
