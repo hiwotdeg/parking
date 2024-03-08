@@ -128,6 +128,11 @@ public class MappingUtil {
                 .build();
 
     }
+    public static List<ParkingLotResponseDto> listOfParkingLotToListOfParkingLotResponseDto(List<ParkingLot> parkingLots){
+        List<ParkingLotResponseDto> parkingLotResponseDtoList = new ArrayList<>();
+        parkingLots.forEach(parkingLot -> parkingLotResponseDtoList.add(parkingLotResponse(parkingLot)));
+        return parkingLotResponseDtoList;
+    }
 
     private static List<String> mapParkingLotImageToString(List<ParkingLotImage> parkingLotImages) {
         List<String> images = new ArrayList<>();

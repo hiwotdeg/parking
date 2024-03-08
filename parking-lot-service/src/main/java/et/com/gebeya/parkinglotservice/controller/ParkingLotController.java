@@ -5,9 +5,11 @@ import et.com.gebeya.parkinglotservice.dto.responsedto.ParkingLotResponseDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateParkingLotDto;
 import et.com.gebeya.parkinglotservice.service.ParkingLotService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,7 +22,6 @@ public class ParkingLotController {
     public ResponseEntity<ParkingLotResponseDto> addParkingLot(@RequestBody AddParkingLotDto request){
         return ResponseEntity.ok(parkingLotService.addParkingLot(request));
     }
-
 
     @PatchMapping ("/lots/{id}")
     public ResponseEntity<ParkingLotResponseDto> updateParkingLot(@RequestBody UpdateParkingLotDto request,@PathVariable("id") Integer id){
@@ -35,6 +36,11 @@ public class ParkingLotController {
     @GetMapping("/lots/")
     public ResponseEntity<ParkingLotResponseDto> getParkingLotByProviderId(){
         return ResponseEntity.ok(parkingLotService.getParkingLotByProviderId());
+    }
+
+    @GetMapping("/lots")
+    public ResponseEntity<List<ParkingLotResponseDto>> getAllParkingLot(@PageableDefault(page = 0, size = 10) Pageable pageable){
+        return ResponseEntity.ok(parkingLotService.getAllParkingLots(pageable));
     }
 
     @DeleteMapping ("/lots/{id}")

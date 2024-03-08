@@ -18,6 +18,7 @@ import et.com.gebeya.parkinglotservice.repository.specification.ParkingLotSpecif
 import et.com.gebeya.parkinglotservice.util.MappingUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -119,6 +120,11 @@ public class ParkingLotService {
         if (providers.isEmpty())
             throw new ProviderIdNotFound("provider id not found");
         return providers.get(0);
+    }
+
+    public List<ParkingLotResponseDto> getAllParkingLots(Pageable pageable){
+        List<ParkingLot> parkingLots = parkingLotRepository.findAll(ParkingLotSpecification.getAllParkingLot(),pageable).stream().toList();
+        return MappingUtil.listOfParkingLotToListOfParkingLotResponseDto(parkingLots);
     }
 
 

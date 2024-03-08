@@ -1,5 +1,6 @@
 package et.com.gebeya.parkinglotservice.repository.specification;
 
+import et.com.gebeya.parkinglotservice.model.Driver;
 import et.com.gebeya.parkinglotservice.model.ParkingLot;
 import et.com.gebeya.parkinglotservice.model.ParkingLotProvider;
 import jakarta.persistence.criteria.Join;
@@ -23,5 +24,10 @@ public class ParkingLotSpecification {
             Predicate isProvider = criteriaBuilder.equal(providerJoin.get("id"), providerId);
             return criteriaBuilder.and(isActive, isProvider);
         };
+    }
+
+    public static Specification<ParkingLot> getAllParkingLot()
+    {
+        return ((root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get("isActive"),false));
     }
 }
