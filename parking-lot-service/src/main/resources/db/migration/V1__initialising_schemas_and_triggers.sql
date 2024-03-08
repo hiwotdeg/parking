@@ -194,3 +194,27 @@ CREATE OR REPLACE TRIGGER update_rating_trigger
     ON review
     FOR EACH ROW
 EXECUTE FUNCTION update_average_rating();
+
+
+CREATE OR REPLACE FUNCTION update_parking_lot()
+    RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.reservation_status = 0 THEN
+        IF NEW.is_active = true THEN
+            UPDATE parking_lot
+            SET available_slot = available_slot - 1
+            WHERE id = NEW.parking_lot_id;
+        ELSE
+            UPDATE parking_lot
+            SET available_slot = available_slot + 1
+            WHERE id = NEW.parking_lot_id;
+        END IF;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER reservation_update_trigger
+    AFTER UPDATE ON reservation
+    FOR EACH ROW
+EXECUTE FUNCTION update_parking_lot();
