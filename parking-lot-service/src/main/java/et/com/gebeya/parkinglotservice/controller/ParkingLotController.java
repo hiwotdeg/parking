@@ -21,6 +21,7 @@ public class ParkingLotController {
         return ResponseEntity.ok(parkingLotService.addParkingLot(request));
     }
 
+
     @PatchMapping ("/lots/{id}")
     public ResponseEntity<ParkingLotResponseDto> updateParkingLot(@RequestBody UpdateParkingLotDto request,@PathVariable("id") Integer id){
         return ResponseEntity.ok(parkingLotService.updateParkingLot(request,id));
@@ -29,6 +30,11 @@ public class ParkingLotController {
     @GetMapping("/lots/{id}")
     public ResponseEntity<ParkingLotResponseDto> getParkingLot(@PathVariable("id") Integer id){
         return ResponseEntity.ok(parkingLotService.getParkingLotById(id));
+    }
+
+    @GetMapping("/lots/")
+    public ResponseEntity<ParkingLotResponseDto> getParkingLotByProviderId(){
+        return ResponseEntity.ok(parkingLotService.getParkingLotByProviderId());
     }
 
     @DeleteMapping ("/lots/{id}")
