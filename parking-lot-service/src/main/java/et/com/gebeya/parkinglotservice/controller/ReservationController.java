@@ -28,8 +28,14 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.updateReservation(reservationId,dto));
     }
 
+    @PostMapping("/reservations/{reservationId}/cancel")
+    public ResponseEntity<Map<String, String>> cancelReservation(@PathVariable("reservationId") Integer reservationId){
+        return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
+    }
+
     @GetMapping("/lots/reservations/")
     public ResponseEntity<List<ReservationResponseDto>> getReservationByProviderID(){
         return ResponseEntity.ok(reservationService.getReservationByProviderId());
     }
+
 }

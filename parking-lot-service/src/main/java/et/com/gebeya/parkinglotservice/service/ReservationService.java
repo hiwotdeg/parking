@@ -4,10 +4,7 @@ import et.com.gebeya.parkinglotservice.dto.requestdto.*;
 import et.com.gebeya.parkinglotservice.dto.responsedto.BalanceResponseDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ReservationResponseDto;
 import et.com.gebeya.parkinglotservice.enums.ReservationStatus;
-import et.com.gebeya.parkinglotservice.exception.ActiveReservationNotFound;
-import et.com.gebeya.parkinglotservice.exception.InsufficientBalance;
-import et.com.gebeya.parkinglotservice.exception.ParkingLotAvailabilityException;
-import et.com.gebeya.parkinglotservice.exception.ReservationUpdateAfterFiveMinuteException;
+import et.com.gebeya.parkinglotservice.exception.*;
 import et.com.gebeya.parkinglotservice.model.Driver;
 import et.com.gebeya.parkinglotservice.model.ParkingLot;
 import et.com.gebeya.parkinglotservice.model.ParkingLotProvider;
@@ -84,11 +81,7 @@ public class ReservationService {
             throw new InsufficientBalance("You have insufficient balance. please purchase coupons");
     }
 
-    public void updateAvailableSlotOfParkingLot(Integer parkingLotId) {
-        ParkingLot parkingLot = parkingLotService.getParkingLot(parkingLotId);
-        UpdateParkingLotDto updateParkingLotDto = UpdateParkingLotDto.builder().availableSlot(parkingLot.getAvailableSlot() - 1).build();
-        parkingLotService.updateParkingLot(updateParkingLotDto, parkingLotId);
-    }
+
 
     private void notifyBooking(Integer providerId, Integer driverId, String parkingLotName, LocalTime duration) {
         messageService.sendPushNotificationForDriver(driverId, MessagingUtil.driverBookNotification(parkingLotName, duration));
@@ -140,5 +133,23 @@ public class ReservationService {
         Instant currentInstant = Instant.now();
         Duration duration = Duration.between(givenInstant, currentInstant);
         return duration.compareTo(Duration.ofMinutes(5)) >= 0;
+    }
+
+    public Map<String, String> cancelReservation(Integer reservationId){
+        Reservation reservation = getActiveReservationsById(reservationId);
+        if(reservation.getReservationStatus().equals(ReservationStatus.PENDING) && reservation.getIsActive().equals(true)){
+            reservation.setIsActive(false);
+            reservationRepository.save(reservation);
+
+        }
+        else if(reservation.getReservationStatus().equals(ReservationStatus.ACCEPTED) && reservation.getIsActive().equals(true)){
+            reservation.setIsActive(false);
+            reservationRepository.save(reservation);
+            messageService.sendPushNotificationForDriver(reservation.getDriver().getId(), MessagingUtil.cancelReservationNotificationForDriver(reservation.getParkingLot().getName()));
+        }
+        else{
+            throw new CancelReservationException("cancel reservation allowed for active accepted and active pending reservations only");
+        }
+        return Map.of("message", "you have cancelled your reservation");
     }
 }

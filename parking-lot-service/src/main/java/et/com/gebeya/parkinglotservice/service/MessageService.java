@@ -36,7 +36,7 @@ public class MessageService {
     }
 
     public void sendPushNotificationForDriver(Integer id, String body){
-        String providerId = "DRIVER"+id;
+        String providerId = "DRIVER_"+id;
         MessageDto messageDto = MessageDto.builder().title("BOOK NOTIFICATION").type(PushNotificationType.RESERVATION.name()).body(body).receiverId(providerId).build();
         messageDtoKafkaTemplate.send(PUSH_NOTIFICATION,messageDto);
     }

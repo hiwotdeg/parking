@@ -28,4 +28,9 @@ public class MessagingUtil {
         return String.format("%02d:%02d", hour, minute);
     }
 
+    public static String cancelReservationNotificationForDriver(String parkingLotName){
+        String formattedDateTime = getDateTime();
+        return "Dear Customer, you canceled your reservation to a parking lot "+parkingLotName+ " at "+formattedDateTime+".\nThank you for choosing our parking service.";
+    }
+
 }
