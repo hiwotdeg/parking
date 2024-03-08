@@ -30,18 +30,13 @@ import java.util.List;
 public class ParkingLotProviderService {
     private final WebClient.Builder webClientBuilder;
     private final ParkingLotProviderRepository parkingLotProviderRepository;
-
+    private final AuthService authService;
     public AddUserResponse registerParkingLotProvider(AddProviderDto dto) {
 
         ParkingLotProvider provider = MappingUtil.mapAddProviderDtoToParkingLotProvider(dto);
         provider = parkingLotProviderRepository.save(provider);
         AddUserRequest addUserRequest = MappingUtil.mapParkingLotProviderToAddUserRequest(provider);
-        Mono<ResponseEntity<AddUserResponse>> responseMono = webClientBuilder.build()
-                .post()
-                .uri("http://AUTH-SERVICE/api/v1/auth/addUser")
-                .body(Mono.just(addUserRequest), AddUserRequest.class)
-                .retrieve()
-                .toEntity(AddUserResponse.class);
+        Mono<ResponseEntity<AddUserResponse>> responseMono = authService.getAuthServiceResponseEntityMono(addUserRequest);
         BalanceRequestDto requestDto = BalanceRequestDto.builder().userId(provider.getId()).amount(BigDecimal.valueOf(0.0)).build();
         BalanceResponseDto responseDto = createBalance(requestDto);
         log.info("Response from Payment micro service==> {}", responseDto);
@@ -49,6 +44,8 @@ public class ParkingLotProviderService {
                 .map(ResponseEntity::getBody)
                 .orElseThrow(() -> new AuthException("Error occurred during generating of token"));
     }
+
+
 
     public ProviderResponseDto updateParkingLotProvider(UpdateProviderRequestDto dto, Integer id) {
         ParkingLotProvider provider = getParkingLotProvider(id);

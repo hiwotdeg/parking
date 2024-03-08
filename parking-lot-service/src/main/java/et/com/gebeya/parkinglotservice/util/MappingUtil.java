@@ -57,6 +57,12 @@ public class MappingUtil {
                 .build();
     }
 
+    public static List<DriverResponseDto> listOfReservationToListOfDriverResponseDto(List<Driver> drivers){
+        List<DriverResponseDto> driverResponseDtos = new ArrayList<>();
+        drivers.forEach(driver -> driverResponseDtos.add(mapDriverToDriverResponseDto(driver)));
+        return driverResponseDtos;
+    }
+
     public static AddUserRequest mapCustomerToAddUserRequest(Driver driver) {
         return AddUserRequest.builder()
                 .phoneNo(driver.getPhoneNo())

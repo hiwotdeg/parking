@@ -16,6 +16,7 @@ import et.com.gebeya.parkinglotservice.util.MappingUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -31,20 +32,14 @@ import java.util.List;
 public class DriverService {
     private final WebClient.Builder webClientBuilder;
     private final DriverRepository driverRepository;
-
+    private final AuthService authService;
     @Transactional
     public AddUserResponse registerDriver(AddDriverRequestDto dto) {
 
         Driver driver = MappingUtil.mapAddDiverRequestDtoToDriver(dto);
         driver = driverRepository.save(driver);
         AddUserRequest addUserRequest = MappingUtil.mapCustomerToAddUserRequest(driver);
-        Mono<ResponseEntity<AddUserResponse>> responseMono = webClientBuilder.build()
-                .post()
-                .uri("http://AUTH-SERVICE/api/v1/auth/addUser")
-                .body(Mono.just(addUserRequest), AddUserRequest.class)
-                .retrieve()
-                .toEntity(AddUserResponse.class);
-
+        Mono<ResponseEntity<AddUserResponse>> responseMono = authService.getAuthServiceResponseEntityMono(addUserRequest);
         BalanceRequestDto requestDto = BalanceRequestDto.builder().userId(driver.getId()).amount(BigDecimal.valueOf(0.0)).build();
         BalanceResponseDto responseDto = createBalance(requestDto);
         log.info("Response from Payment micro service==> {}", responseDto);
@@ -84,5 +79,9 @@ public class DriverService {
                 .bodyToMono(BalanceResponseDto.class)
                 .block();
 
+    }
+    public List<DriverResponseDto> getAllDrivers(Pageable pageable){
+        List<Driver> driverList = driverRepository.findAll(DriverSpecification.getAllDrivers(),pageable).stream().toList();
+        return MappingUtil.listOfReservationToListOfDriverResponseDto(driverList);
     }
 }

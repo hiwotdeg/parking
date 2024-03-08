@@ -6,9 +6,10 @@ import et.com.gebeya.parkinglotservice.dto.responsedto.AddUserResponse;
 import et.com.gebeya.parkinglotservice.dto.responsedto.DriverResponseDto;
 import et.com.gebeya.parkinglotservice.service.DriverService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
+import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,6 +32,10 @@ public class DriverController {
     @GetMapping("/drivers/")
     public ResponseEntity<DriverResponseDto> getDriverById(){
         return ResponseEntity.ok(driverService.getDriverById());
+    }
+    @GetMapping("/drivers")
+    public ResponseEntity<List<DriverResponseDto>> getAllDrivers(@PageableDefault(page = 0, size = 10) Pageable pageable){
+        return ResponseEntity.ok(driverService.getAllDrivers(pageable));
     }
 
 }
