@@ -16,6 +16,7 @@ import et.com.gebeya.parkinglotservice.util.MessagingUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -151,5 +152,10 @@ public class ReservationService {
             throw new CancelReservationException("cancel reservation allowed for active accepted and active pending reservations only");
         }
         return Map.of("message", "you have cancelled your reservation");
+    }
+
+    public List<ReservationResponseDto> getAllReservation(Pageable pageable){
+        List<Reservation> reservations = reservationRepository.findAll(pageable).stream().toList();
+        return MappingUtil.mapListOfReservationToReservationResponseDto(reservations);
     }
 }
