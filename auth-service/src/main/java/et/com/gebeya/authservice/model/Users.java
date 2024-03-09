@@ -22,15 +22,12 @@ import java.util.List;
 
 public class Users extends BaseModel implements UserDetails {
     @JsonIgnoreProperties(ignoreUnknown = true)
-//    @NotBlank(message = "UserName is mandatory")
-    @Column(name = "phonenumber")
+    @Column(name = "phonenumber",unique = true)
     private String userName;
-    //    @Size(min = 6, max = 16)
     @Column(name = "password")
     private String password;
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-//    @NotBlank
     private Authority authority;
     private Integer roleId;
 
