@@ -5,6 +5,7 @@ import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateDriverRequestDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.AddUserResponse;
 import et.com.gebeya.parkinglotservice.dto.responsedto.DriverResponseDto;
 import et.com.gebeya.parkinglotservice.service.DriverService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class DriverController {
     private final DriverService driverService;
     @PostMapping("/drivers") //unsecured endpoint
-    public ResponseEntity<AddUserResponse> registerDriver(@RequestBody AddDriverRequestDto dto){
+    public ResponseEntity<AddUserResponse> registerDriver(@Valid @RequestBody AddDriverRequestDto dto){
         return ResponseEntity.ok(driverService.registerDriver(dto));
     }
     @PatchMapping("/drivers/{id}") //drivers only
