@@ -1,5 +1,7 @@
 package et.com.gebeya.parkinglotservice.dto.requestdto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +14,9 @@ import lombok.NoArgsConstructor;
 public class UpdateDriverRequestDto {
     private String firstName;
     private String lastName;
+    @Email
     private String email;
+    @Pattern(regexp = "^\\+251[79]\\d{8}$", message = "Phone Number starts with +251*********")
     private String phoneNo;
     private String imageUrl;
 }

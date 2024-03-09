@@ -206,6 +206,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleException(Exception exception) {
         Map<String, Object> errorResponse = new HashMap<>();
         errorResponse.put("message", exception.getMessage());
+        log.error(exception.getMessage(),exception);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 }
