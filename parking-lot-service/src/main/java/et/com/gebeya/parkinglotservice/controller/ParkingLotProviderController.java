@@ -30,7 +30,7 @@ public class ParkingLotProviderController {
     public ResponseEntity<ProviderResponseDto> getParkingLotProviderById(@PathVariable("id") Integer id){
         return ResponseEntity.ok(parkingLotProviderService.getParkingLotProviderById(id));
     }
-    @GetMapping("/providers/")
+    @GetMapping("/providers/my")
     public ResponseEntity<ProviderResponseDto> getParkingLotProviderById(){
         return ResponseEntity.ok(parkingLotProviderService.getParkingLotProviderById());
     }

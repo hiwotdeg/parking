@@ -59,7 +59,7 @@ public class DriverService {
         return MappingUtil.mapDriverToDriverResponseDto(driver);
     }
 
-    public DriverResponseDto getDriverById(){
+    public DriverResponseDto getMyDriverProfile(){
         Integer driverId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return getDriverById(driverId);
     }

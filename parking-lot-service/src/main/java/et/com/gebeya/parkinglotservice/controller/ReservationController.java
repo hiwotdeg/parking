@@ -34,7 +34,7 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
     }
 
-    @GetMapping("/reservations/")
+    @GetMapping("/reservations/my")
     public ResponseEntity<List<ReservationResponseDto>> getReservationByProviderID() {
         return ResponseEntity.ok(reservationService.getReservationByProviderId());
     }

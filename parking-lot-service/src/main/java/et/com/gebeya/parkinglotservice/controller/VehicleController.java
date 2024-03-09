@@ -24,7 +24,7 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleService.updateVehicle(vehicleRequestDto,id));
     }
 
-    @GetMapping("/vehicles")
+    @GetMapping("/vehicles/my")
     public ResponseEntity<List<VehicleResponseDto>> getVehiclesByDriverId(){
         return ResponseEntity.ok(vehicleService.getVehiclesByDriverId());
     }

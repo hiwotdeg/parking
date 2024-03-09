@@ -33,7 +33,7 @@ public class ParkingLotController {
         return ResponseEntity.ok(parkingLotService.getParkingLotById(id));
     }
 
-    @GetMapping("/lots/")
+    @GetMapping("/lots/my")
     public ResponseEntity<ParkingLotResponseDto> getParkingLotByProviderId(){
         return ResponseEntity.ok(parkingLotService.getParkingLotByProviderId());
     }

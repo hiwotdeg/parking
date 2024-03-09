@@ -29,9 +29,9 @@ public class DriverController {
     public ResponseEntity<DriverResponseDto> getDriverById(@PathVariable("id") Integer id){
         return ResponseEntity.ok(driverService.getDriverById(id));
     }
-    @GetMapping("/drivers/")
+    @GetMapping("/drivers/my")
     public ResponseEntity<DriverResponseDto> getDriverById(){
-        return ResponseEntity.ok(driverService.getDriverById());
+        return ResponseEntity.ok(driverService.getMyDriverProfile());
     }
     @GetMapping("/drivers")
     public ResponseEntity<List<DriverResponseDto>> getAllDrivers(@PageableDefault(page = 0, size = 10) Pageable pageable){
