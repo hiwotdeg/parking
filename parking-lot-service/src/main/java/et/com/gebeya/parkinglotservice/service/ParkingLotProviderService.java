@@ -13,6 +13,7 @@ import et.com.gebeya.parkinglotservice.model.ParkingLotProvider;
 import et.com.gebeya.parkinglotservice.repository.ParkingLotProviderRepository;
 import et.com.gebeya.parkinglotservice.repository.specification.ParkingLotProviderSpecification;
 import et.com.gebeya.parkinglotservice.util.MappingUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +33,7 @@ public class ParkingLotProviderService {
     private final WebClient.Builder webClientBuilder;
     private final ParkingLotProviderRepository parkingLotProviderRepository;
     private final AuthService authService;
+    @Transactional
     public AddUserResponse registerParkingLotProvider(AddProviderDto dto) {
 
         ParkingLotProvider provider = MappingUtil.mapAddProviderDtoToParkingLotProvider(dto);
@@ -78,7 +80,7 @@ public class ParkingLotProviderService {
     }
     private BalanceResponseDto createBalance(BalanceRequestDto balanceRequestDto) {
         return webClientBuilder.build().post()
-                .uri("http://PAYMENT-SERVICE/api/v1/payment/driver")
+                .uri("http://PAYMENT-SERVICE/api/v1/payment/provider")
                 .bodyValue(balanceRequestDto)
                 .retrieve()
                 .bodyToMono(BalanceResponseDto.class)
