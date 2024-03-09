@@ -30,6 +30,9 @@ public class Reservation {
     @ManyToOne()
     @JoinColumn(name ="parking_lot_id")
     private ParkingLot parkingLot;
+    @ManyToOne()
+    @JoinColumn(name = "vehicle_id")
+    private Vehicle vehicle;
     private LocalTime stayingDuration;
     private BigDecimal price;
     private Boolean isActive;

@@ -322,6 +322,7 @@ public class MappingUtil {
                 .reservedAt(reservation.getCreatedOn())
                 .stayingDuration(reservation.getStayingDuration())
                 .parkingLotId(reservation.getParkingLot().getId())
+                .vehicleId(reservation.getVehicle().getId())
                 .price(reservation.getPrice())
                 .isActive(reservation.getIsActive())
                 .build();

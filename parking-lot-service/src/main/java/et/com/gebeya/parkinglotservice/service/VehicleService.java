@@ -45,7 +45,7 @@ public class VehicleService {
         return MappingUtil.vehicleToVehicleResponseDto(vehicle);
     }
 
-    private Vehicle getVehicle(Integer id) {
+    Vehicle getVehicle(Integer id) {
         List<Vehicle> vehicle = vehicleRepository.findAll(VehicleSpecification.getVehicleById(id));
         if (vehicle.isEmpty())
             throw new VehicleIdNotFound("Vehicle is not found");

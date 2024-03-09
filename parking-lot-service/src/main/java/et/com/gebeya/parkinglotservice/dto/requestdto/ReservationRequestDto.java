@@ -14,4 +14,5 @@ import java.time.LocalTime;
 @Data
 public class ReservationRequestDto {
     private LocalTime stayingDuration;
+    private Integer vehicleId;
 }

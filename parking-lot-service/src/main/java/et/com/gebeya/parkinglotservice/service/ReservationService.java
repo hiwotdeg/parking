@@ -5,10 +5,7 @@ import et.com.gebeya.parkinglotservice.dto.responsedto.BalanceResponseDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ReservationResponseDto;
 import et.com.gebeya.parkinglotservice.enums.ReservationStatus;
 import et.com.gebeya.parkinglotservice.exception.*;
-import et.com.gebeya.parkinglotservice.model.Driver;
-import et.com.gebeya.parkinglotservice.model.ParkingLot;
-import et.com.gebeya.parkinglotservice.model.ParkingLotProvider;
-import et.com.gebeya.parkinglotservice.model.Reservation;
+import et.com.gebeya.parkinglotservice.model.*;
 import et.com.gebeya.parkinglotservice.repository.ReservationRepository;
 import et.com.gebeya.parkinglotservice.repository.specification.ReservationSpecification;
 import et.com.gebeya.parkinglotservice.util.MappingUtil;
@@ -39,6 +36,7 @@ public class ReservationService {
     private final DriverService driverService;
     private final WebClient.Builder webClientBuilder;
     private final MessageService messageService;
+    private final VehicleService vehicleService;
 
     @Transactional
     public Map<String, String> book(Integer parkingLotId, ReservationRequestDto dto) {
@@ -52,6 +50,8 @@ public class ReservationService {
         BigDecimal price = pricingService.dynamicPricing(requestDto, parkingLotId);
         Reservation reservation = Reservation.builder().price(price).parkingLot(parkingLot).driver(driver).stayingDuration(dto.getStayingDuration()).reservationStatus(ReservationStatus.PENDING).isActive(true).build();
         checkBalanceForDriver(driverId, price);
+        Vehicle vehicle = vehicleService.getVehicle(dto.getVehicleId());
+        reservation.setVehicle(vehicle);
         reservationRepository.save(reservation);
         notifyBooking(provider.getId(), driverId, parkingLot.getName(), dto.getStayingDuration());
         return Map.of("message", "you have reserved a parking lot successfully");

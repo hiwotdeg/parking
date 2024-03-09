@@ -18,6 +18,7 @@ public class ReservationResponseDto {
     private Integer id;
     private Integer driverId;
     private Integer parkingLotId;
+    private Integer vehicleId;
     private LocalTime stayingDuration;
     private BigDecimal price;
     private ReservationStatus reservationStatus;
