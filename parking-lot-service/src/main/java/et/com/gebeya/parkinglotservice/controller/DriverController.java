@@ -17,23 +17,23 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class DriverController {
     private final DriverService driverService;
-    @PostMapping("/drivers")
+    @PostMapping("/drivers") //unsecured endpoint
     public ResponseEntity<AddUserResponse> registerDriver(@RequestBody AddDriverRequestDto dto){
         return ResponseEntity.ok(driverService.registerDriver(dto));
     }
-    @PatchMapping("/drivers/{id}")
+    @PatchMapping("/drivers/{id}") //drivers only
     public ResponseEntity<DriverResponseDto> updateDriver(@RequestBody UpdateDriverRequestDto dto, @PathVariable("id") Integer id){
         return ResponseEntity.ok(driverService.updateDriver(dto,id));
     }
-    @GetMapping("/drivers/{id}")
+    @GetMapping("/drivers/{id}") //drivers,providers
     public ResponseEntity<DriverResponseDto> getDriverById(@PathVariable("id") Integer id){
         return ResponseEntity.ok(driverService.getDriverById(id));
     }
-    @GetMapping("/drivers/my")
+    @GetMapping("/drivers/my") //drivers only
     public ResponseEntity<DriverResponseDto> getDriverById(){
         return ResponseEntity.ok(driverService.getMyDriverProfile());
     }
-    @GetMapping("/drivers")
+    @GetMapping("/drivers") //admin
     public ResponseEntity<List<DriverResponseDto>> getAllDrivers(@PageableDefault(page = 0, size = 10) Pageable pageable){
         return ResponseEntity.ok(driverService.getAllDrivers(pageable));
     }

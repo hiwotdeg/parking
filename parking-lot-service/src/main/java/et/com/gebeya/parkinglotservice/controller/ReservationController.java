@@ -19,27 +19,27 @@ import java.util.Map;
 public class ReservationController {
     private final ReservationService reservationService;
 
-    @PostMapping("/lots/{parkingLotId}/reservations")
+    @PostMapping("/lots/{parkingLotId}/reservations") // driver
     public ResponseEntity<Map<String, String>> book(@RequestBody ReservationRequestDto requestDto, @PathVariable("parkingLotId") Integer parkingLotId) {
-        return ResponseEntity.ok(reservationService.book(parkingLotId, ReservationRequestDto.builder().stayingDuration(requestDto.getStayingDuration()).build()));
+        return ResponseEntity.ok(reservationService.book(parkingLotId,requestDto));
     }
 
-    @PostMapping("/reservations/{reservationId}/requests")
+    @PostMapping("/reservations/{reservationId}/requests") // provider
     public ResponseEntity<ReservationResponseDto> updateStatus(@PathVariable("reservationId") Integer reservationId, @RequestBody UpdateReservation dto) {
         return ResponseEntity.ok(reservationService.updateReservation(reservationId, dto));
     }
 
-    @PostMapping("/reservations/{reservationId}/cancel")
+    @PostMapping("/reservations/{reservationId}/cancel") // driver
     public ResponseEntity<Map<String, String>> cancelReservation(@PathVariable("reservationId") Integer reservationId) {
         return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
     }
 
-    @GetMapping("/reservations/my")
+    @GetMapping("/reservations/my") // provider
     public ResponseEntity<List<ReservationResponseDto>> getReservationByProviderID() {
         return ResponseEntity.ok(reservationService.getReservationByProviderId());
     }
 
-    @GetMapping("/reservations")
+    @GetMapping("/reservations") // admin
     public ResponseEntity<List<ReservationResponseDto>> getAllReservations(@PageableDefault(page = 0, size = 10) Pageable pageable) {
         return ResponseEntity.ok(reservationService.getAllReservation(pageable));
     }

@@ -74,6 +74,7 @@ create table reservation
     updated_on         timestamp(6) with time zone,
     driver_id          integer,
     parking_lot_id     integer,
+    vehicle_id         integer,
     primary key (id)
 );
 
@@ -151,6 +152,11 @@ alter table if exists reservation
         foreign key (parking_lot_id)
             references parking_lot;
 
+alter table if exists reservation
+    add constraint FKrm327sr0rb11mme0kbsm37od5
+        foreign key (vehicle_id)
+            references vehicle;
+
 alter table if exists review
     add constraint FKc5ins2nksp4wrkoiusu9quc3g
         foreign key (driver_id)
@@ -197,7 +203,8 @@ EXECUTE FUNCTION update_average_rating();
 
 
 CREATE OR REPLACE FUNCTION update_parking_lot()
-    RETURNS TRIGGER AS $$
+    RETURNS TRIGGER AS
+$$
 BEGIN
     IF NEW.reservation_status = 0 THEN
         IF NEW.is_active = true THEN
@@ -215,6 +222,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER reservation_update_trigger
-    AFTER UPDATE ON reservation
+    AFTER UPDATE
+    ON reservation
     FOR EACH ROW
 EXECUTE FUNCTION update_parking_lot();

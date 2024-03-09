@@ -14,27 +14,27 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class VehicleController {
     private final VehicleService vehicleService;
-    @PostMapping("/vehicles")
+    @PostMapping("/vehicles") // driver
     public ResponseEntity<VehicleResponseDto> addVehicle(@RequestBody VehicleRequestDto vehicleRequestDto){
         return ResponseEntity.ok(vehicleService.addVehicle(vehicleRequestDto));
     }
 
-    @PatchMapping("/vehicles/{id}")
+    @PatchMapping("/vehicles/{id}") // driver
     public ResponseEntity<VehicleResponseDto> updateVehicle(@RequestBody VehicleRequestDto vehicleRequestDto,@PathVariable("id") Integer id){
         return ResponseEntity.ok(vehicleService.updateVehicle(vehicleRequestDto,id));
     }
 
-    @GetMapping("/vehicles/my")
+    @GetMapping("/vehicles/my") // driver
     public ResponseEntity<List<VehicleResponseDto>> getVehiclesByDriverId(){
         return ResponseEntity.ok(vehicleService.getVehiclesByDriverId());
     }
 
-    @GetMapping("/vehicles/{id}")
+    @GetMapping("/vehicles/{id}") // driver, provider
     public ResponseEntity<VehicleResponseDto> getVehicleByVehicleId(@PathVariable("id") Integer id){
         return ResponseEntity.ok(vehicleService.getVehiclesByVehicleId(id));
     }
 
-    @DeleteMapping("/vehicles/{id}")
+    @DeleteMapping("/vehicles/{id}") // driver
     public ResponseEntity<Map<String, String>> deleteVehicleById(@PathVariable("id") Integer id){
         return ResponseEntity.ok(vehicleService.deleteVehicleById(id));
     }

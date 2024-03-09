@@ -18,23 +18,23 @@ import java.util.List;
 public class ParkingLotProviderController {
     private final ParkingLotProviderService parkingLotProviderService;
 
-    @PostMapping("/providers")
+    @PostMapping("/providers") // unsecured
     public ResponseEntity<AddUserResponse> registerParkingLotProvider(@RequestBody AddProviderDto dto){
         return ResponseEntity.ok(parkingLotProviderService.registerParkingLotProvider(dto));
     }
-    @PatchMapping("/providers/{id}")
+    @PatchMapping("/providers/{id}") // provider
     public ResponseEntity<ProviderResponseDto> updateParkingLotProvider(@RequestBody UpdateProviderRequestDto dto, @PathVariable("id") Integer id){
         return ResponseEntity.ok(parkingLotProviderService.updateParkingLotProvider(dto,id));
     }
-    @GetMapping("/providers/{id}")
+    @GetMapping("/providers/{id}") // driver, provider, admin
     public ResponseEntity<ProviderResponseDto> getParkingLotProviderById(@PathVariable("id") Integer id){
         return ResponseEntity.ok(parkingLotProviderService.getParkingLotProviderById(id));
     }
-    @GetMapping("/providers/my")
+    @GetMapping("/providers/my") // provider
     public ResponseEntity<ProviderResponseDto> getParkingLotProviderById(){
         return ResponseEntity.ok(parkingLotProviderService.getParkingLotProviderById());
     }
-    @GetMapping("/providers")
+    @GetMapping("/providers") // admin
     public ResponseEntity<List<ProviderResponseDto>> getAllProviders(@PageableDefault(page = 0, size = 10) Pageable pageable){
         return ResponseEntity.ok(parkingLotProviderService.getAllProviders(pageable));
     }

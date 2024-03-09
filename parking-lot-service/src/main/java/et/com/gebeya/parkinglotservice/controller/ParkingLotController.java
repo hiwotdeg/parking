@@ -18,32 +18,32 @@ import java.util.Map;
 public class ParkingLotController {
     private final ParkingLotService parkingLotService;
 
-    @PostMapping("/lots")
+    @PostMapping("/lots") // providers
     public ResponseEntity<ParkingLotResponseDto> addParkingLot(@RequestBody AddParkingLotDto request){
         return ResponseEntity.ok(parkingLotService.addParkingLot(request));
     }
 
-    @PatchMapping ("/lots/{id}")
+    @PatchMapping ("/lots/{id}") // providers
     public ResponseEntity<ParkingLotResponseDto> updateParkingLot(@RequestBody UpdateParkingLotDto request,@PathVariable("id") Integer id){
         return ResponseEntity.ok(parkingLotService.updateParkingLot(request,id));
     }
 
-    @GetMapping("/lots/{id}")
+    @GetMapping("/lots/{id}") // providers, drivers
     public ResponseEntity<ParkingLotResponseDto> getParkingLot(@PathVariable("id") Integer id){
         return ResponseEntity.ok(parkingLotService.getParkingLotById(id));
     }
 
-    @GetMapping("/lots/my")
+    @GetMapping("/lots/my") // providers
     public ResponseEntity<ParkingLotResponseDto> getParkingLotByProviderId(){
         return ResponseEntity.ok(parkingLotService.getParkingLotByProviderId());
     }
 
-    @GetMapping("/lots")
+    @GetMapping("/lots") // admin
     public ResponseEntity<List<ParkingLotResponseDto>> getAllParkingLot(@PageableDefault(page = 0, size = 10) Pageable pageable){
         return ResponseEntity.ok(parkingLotService.getAllParkingLots(pageable));
     }
 
-    @DeleteMapping ("/lots/{id}")
+    @DeleteMapping ("/lots/{id}") // providers
     public ResponseEntity<Map<String, String>> deleteParkingLot(@PathVariable("id") Integer id){
         return ResponseEntity.ok(parkingLotService.deleteParkingLot(id));
     }

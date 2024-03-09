@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 public class PaymentController {
     private final PricingService pricingService;
 
-    @GetMapping("/lots/{parkingLotId}/pricing")
+    @GetMapping("/lots/{parkingLotId}/pricing") // drivers
     public ResponseEntity<BigDecimal> getPricing(@ModelAttribute PriceRequestDto request, @PathVariable("parkingLotId")Integer parkingLotId){
         return ResponseEntity.ok(pricingService.dynamicPricing(request,parkingLotId));
     }

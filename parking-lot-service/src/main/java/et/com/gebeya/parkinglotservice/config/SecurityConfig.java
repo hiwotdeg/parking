@@ -26,6 +26,9 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    private static final String ADMIN = "ROLE_ADMIN";
+    private static final String PROVIDER = "ROLE_PROVIDER";
+    private static final String DRIVER = "ROLE_DRIVER";
     protected static final RequestMatcher[] UNAUTHORIZED_MATCHERS = {
             new AntPathRequestMatcher("/api/v1/parking-lot/providers", HttpMethod.POST.name()),
             new AntPathRequestMatcher("/api/v1/parking-lot/drivers", HttpMethod.POST.name()),
@@ -49,42 +52,53 @@ public class SecurityConfig {
     };
 
     protected static final RequestMatcher[] DRIVER_MATCHERS = {
-            new AntPathRequestMatcher("/api/v1/parking-lot/drivers/*", HttpMethod.PATCH.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/drivers", HttpMethod.DELETE.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*/reviews", HttpMethod.POST.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*/reviews/*", HttpMethod.PATCH.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*/reviews/*", HttpMethod.DELETE.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/vehicles",HttpMethod.POST.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/vehicles",HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/vehicles/*",HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/vehicles/*",HttpMethod.PATCH.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/vehicles/*",HttpMethod.DELETE.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*/pricing/**", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*/reservations", HttpMethod.POST.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/reservations/*/cancel",HttpMethod.POST.name())
+            new AntPathRequestMatcher("/api/v1/parking-lot/drivers/{id}", HttpMethod.PATCH.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/drivers/my", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/{parkingLotId}/pricing", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/{parkingLotId}/reservations", HttpMethod.POST.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/reservations/{reservationId}/cancel", HttpMethod.POST.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/{parkingLotId}/reviews", HttpMethod.POST.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/{parkingLotId}/reviews/{reviewId}", HttpMethod.PATCH.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/{parkingLotId}/reviews/{reviewId}", HttpMethod.DELETE.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/vehicles", HttpMethod.POST.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/vehicles/{id}", HttpMethod.PATCH.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/vehicles/my", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/vehicles/{id}", HttpMethod.DELETE.name()),
     };
 
     protected static final RequestMatcher[] PROVIDER_MATCHERS = {
-            new AntPathRequestMatcher("/api/v1/parking-lot/providers/*", HttpMethod.PATCH.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/providers", HttpMethod.DELETE.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*", HttpMethod.PATCH.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/{parkingLotId}/operation-hours", HttpMethod.POST.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/{parkingLotId}/operation-hours/{operationHourId}", HttpMethod.DELETE.name()),
             new AntPathRequestMatcher("/api/v1/parking-lot/lots", HttpMethod.POST.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*", HttpMethod.DELETE.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*/operation-hours", HttpMethod.POST.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*/operation-hours/*", HttpMethod.DELETE.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/lots/reservations/**", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/reservations/*/requests",HttpMethod.POST.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/reservations/*")
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/{id}", HttpMethod.PATCH.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/my", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/{id}", HttpMethod.DELETE.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/providers/{id}", HttpMethod.PATCH.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/providers/my", HttpMethod.DELETE.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/reservations/{reservationId}/requests", HttpMethod.POST.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/reservations/my", HttpMethod.GET.name()),
+
+    };
+
+    protected static final RequestMatcher[] ADMIN_MATCHERS = {
+            new AntPathRequestMatcher("/api/v1/parking-lot/drivers", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/providers", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/reservations", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/reviews", HttpMethod.GET.name()),
     };
 
     protected static final RequestMatcher[] DRIVER_AND_PROVIDER_MATCHERS = {
-            new AntPathRequestMatcher("/api/v1/parking-lot/providers/*", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/drivers/*", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*/reviews/*", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*/operation-hours", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*/operation-hours/*", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/lots/*/reviews", HttpMethod.GET.name()),          //12
+            new AntPathRequestMatcher("/api/v1/parking-lot/drivers/{id}", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/{id}", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/{parkingLotId}/reviews", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/vehicles/{id}", HttpMethod.GET.name()),          //12
+    };
+
+    protected static final RequestMatcher[] DRIVER_PROVIDER_ADMIN_MATCHERS = {
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/{parkingLotId}/operation-hours", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/lots/{parkingLotId}/operation-hours/{operationHourId}", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/providers/{id}", HttpMethod.GET.name()),
     };
 
     @Bean
@@ -94,10 +108,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request.requestMatchers(UNAUTHORIZED_MATCHERS).permitAll())
                 .authorizeHttpRequests(request -> request.requestMatchers(SWAGGER_MATCHERS).permitAll())
-                .authorizeHttpRequests(request -> request.requestMatchers(DRIVER_AND_PROVIDER_MATCHERS).hasAnyAuthority("ROLE_DRIVER","ROLE_PROVIDER"))
-                .authorizeHttpRequests(request -> request.requestMatchers(PROVIDER_MATCHERS).hasAuthority("ROLE_PROVIDER"))
-                .authorizeHttpRequests(request -> request.requestMatchers(DRIVER_MATCHERS).hasAuthority("ROLE_DRIVER"))
-
+                .authorizeHttpRequests(request -> request.requestMatchers(DRIVER_AND_PROVIDER_MATCHERS).hasAnyAuthority(DRIVER, PROVIDER))
+                .authorizeHttpRequests(request -> request.requestMatchers(DRIVER_PROVIDER_ADMIN_MATCHERS).hasAnyAuthority(DRIVER, PROVIDER, ADMIN))
+                .authorizeHttpRequests(request -> request.requestMatchers(ADMIN_MATCHERS).hasAuthority(ADMIN))
+                .authorizeHttpRequests(request -> request.requestMatchers(PROVIDER_MATCHERS).hasAuthority(PROVIDER))
+                .authorizeHttpRequests(request -> request.requestMatchers(DRIVER_MATCHERS).hasAuthority(DRIVER))
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS)).exceptionHandling(handling -> {
                     handling.authenticationEntryPoint(unauthorizedEntryPoint());
                     handling.accessDeniedHandler(accessDeniedHandler());
