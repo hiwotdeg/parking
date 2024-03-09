@@ -7,6 +7,8 @@ import et.com.gebeya.parkinglotservice.dto.responsedto.ReviewResponseDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ReviewSearch;
 import et.com.gebeya.parkinglotservice.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -38,5 +40,10 @@ public class ReviewController {
     @GetMapping("/lots/{parkingLotId}/reviews")
     public ResponseEntity<List<ReviewSearch>> getReviews(@PathVariable("parkingLotId") Integer parkingLotId, @ModelAttribute ReviewSearchRequestDto reviewSearchRequestDto){
         return ResponseEntity.ok(reviewService.getReviews(reviewSearchRequestDto,parkingLotId));
+    }
+
+    @GetMapping("/reviews")
+    public ResponseEntity<List<ReviewSearch>> getAllReviews(@PageableDefault(page = 0, size = 10) Pageable pageable){
+        return ResponseEntity.ok(reviewService.getAllReviews(pageable));
     }
 }

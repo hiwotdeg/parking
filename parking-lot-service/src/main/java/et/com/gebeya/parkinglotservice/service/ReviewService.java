@@ -17,6 +17,7 @@ import et.com.gebeya.parkinglotservice.repository.ParkingLotRepository;
 import et.com.gebeya.parkinglotservice.repository.ReviewRepository;
 import et.com.gebeya.parkinglotservice.repository.specification.ReviewSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import et.com.gebeya.parkinglotservice.util.MappingUtil;
@@ -65,7 +66,10 @@ public class ReviewService {
         return response;
     }
 
-
+    public List<ReviewSearch> getAllReviews(Pageable pageable){
+        List<Review> reviews = reviewRepository.findAll(ReviewSpecification.getAllReviews(),pageable).stream().toList();
+        return MappingUtil.listOfReviewToListOfReviewSearch(reviews);
+    }
 
 
     public List<ReviewSearch> getReviews(ReviewSearchRequestDto reviewSearchRequestDto, Integer parkingLotId){
