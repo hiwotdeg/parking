@@ -23,7 +23,7 @@ public class DriverController {
         return ResponseEntity.ok(driverService.registerDriver(dto));
     }
     @PatchMapping("/drivers/{id}") //drivers only
-    public ResponseEntity<DriverResponseDto> updateDriver(@RequestBody UpdateDriverRequestDto dto, @PathVariable("id") Integer id){
+    public ResponseEntity<DriverResponseDto> updateDriver(@Valid @RequestBody UpdateDriverRequestDto dto, @PathVariable("id") Integer id){
         return ResponseEntity.ok(driverService.updateDriver(dto,id));
     }
     @GetMapping("/drivers/{id}") //drivers,providers

@@ -5,6 +5,7 @@ import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateProviderRequestDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.AddUserResponse;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ProviderResponseDto;
 import et.com.gebeya.parkinglotservice.service.ParkingLotProviderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -19,11 +20,11 @@ public class ParkingLotProviderController {
     private final ParkingLotProviderService parkingLotProviderService;
 
     @PostMapping("/providers") // unsecured
-    public ResponseEntity<AddUserResponse> registerParkingLotProvider(@RequestBody AddProviderDto dto){
+    public ResponseEntity<AddUserResponse> registerParkingLotProvider(@Valid @RequestBody AddProviderDto dto){
         return ResponseEntity.ok(parkingLotProviderService.registerParkingLotProvider(dto));
     }
     @PatchMapping("/providers/{id}") // provider
-    public ResponseEntity<ProviderResponseDto> updateParkingLotProvider(@RequestBody UpdateProviderRequestDto dto, @PathVariable("id") Integer id){
+    public ResponseEntity<ProviderResponseDto> updateParkingLotProvider(@Valid @RequestBody UpdateProviderRequestDto dto, @PathVariable("id") Integer id){
         return ResponseEntity.ok(parkingLotProviderService.updateParkingLotProvider(dto,id));
     }
     @GetMapping("/providers/{id}") // driver, provider, admin
