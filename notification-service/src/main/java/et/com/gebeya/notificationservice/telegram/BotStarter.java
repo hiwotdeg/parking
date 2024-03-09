@@ -55,7 +55,7 @@ public class BotStarter extends TelegramLongPollingBot {
     }
 
     public static boolean isPatternMatch(String input) {
-        Pattern regex = Pattern.compile("^0[79]\\d{8}$");
+        Pattern regex = Pattern.compile("^\\+251[79]\\d{8}$");
         Matcher matcher = regex.matcher(input);
         return matcher.matches();
     }
