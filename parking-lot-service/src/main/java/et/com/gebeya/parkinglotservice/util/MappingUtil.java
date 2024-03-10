@@ -39,8 +39,6 @@ public class MappingUtil {
             driver.setLastName(dto.getLastName());
         if (dto.getEmail() != null)
             driver.setEmail(dto.getEmail());
-        if (dto.getPhoneNo() != null)
-            driver.setEmail(dto.getEmail());
         if (dto.getImageUrl() != null)
             driver.setImageUrl(dto.getImageUrl());
         return driver;
@@ -200,8 +198,6 @@ public class MappingUtil {
             provider.setLastName(dto.getLastName());
         if (dto.getEmail() != null)
             provider.setEmail(dto.getEmail());
-        if (dto.getPhoneNo() != null)
-            provider.setPhoneNo(dto.getPhoneNo());
         if (dto.getImageUrl() != null)
             provider.setImageUrl(dto.getImageUrl());
         return provider;

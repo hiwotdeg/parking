@@ -16,7 +16,5 @@ public class UpdateProviderRequestDto {
     private String lastName;
     @Email
     private String email;
-    @Pattern(regexp = "^\\+251[79]\\d{8}$", message = "Phone Number starts with +251*********")
-    private String phoneNo;
     private String imageUrl;
 }
