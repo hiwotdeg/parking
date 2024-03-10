@@ -30,22 +30,34 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class DriverService {
-    private final WebClient.Builder webClientBuilder;
+    private final BalanceService balanceService;
     private final DriverRepository driverRepository;
     private final AuthService authService;
     @Transactional
     public AddUserResponse registerDriver(AddDriverRequestDto dto) {
+        Integer dId = null;
+        try{
+            Driver driver = MappingUtil.mapAddDiverRequestDtoToDriver(dto);
+            driver = driverRepository.save(driver);
+            dId = driver.getId();
+            AddUserRequest addUserRequest = MappingUtil.mapCustomerToAddUserRequest(driver);
+            Mono<ResponseEntity<AddUserResponse>> responseMono = authService.getAuthServiceResponseEntityMono(addUserRequest);
+            BalanceRequestDto requestDto = BalanceRequestDto.builder().userId(driver.getId()).amount(BigDecimal.valueOf(0.0)).build();
+            BalanceResponseDto responseDto = balanceService.createBalanceForDriver(requestDto);
+            log.info("Response from Payment micro service==> {}", responseDto);
+            return responseMono.blockOptional()
+                    .map(ResponseEntity::getBody)
+                    .orElseThrow(() -> new AuthException("Error occurred during generating of token"));
+        }
+        catch (Exception e){
+            if(dId!=null)
+            {
+                log.info("delete the coupon balance ==>{}",dId);
+                balanceService.deleteBalanceForDriver(dId);
+            }
+            throw e;
+        }
 
-        Driver driver = MappingUtil.mapAddDiverRequestDtoToDriver(dto);
-        driver = driverRepository.save(driver);
-        AddUserRequest addUserRequest = MappingUtil.mapCustomerToAddUserRequest(driver);
-        Mono<ResponseEntity<AddUserResponse>> responseMono = authService.getAuthServiceResponseEntityMono(addUserRequest);
-        BalanceRequestDto requestDto = BalanceRequestDto.builder().userId(driver.getId()).amount(BigDecimal.valueOf(0.0)).build();
-        BalanceResponseDto responseDto = createBalance(requestDto);
-        log.info("Response from Payment micro service==> {}", responseDto);
-        return responseMono.blockOptional()
-                .map(ResponseEntity::getBody)
-                .orElseThrow(() -> new AuthException("Error occurred during generating of token"));
     }
 
     public DriverResponseDto updateDriver(UpdateDriverRequestDto dto, Integer id) {
@@ -71,15 +83,6 @@ public class DriverService {
         return driver.get(0);
     }
 
-    private BalanceResponseDto createBalance(BalanceRequestDto balanceRequestDto){
-        return webClientBuilder.build().post()
-                .uri("http://PAYMENT-SERVICE/api/v1/payment/driver")
-                .bodyValue(balanceRequestDto)
-                .retrieve()
-                .bodyToMono(BalanceResponseDto.class)
-                .block();
-
-    }
     public List<DriverResponseDto> getAllDrivers(Pageable pageable){
         List<Driver> driverList = driverRepository.findAll(DriverSpecification.getAllDrivers(),pageable).stream().toList();
         return MappingUtil.listOfReservationToListOfDriverResponseDto(driverList);

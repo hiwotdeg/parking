@@ -25,30 +25,41 @@ import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class ParkingLotProviderService {
-    private final WebClient.Builder webClientBuilder;
+    private final BalanceService balanceService;
     private final ParkingLotProviderRepository parkingLotProviderRepository;
     private final AuthService authService;
     @Transactional
     public AddUserResponse registerParkingLotProvider(AddProviderDto dto) {
+        Integer pId = null;
+        try{
+            ParkingLotProvider provider = MappingUtil.mapAddProviderDtoToParkingLotProvider(dto);
+            provider = parkingLotProviderRepository.save(provider);
+            pId = provider.getId();
+            AddUserRequest addUserRequest = MappingUtil.mapParkingLotProviderToAddUserRequest(provider);
+            Mono<ResponseEntity<AddUserResponse>> responseMono = authService.getAuthServiceResponseEntityMono(addUserRequest);
+            BalanceRequestDto requestDto = BalanceRequestDto.builder().userId(provider.getId()).amount(BigDecimal.valueOf(0.0)).build();
+            BalanceResponseDto responseDto = balanceService.createBalanceForProvider(requestDto);
+            log.info("Response from Payment micro service==> {}", responseDto);
+            return responseMono.blockOptional()
+                    .map(ResponseEntity::getBody)
+                    .orElseThrow(() -> new AuthException("Error occurred during generating of token"));
+        }
+        catch (Exception e){
+            if(pId!=null)
+            {
+                log.info("delete the coupon balance ==>{}",pId);
+                balanceService.deleteBalanceForProvider(pId);
+            }
+            throw e;
+        }
 
-        ParkingLotProvider provider = MappingUtil.mapAddProviderDtoToParkingLotProvider(dto);
-        provider = parkingLotProviderRepository.save(provider);
-        AddUserRequest addUserRequest = MappingUtil.mapParkingLotProviderToAddUserRequest(provider);
-        Mono<ResponseEntity<AddUserResponse>> responseMono = authService.getAuthServiceResponseEntityMono(addUserRequest);
-        BalanceRequestDto requestDto = BalanceRequestDto.builder().userId(provider.getId()).amount(BigDecimal.valueOf(0.0)).build();
-        BalanceResponseDto responseDto = createBalance(requestDto);
-        log.info("Response from Payment micro service==> {}", responseDto);
-        return responseMono.blockOptional()
-                .map(ResponseEntity::getBody)
-                .orElseThrow(() -> new AuthException("Error occurred during generating of token"));
     }
-
-
 
     public ProviderResponseDto updateParkingLotProvider(UpdateProviderRequestDto dto, Integer id) {
         ParkingLotProvider provider = getParkingLotProvider(id);
@@ -78,12 +89,5 @@ public class ParkingLotProviderService {
             throw new ProviderIdNotFound("provider id not found");
         return providers.get(0);
     }
-    private BalanceResponseDto createBalance(BalanceRequestDto balanceRequestDto) {
-        return webClientBuilder.build().post()
-                .uri("http://PAYMENT-SERVICE/api/v1/payment/provider")
-                .bodyValue(balanceRequestDto)
-                .retrieve()
-                .bodyToMono(BalanceResponseDto.class)
-                .block();
-    }
+
 }
