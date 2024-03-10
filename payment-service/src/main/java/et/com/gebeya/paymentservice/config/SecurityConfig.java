@@ -44,7 +44,9 @@ public class SecurityConfig {
             "/api/v1/payment/provider",
             "/api/v1/payment/deposit",
             "/api/v1/payment/transfer",
-            "/api/v1/payment/driver_balance/*"
+            "/api/v1/payment/driver_balance/*",
+            "/api/v1/payment/provider/{id}",
+            "/api/v1/payment/deposit/{id}",
 
 
     };
