@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
+
 import static et.com.gebeya.paymentservice.util.Constant.CREDIT_OR_DEBIT_MESSAGE;
 import static et.com.gebeya.paymentservice.util.Constant.TRANSFER_MESSAGE;
 
@@ -61,6 +64,14 @@ public class CouponManagementService {
     public BalanceResponseDto checkBalanceForDriver(Integer dId){
         String driverId = IdConvertorUtil.driverConvertor(dId);
         return balanceService.checkBalance(driverId);
+    }
+    public Map<String,String> deleteCouponBalanceForDriver(Integer dId){
+        String driverId = IdConvertorUtil.driverConvertor(dId);
+        return balanceService.deleteUser(driverId);
+    }
+    public Map<String,String> deleteCouponBalanceForProvider(Integer pId){
+        String providerId = IdConvertorUtil.providerConvertor(pId);
+        return balanceService.deleteUser(providerId);
     }
 
 }

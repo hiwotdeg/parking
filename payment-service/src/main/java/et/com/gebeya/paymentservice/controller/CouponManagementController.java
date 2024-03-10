@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/payment")
 @RequiredArgsConstructor
@@ -25,6 +27,16 @@ public class CouponManagementController {
     @PostMapping("/provider")
     public ResponseEntity<BalanceResponseDto> createBalanceForProvider(@RequestBody BalanceRequestDto dto){
         return ResponseEntity.ok(couponManagementService.createBalanceForProvider(dto));
+    }
+    @Hidden
+    @DeleteMapping("/driver/{id}")
+    public ResponseEntity<Map<String,String>> deleteBalanceForDriver(@PathVariable("id") Integer id){
+        return ResponseEntity.ok(couponManagementService.deleteCouponBalanceForDriver(id));
+    }
+    @Hidden
+    @DeleteMapping("/provider/{id}")
+    public ResponseEntity<Map<String,String>> deleteBalanceForProvider(@PathVariable("id") Integer id){
+        return ResponseEntity.ok(couponManagementService.deleteCouponBalanceForProvider(id));
     }
     @PostMapping("/withdrawal")
     public ResponseEntity<BalanceResponseDto> withdrawBalanceFromProvider(@RequestBody WithdrawalRequestDto dto){
