@@ -9,6 +9,7 @@ import et.com.gebeya.authservice.enums.Authority;
 import et.com.gebeya.authservice.enums.Code;
 import et.com.gebeya.authservice.model.Users;
 import et.com.gebeya.authservice.repository.UsersRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,6 @@ public class AuthenticationService {
     private final UsersRepository userRepository;
     private final JwtService jwtService;
     private final KafkaTemplate<String, OtpRequest> kafkaTemplate;
-    private final AuthenticationManager authenticationManager;
     private final UsersService usersService;
     private final RedisService redisService;
 
@@ -80,27 +80,22 @@ public class AuthenticationService {
                     OtpVerificationResponseDto response = OtpVerificationResponseDto.builder()
                             .token(jwt).code(Code.U102).build();
                     return new ResponseEntity<>(response, HttpStatus.OK);
-                }
-                else if(users.get().getAuthorities().stream()
-                        .anyMatch(authority -> authority.getAuthority().equals(Authority.ADMIN.name()))){
+                } else if (users.get().getAuthorities().stream()
+                        .anyMatch(authority -> authority.getAuthority().equals(Authority.ADMIN.name()))) {
                     redisService.deleteValue(request.getOtp());
                     String jwt = jwtService.generateToken(users.get());
                     OtpVerificationResponseDto response = OtpVerificationResponseDto.builder()
                             .token(jwt).code(Code.U103).build();
-                    return new ResponseEntity<>(response,HttpStatus.OK);
+                    return new ResponseEntity<>(response, HttpStatus.OK);
                 }
 
             }
         }
-
-
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
     }
 
-    // this method is used to add user credential.
-    public ResponseEntity<AddUserResponse> addUser(AddUserRequest dto)
-    {
+    @Transactional
+    public ResponseEntity<AddUserResponse> addUser(AddUserRequest dto) {
         Users users = Users.builder()
                 .userName(dto.getPhoneNo())
                 .password(passwordEncoder.encode(dto.getPhoneNo()))
@@ -108,20 +103,13 @@ public class AuthenticationService {
                 .authority(dto.getRole())
                 .roleId(dto.getRoleId())
                 .build();
-        users=userRepository.save(users);
-      if(users!=null)
-      {
-          String jwt = jwtService.generateToken(users);
-          AddUserResponse response = AddUserResponse.builder().token(jwt).build();
-          return new ResponseEntity<>(response,HttpStatus.OK);
-      }
+        users = userRepository.save(users);
+        String jwt = jwtService.generateToken(users);
+        AddUserResponse response = AddUserResponse.builder().token(jwt).build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
 
-
-      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-
-    //this function is used to validate the token
     public ResponseEntity<ValidationResponse> validate(ValidationRequest validationRequest) {
         final String userName;
         userName = jwtService.extractUserName(validationRequest.getToken());

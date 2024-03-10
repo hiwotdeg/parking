@@ -17,7 +17,6 @@ public class RedisService {
 
 public UsersCredential getObject(String key) {
     Object serializedObject = redisTemplate.opsForValue().get(key);
-    // Deserialize the serializedObject into UserCredential object
     ObjectMapper objectMapper = new ObjectMapper();
     UsersCredential userCredential = null;
     try {

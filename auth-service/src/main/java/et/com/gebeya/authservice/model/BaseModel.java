@@ -16,11 +16,9 @@ import java.time.Instant;
 @Getter
 @Setter
 @MappedSuperclass
-//@Builder
 public class BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(columnDefinition = "serial")
     private Integer id;
 
     @JsonIgnore
@@ -33,8 +31,7 @@ public class BaseModel {
     @Column(name = "updated_on")
     private Instant updatedOn;
 
-    @JsonIgnore
+
     @Column(name = "is_active")
-//    @NotBlank(message = "ActiveStatus is mandatory")
     private Boolean isActive;
 }
