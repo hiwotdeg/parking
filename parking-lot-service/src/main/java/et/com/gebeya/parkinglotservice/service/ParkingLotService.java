@@ -1,9 +1,6 @@
 package et.com.gebeya.parkinglotservice.service;
 
-import et.com.gebeya.parkinglotservice.dto.requestdto.AddLocationRequestDto;
-import et.com.gebeya.parkinglotservice.dto.requestdto.AddParkingLotDto;
-import et.com.gebeya.parkinglotservice.dto.requestdto.DeleteLocationRequestDto;
-import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateParkingLotDto;
+import et.com.gebeya.parkinglotservice.dto.requestdto.*;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ParkingLotResponseDto;
 import et.com.gebeya.parkinglotservice.exception.MoreThanOneProviderException;
 import et.com.gebeya.parkinglotservice.exception.ParkingLotIdNotFound;
@@ -44,8 +41,8 @@ public class ParkingLotService {
         ParkingLot parkingLot = MappingUtil.mapAddParkingLotToParkingLot(dto);
         parkingLot.setRating(5.0f);
         parkingLot.setAvailableSlot(parkingLot.getCapacity());
-        Integer id = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        parkingLot.setParkingLotProvider(getProvider(id));
+        UserDto providerId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        parkingLot.setParkingLotProvider(getProvider(providerId.getId()));
         if (!parkingLotRepository.findAll(ParkingLotSpecification.getParkingLotByProviderId(parkingLot.getParkingLotProvider().getId())).isEmpty())
             throw new MoreThanOneProviderException("one provider can add one parking lot only");
         parkingLot = parkingLotRepository.save(parkingLot);
@@ -110,8 +107,8 @@ public class ParkingLotService {
     }
 
     public ParkingLotResponseDto getParkingLotByProviderId(){
-        Integer providerId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        ParkingLot parkingLot = getParkingLotByProviderId(providerId);
+        UserDto providerId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ParkingLot parkingLot = getParkingLotByProviderId(providerId.getId());
         return MappingUtil.parkingLotResponse(parkingLot);
     }
 

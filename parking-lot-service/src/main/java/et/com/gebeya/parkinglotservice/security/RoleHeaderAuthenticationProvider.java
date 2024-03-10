@@ -1,5 +1,6 @@
 package et.com.gebeya.parkinglotservice.security;
 
+import et.com.gebeya.parkinglotservice.dto.requestdto.UserDto;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,7 +21,8 @@ public class RoleHeaderAuthenticationProvider implements AuthenticationProvider 
         Integer roleId = ((RoleHeaderAuthenticationToken) authentication).getRoleId();
         if ((!headerRole.isEmpty())) {
             List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_"+headerRole));
-            return new UsernamePasswordAuthenticationToken(roleId, null, authorities);
+            UserDto userDto = UserDto.builder().role(headerRole).id(roleId).build();
+            return new UsernamePasswordAuthenticationToken(userDto, null, authorities);
         } else {
             throw new BadCredentialsException("Invalid role");
         }

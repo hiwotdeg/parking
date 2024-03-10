@@ -40,8 +40,8 @@ public class ReservationService {
 
     @Transactional
     public Map<String, String> book(Integer parkingLotId, ReservationRequestDto dto) {
-        Integer driverId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Driver driver = driverService.getDriver(driverId);
+        UserDto driverId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Driver driver = driverService.getDriver(driverId.getId());
         ParkingLot parkingLot = parkingLotService.getParkingLot(parkingLotId);
         if (parkingLot.getAvailableSlot() <= 0)
             throw new ParkingLotAvailabilityException("the parking lot that you selected is full at the moment");
@@ -49,11 +49,11 @@ public class ReservationService {
         PriceRequestDto requestDto = PriceRequestDto.builder().duration(dto.getStayingDuration()).build();
         BigDecimal price = pricingService.dynamicPricing(requestDto, parkingLotId);
         Reservation reservation = Reservation.builder().price(price).parkingLot(parkingLot).driver(driver).stayingDuration(dto.getStayingDuration()).reservationStatus(ReservationStatus.PENDING).isActive(true).build();
-        checkBalanceForDriver(driverId, price);
+        checkBalanceForDriver(driverId.getId(), price);
         Vehicle vehicle = vehicleService.getVehicle(dto.getVehicleId());
         reservation.setVehicle(vehicle);
         reservationRepository.save(reservation);
-        notifyBooking(provider.getId(), driverId, parkingLot.getName(), dto.getStayingDuration());
+        notifyBooking(provider.getId(), driverId.getId(), parkingLot.getName(), dto.getStayingDuration());
         return Map.of("message", "you have reserved a parking lot successfully");
 
     }
@@ -90,8 +90,8 @@ public class ReservationService {
     }
 
     public List<ReservationResponseDto> getReservationByProviderId() {
-        Integer providerId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<Reservation> reservationList = reservationRepository.findAll(ReservationSpecification.getReservationByProviderId(providerId));
+        UserDto providerId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Reservation> reservationList = reservationRepository.findAll(ReservationSpecification.getReservationByProviderId(providerId.getId()));
         return MappingUtil.mapListOfReservationToReservationResponseDto(reservationList);
     }
 

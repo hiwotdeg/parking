@@ -1,25 +1,19 @@
 package et.com.gebeya.parkinglotservice.service;
 
 
-import et.com.gebeya.parkinglotservice.dto.requestdto.AddOperationRequestDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.OperationHourDto;
+import et.com.gebeya.parkinglotservice.dto.requestdto.UserDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.OperationHourResponseDto;
 import et.com.gebeya.parkinglotservice.exception.OperationHourIdNotFound;
-import et.com.gebeya.parkinglotservice.exception.ParkingLotIdNotFound;
 import et.com.gebeya.parkinglotservice.model.OperationHour;
 import et.com.gebeya.parkinglotservice.model.ParkingLot;
 import et.com.gebeya.parkinglotservice.repository.OperationHourRepository;
-import et.com.gebeya.parkinglotservice.repository.ParkingLotRepository;
 import et.com.gebeya.parkinglotservice.repository.specification.OperationHourSpecification;
-import et.com.gebeya.parkinglotservice.repository.specification.ParkingLotSpecification;
 import et.com.gebeya.parkinglotservice.util.MappingUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,18 +23,14 @@ import java.util.Map;
 public class OperationHourService {
     private final OperationHourRepository operationHourRepository;
     private final ParkingLotService parkingLotService;
-
-
-
-
     public List<OperationHourResponseDto> addOperationHour(List<OperationHourDto> request, Integer parkingId) {
         ParkingLot parkingLot = parkingLotService.getParkingLot(parkingId);
         List<OperationHour> operationHours = MappingUtil.addOperationRequestDtoToOperationHour(parkingLot, request);
         return MappingUtil.listOfOperationHourToListOfOperationHourResponseDto(operationHourRepository.saveAll(operationHours));
     }
     public Map<String, String> deleteOperationHour(Integer parkingId, Integer operationHourId){
-        Integer providerId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<OperationHour> operationHours = operationHourRepository.findAll(OperationHourSpecification.hasParkingLotOperationAndProviderId(parkingId,operationHourId,providerId));
+        UserDto providerId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<OperationHour> operationHours = operationHourRepository.findAll(OperationHourSpecification.hasParkingLotOperationAndProviderId(parkingId,operationHourId,providerId.getId()));
         if(operationHours.isEmpty())
             throw new OperationHourIdNotFound("operationHourId not found");
         operationHourRepository.delete(operationHours.get(0));

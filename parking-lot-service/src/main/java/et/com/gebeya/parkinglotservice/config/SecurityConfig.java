@@ -74,7 +74,7 @@ public class SecurityConfig {
             new AntPathRequestMatcher("/api/v1/parking-lot/lots/my", HttpMethod.GET.name()),
             new AntPathRequestMatcher("/api/v1/parking-lot/lots/{id}", HttpMethod.DELETE.name()),
             new AntPathRequestMatcher("/api/v1/parking-lot/providers/{id}", HttpMethod.PATCH.name()),
-            new AntPathRequestMatcher("/api/v1/parking-lot/providers/my", HttpMethod.DELETE.name()),
+            new AntPathRequestMatcher("/api/v1/parking-lot/providers/my", HttpMethod.GET.name()),
             new AntPathRequestMatcher("/api/v1/parking-lot/reservations/{reservationId}/requests", HttpMethod.POST.name()),
             new AntPathRequestMatcher("/api/v1/parking-lot/reservations/my", HttpMethod.GET.name()),
 

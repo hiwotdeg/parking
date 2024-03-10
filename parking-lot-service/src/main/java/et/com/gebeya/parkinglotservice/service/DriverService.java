@@ -1,9 +1,6 @@
 package et.com.gebeya.parkinglotservice.service;
 
-import et.com.gebeya.parkinglotservice.dto.requestdto.AddDriverRequestDto;
-import et.com.gebeya.parkinglotservice.dto.requestdto.AddUserRequest;
-import et.com.gebeya.parkinglotservice.dto.requestdto.BalanceRequestDto;
-import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateDriverRequestDto;
+import et.com.gebeya.parkinglotservice.dto.requestdto.*;
 import et.com.gebeya.parkinglotservice.dto.responsedto.AddUserResponse;
 import et.com.gebeya.parkinglotservice.dto.responsedto.BalanceResponseDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.DriverResponseDto;
@@ -72,8 +69,8 @@ public class DriverService {
     }
 
     public DriverResponseDto getMyDriverProfile(){
-        Integer driverId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return getDriverById(driverId);
+        UserDto driverId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return getDriverById(driverId.getId());
     }
 
     Driver getDriver(Integer id) {

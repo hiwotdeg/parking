@@ -3,6 +3,7 @@ package et.com.gebeya.parkinglotservice.service;
 import et.com.gebeya.parkinglotservice.dto.requestdto.AddReviewRequestDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.ReviewSearchRequestDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateReviewRequestDto;
+import et.com.gebeya.parkinglotservice.dto.requestdto.UserDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ReviewResponseDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ReviewSearch;
 import et.com.gebeya.parkinglotservice.exception.MultipleReviewException;
@@ -29,11 +30,11 @@ public class ReviewService {
     private final DriverService driverService;
     private final ParkingLotService parkingLotService;
     public ReviewResponseDto createReviewForParkingLot(AddReviewRequestDto reviewRequest, Integer parkingLotId){
-        Integer driverId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<Review> reviews = reviewRepository.findAll(ReviewSpecification.getReviewByParkingLotAndDriver(parkingLotId,driverId));
+        UserDto driverId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Review> reviews = reviewRepository.findAll(ReviewSpecification.getReviewByParkingLotAndDriver(parkingLotId,driverId.getId()));
         if(!reviews.isEmpty())
             throw new MultipleReviewException("a driver can give you only one review per parkingLot");
-        Driver driver = driverService.getDriver(driverId);
+        Driver driver = driverService.getDriver(driverId.getId());
         ParkingLot parkingLot = parkingLotService.getParkingLot(parkingLotId);
         Review review = MappingUtil.mapAddReviewRequestDtoToReview(reviewRequest);
         review.setDriverId(driver);
@@ -43,8 +44,8 @@ public class ReviewService {
     }
 
     public ReviewResponseDto updateReviewForParkingLot(UpdateReviewRequestDto updateReview, Integer parkingLotId, Integer reviewId){
-        Integer driverId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<Review> review = reviewRepository.findAll(ReviewSpecification.getByParkingLotReviewAndDriver(parkingLotId,driverId,reviewId));
+        UserDto driverId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Review> review = reviewRepository.findAll(ReviewSpecification.getByParkingLotReviewAndDriver(parkingLotId,driverId.getId(),reviewId));
         if(review.isEmpty())
             throw new ReviewIdNotFound("review id not found");
         Review reviewList = reviewRepository.save(MappingUtil.mapUpdateRequestDtoToReview(review.get(0), updateReview));
@@ -53,8 +54,8 @@ public class ReviewService {
 
 
     public Map<String,String> deleteReview(Integer parkingLotId, Integer reviewId){
-        Integer driverId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<Review> review = reviewRepository.findAll(ReviewSpecification.getByParkingLotReviewAndDriver(parkingLotId,driverId,reviewId));
+        UserDto driverId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Review> review = reviewRepository.findAll(ReviewSpecification.getByParkingLotReviewAndDriver(parkingLotId,driverId.getId(),reviewId));
         if(review.isEmpty())
             throw new ReviewIdNotFound("review id not found");
         review.get(0).setIsActive(false);

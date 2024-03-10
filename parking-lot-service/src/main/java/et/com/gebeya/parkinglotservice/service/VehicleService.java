@@ -1,6 +1,7 @@
 package et.com.gebeya.parkinglotservice.service;
 
 import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateVehicleDto;
+import et.com.gebeya.parkinglotservice.dto.requestdto.UserDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.VehicleRequestDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.VehicleResponseDto;
 import et.com.gebeya.parkinglotservice.exception.VehicleIdNotFound;
@@ -24,9 +25,9 @@ public class VehicleService {
     private final DriverService driverService;
 
     public VehicleResponseDto addVehicle(VehicleRequestDto vehicleRequestDto) {
-        Integer driverId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDto driverId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Vehicle vehicle = MappingUtil.vehicleRequestDtoToVehicle(vehicleRequestDto);
-        Driver driver = driverService.getDriver(driverId);
+        Driver driver = driverService.getDriver(driverId.getId());
         vehicle.setDriver(driver);
         vehicle = vehicleRepository.save(vehicle);
         return MappingUtil.vehicleToVehicleResponseDto(vehicle);
@@ -46,8 +47,8 @@ public class VehicleService {
     }
 
     public List<VehicleResponseDto> getVehiclesByDriverId() {
-        Integer driverId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<Vehicle> vehicle = vehicleRepository.findAll(VehicleSpecification.getVehicleByDriverId(driverId));
+        UserDto driverId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Vehicle> vehicle = vehicleRepository.findAll(VehicleSpecification.getVehicleByDriverId(driverId.getId()));
         return MappingUtil.vehicleToListOfVehicleResponseDto(vehicle);
     }
 
