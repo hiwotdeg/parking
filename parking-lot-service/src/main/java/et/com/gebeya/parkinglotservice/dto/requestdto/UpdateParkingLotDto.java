@@ -13,7 +13,6 @@ public class UpdateParkingLotDto {
     private Double latitude;
     private Double longitude;
     private Integer capacity;
-//    private List<String> imageUrl;
     private Integer availableSlot;
     private ParkingType parkingType;
 }

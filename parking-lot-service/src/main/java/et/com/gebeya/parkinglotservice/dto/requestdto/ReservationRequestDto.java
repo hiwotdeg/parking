@@ -1,5 +1,6 @@
 package et.com.gebeya.parkinglotservice.dto.requestdto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +14,8 @@ import java.time.LocalTime;
 @Builder
 @Data
 public class ReservationRequestDto {
+    @NotBlank
     private LocalTime stayingDuration;
+    @NotBlank
     private Integer vehicleId;
 }

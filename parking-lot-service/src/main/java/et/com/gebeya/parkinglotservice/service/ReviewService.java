@@ -5,24 +5,22 @@ import et.com.gebeya.parkinglotservice.dto.requestdto.ReviewSearchRequestDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateReviewRequestDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ReviewResponseDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ReviewSearch;
-import et.com.gebeya.parkinglotservice.exception.DriverIdNotFound;
 import et.com.gebeya.parkinglotservice.exception.MultipleReviewException;
-import et.com.gebeya.parkinglotservice.exception.ParkingLotIdNotFound;
 import et.com.gebeya.parkinglotservice.exception.ReviewIdNotFound;
 import et.com.gebeya.parkinglotservice.model.Driver;
 import et.com.gebeya.parkinglotservice.model.ParkingLot;
 import et.com.gebeya.parkinglotservice.model.Review;
-import et.com.gebeya.parkinglotservice.repository.DriverRepository;
-import et.com.gebeya.parkinglotservice.repository.ParkingLotRepository;
 import et.com.gebeya.parkinglotservice.repository.ReviewRepository;
 import et.com.gebeya.parkinglotservice.repository.specification.ReviewSpecification;
+import et.com.gebeya.parkinglotservice.util.MappingUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import et.com.gebeya.parkinglotservice.util.MappingUtil;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor

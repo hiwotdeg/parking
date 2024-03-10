@@ -1,10 +1,10 @@
 package et.com.gebeya.parkinglotservice.controller;
 
 
-import et.com.gebeya.parkinglotservice.dto.requestdto.AddOperationRequestDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.OperationHourDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.OperationHourResponseDto;
 import et.com.gebeya.parkinglotservice.service.OperationHourService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,7 @@ public class OperationHourController {
     private final OperationHourService operationHourService;
 
     @PostMapping("/lots/{parkingLotId}/operation-hours") // providers
-    public ResponseEntity<List<OperationHourResponseDto>> addOperation(@RequestBody List<OperationHourDto> request, @PathVariable("parkingLotId")Integer parkingId) {
+    public ResponseEntity<List<OperationHourResponseDto>> addOperation(@Valid @RequestBody List<OperationHourDto> request, @PathVariable("parkingLotId")Integer parkingId) {
         return ResponseEntity.ok(operationHourService.addOperationHour(request, parkingId));
     }
 
