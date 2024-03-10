@@ -1,19 +1,14 @@
 package et.com.gebeya.parkinglotservice.service;
 
-import et.com.gebeya.parkinglotservice.dto.requestdto.DeleteLocationRequestDto;
+import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateVehicleDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.VehicleRequestDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.VehicleResponseDto;
-import et.com.gebeya.parkinglotservice.exception.DriverIdNotFound;
 import et.com.gebeya.parkinglotservice.exception.VehicleIdNotFound;
 import et.com.gebeya.parkinglotservice.model.Driver;
-import et.com.gebeya.parkinglotservice.model.ParkingLot;
 import et.com.gebeya.parkinglotservice.model.Vehicle;
-import et.com.gebeya.parkinglotservice.repository.DriverRepository;
 import et.com.gebeya.parkinglotservice.repository.VehicleRepository;
-import et.com.gebeya.parkinglotservice.repository.specification.DriverSpecification;
 import et.com.gebeya.parkinglotservice.repository.specification.VehicleSpecification;
 import et.com.gebeya.parkinglotservice.util.MappingUtil;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,8 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static et.com.gebeya.parkinglotservice.util.Constant.DELETE_LOCATION;
 
 @Service
 @RequiredArgsConstructor
@@ -39,9 +32,9 @@ public class VehicleService {
         return MappingUtil.vehicleToVehicleResponseDto(vehicle);
     }
 
-    public VehicleResponseDto updateVehicle(VehicleRequestDto vehicleRequestDto, Integer vehicleId) {
+    public VehicleResponseDto updateVehicle(UpdateVehicleDto updateVehicleDto, Integer vehicleId) {
         Vehicle vehicle = getVehicle(vehicleId);
-        vehicle = vehicleRepository.save(MappingUtil.updateVehicle(vehicleRequestDto, vehicle));
+        vehicle = vehicleRepository.save(MappingUtil.updateVehicle(updateVehicleDto, vehicle));
         return MappingUtil.vehicleToVehicleResponseDto(vehicle);
     }
 

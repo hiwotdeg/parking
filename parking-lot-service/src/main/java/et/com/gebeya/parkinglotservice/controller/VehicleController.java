@@ -1,8 +1,10 @@
 package et.com.gebeya.parkinglotservice.controller;
 
+import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateVehicleDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.VehicleRequestDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.VehicleResponseDto;
 import et.com.gebeya.parkinglotservice.service.VehicleService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +17,13 @@ import java.util.Map;
 public class VehicleController {
     private final VehicleService vehicleService;
     @PostMapping("/vehicles") // driver
-    public ResponseEntity<VehicleResponseDto> addVehicle(@RequestBody VehicleRequestDto vehicleRequestDto){
+    public ResponseEntity<VehicleResponseDto> addVehicle(@Valid @RequestBody VehicleRequestDto vehicleRequestDto){
         return ResponseEntity.ok(vehicleService.addVehicle(vehicleRequestDto));
     }
 
     @PatchMapping("/vehicles/{id}") // driver
-    public ResponseEntity<VehicleResponseDto> updateVehicle(@RequestBody VehicleRequestDto vehicleRequestDto,@PathVariable("id") Integer id){
-        return ResponseEntity.ok(vehicleService.updateVehicle(vehicleRequestDto,id));
+    public ResponseEntity<VehicleResponseDto> updateVehicle(@RequestBody UpdateVehicleDto updateVehicleDto, @PathVariable("id") Integer id){
+        return ResponseEntity.ok(vehicleService.updateVehicle(updateVehicleDto,id));
     }
 
     @GetMapping("/vehicles/my") // driver

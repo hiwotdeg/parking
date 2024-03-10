@@ -293,7 +293,7 @@ public class MappingUtil {
                 .build();
     }
 
-    public static Vehicle updateVehicle(VehicleRequestDto dto, Vehicle vehicle) {
+    public static Vehicle updateVehicle(UpdateVehicleDto dto, Vehicle vehicle) {
         if (dto.getName() != null)
             vehicle.setName(dto.getName());
         if (dto.getYear() != null)

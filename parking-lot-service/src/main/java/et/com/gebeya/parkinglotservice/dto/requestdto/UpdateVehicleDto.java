@@ -1,6 +1,5 @@
 package et.com.gebeya.parkinglotservice.dto.requestdto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,13 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-public class VehicleRequestDto {
-    @NotBlank
+public class UpdateVehicleDto {
     private String name;
-    @NotBlank
     private String model;
-    @NotBlank
     private Integer year;
-    @NotBlank
     private String plate;
 }
