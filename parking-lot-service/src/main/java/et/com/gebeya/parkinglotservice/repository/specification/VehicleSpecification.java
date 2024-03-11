@@ -20,7 +20,7 @@ public class VehicleSpecification {
     public static Specification<Vehicle> getVehicleByDriverId(Integer driverId) {
         return (root, query, criteriaBuilder) -> {
             Join<Vehicle, Driver> driverJoin = root.join("driver");
-            Predicate isActive = criteriaBuilder.isTrue(driverJoin.get("isActive"));
+            Predicate isActive = criteriaBuilder.isTrue(root.get("isActive"));
             Predicate isDriver = criteriaBuilder.equal(driverJoin.get("id"), driverId);
             return criteriaBuilder.and(isActive, isDriver);
         };
