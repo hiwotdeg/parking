@@ -36,8 +36,8 @@ public class ParkingLotController {
     }
 
     @GetMapping("/lots/my") // providers
-    public ResponseEntity<ParkingLotResponseDto> getParkingLotByProviderId() {
-        return ResponseEntity.ok(parkingLotService.getParkingLotByProviderId());
+    public ResponseEntity<ParkingLotResponseDto> getMyParkingLot() {
+        return ResponseEntity.ok(parkingLotService.getMyParkingLotByProviderId());
     }
 
     @GetMapping("/lots") // admin

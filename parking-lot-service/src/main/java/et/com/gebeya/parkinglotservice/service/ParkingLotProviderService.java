@@ -69,7 +69,7 @@ public class ParkingLotProviderService {
         return MappingUtil.mapParkingLotProviderToProviderResponseDto(provider);
     }
 
-    public ProviderResponseDto getParkingLotProviderById()
+    public ProviderResponseDto getMyParkingLotProviderById()
     {
         UserDto providerId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return getParkingLotProviderById(providerId.getId());

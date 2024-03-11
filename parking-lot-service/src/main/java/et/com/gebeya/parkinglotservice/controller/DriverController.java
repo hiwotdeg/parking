@@ -31,7 +31,7 @@ public class DriverController {
         return ResponseEntity.ok(driverService.getDriverById(id));
     }
     @GetMapping("/drivers/my") //drivers only
-    public ResponseEntity<DriverResponseDto> getDriverById(){
+    public ResponseEntity<DriverResponseDto> getMyDriver(){
         return ResponseEntity.ok(driverService.getMyDriverProfile());
     }
     @GetMapping("/drivers") //admin

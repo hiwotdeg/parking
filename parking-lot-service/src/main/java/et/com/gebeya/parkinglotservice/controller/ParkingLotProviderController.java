@@ -32,8 +32,8 @@ public class ParkingLotProviderController {
         return ResponseEntity.ok(parkingLotProviderService.getParkingLotProviderById(id));
     }
     @GetMapping("/providers/my") // provider
-    public ResponseEntity<ProviderResponseDto> getParkingLotProviderById(){
-        return ResponseEntity.ok(parkingLotProviderService.getParkingLotProviderById());
+    public ResponseEntity<ProviderResponseDto> getMyParkingLotProvider(){
+        return ResponseEntity.ok(parkingLotProviderService.getMyParkingLotProviderById());
     }
     @GetMapping("/providers") // admin
     public ResponseEntity<List<ProviderResponseDto>> getAllProviders(@PageableDefault(page = 0, size = 10) Pageable pageable){
