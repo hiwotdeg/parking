@@ -12,6 +12,5 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class UpdateReservation {
-    @NotBlank
     private ReservationStatus reservationStatus;
 }

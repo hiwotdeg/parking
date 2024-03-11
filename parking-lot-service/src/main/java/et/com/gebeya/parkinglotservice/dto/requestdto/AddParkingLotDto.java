@@ -16,14 +16,9 @@ public class AddParkingLotDto {
     private String name;
     @NotBlank
     private String address;
-    @NotBlank
     private Double latitude;
-    @NotBlank
     private Double longitude;
-    @NotBlank
     private Integer capacity;
-    @NotBlank
     private ParkingType parkingType;
-    @NotBlank
     private List<String> imageUrl;
 }

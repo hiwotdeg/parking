@@ -19,7 +19,7 @@ public class OperationHourController {
     private final OperationHourService operationHourService;
 
     @PostMapping("/lots/{parkingLotId}/operation-hours") // providers
-    public ResponseEntity<List<OperationHourResponseDto>> addOperation(@Valid @RequestBody List<OperationHourDto> request, @PathVariable("parkingLotId")Integer parkingId) {
+    public ResponseEntity<List<OperationHourResponseDto>> addOperation(@RequestBody List<OperationHourDto> request, @PathVariable("parkingLotId")Integer parkingId) {
         return ResponseEntity.ok(operationHourService.addOperationHour(request, parkingId));
     }
 

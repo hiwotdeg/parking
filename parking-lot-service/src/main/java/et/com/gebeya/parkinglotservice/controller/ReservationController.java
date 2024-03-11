@@ -21,12 +21,12 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping("/lots/{parkingLotId}/reservations") // driver
-    public ResponseEntity<Map<String, String>> book(@Valid @RequestBody ReservationRequestDto requestDto, @PathVariable("parkingLotId") Integer parkingLotId) {
+    public ResponseEntity<Map<String, String>> book(@RequestBody ReservationRequestDto requestDto, @PathVariable("parkingLotId") Integer parkingLotId) {
         return ResponseEntity.ok(reservationService.book(parkingLotId, requestDto));
     }
 
     @PostMapping("/reservations/{reservationId}/requests") // provider
-    public ResponseEntity<ReservationResponseDto> updateStatus(@PathVariable("reservationId") Integer reservationId, @Valid @RequestBody UpdateReservation dto) {
+    public ResponseEntity<ReservationResponseDto> updateStatus(@PathVariable("reservationId") Integer reservationId,@RequestBody UpdateReservation dto) {
         return ResponseEntity.ok(reservationService.updateReservation(reservationId, dto));
     }
 

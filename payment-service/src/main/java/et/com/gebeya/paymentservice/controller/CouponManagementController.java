@@ -56,7 +56,7 @@ public class CouponManagementController {
     public ResponseEntity<BalanceResponseDto> checkBalance(){
         return ResponseEntity.ok(couponManagementService.checkBalance());
     }
-
+    @Hidden
     @GetMapping("/driver_balance/{id}")
     public ResponseEntity<BalanceResponseDto> checkBalanceForDriverId(@PathVariable("id") Integer driverId){
         return ResponseEntity.ok(couponManagementService.checkBalanceForDriver(driverId));

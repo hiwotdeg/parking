@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class AddReviewRequestDto {
     @Size(min = 0, max = 5)
-    @NotBlank
     private Float rate;
     private String comment;
 }

@@ -14,8 +14,6 @@ import java.time.LocalTime;
 @Builder
 @Data
 public class ReservationRequestDto {
-    @NotBlank
     private LocalTime stayingDuration;
-    @NotBlank
     private Integer vehicleId;
 }
