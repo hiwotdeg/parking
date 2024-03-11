@@ -15,7 +15,6 @@ public class VehicleRequestDto {
     private String name;
     @NotBlank
     private String model;
-    @NotBlank
     private Integer year;
     @NotBlank
     private String plate;
