@@ -41,11 +41,10 @@ public class ReservationService {
     private final WebClient.Builder webClientBuilder;
     private final MessageService messageService;
     private final VehicleService vehicleService;
-    private final RestTemplate restTemplate;
 
     @Transactional
-    @CircuitBreaker(name = "auth", fallbackMethod = "fallBackMethod")
-    @Retry(name = "auth")
+    @CircuitBreaker(name = "default", fallbackMethod = "fallBackMethod")
+    @Retry(name = "default")
 
     public Map<String, String> book(Integer parkingLotId, ReservationRequestDto dto) {
         UserDto driverId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -79,7 +78,7 @@ public class ReservationService {
 
     private Mono<BalanceResponseDto> checkBalance(Integer driverId) {
         return webClientBuilder.build().get()
-                .uri("http://PAYMENT-SERVICE/api/v1/payment/driver_balance/" + 111)
+                .uri("http://PAYMENT-SERVICE/api/v1/payment/driver_balance/" + driverId)
                 .retrieve()
                 .bodyToMono(BalanceResponseDto.class);
     }

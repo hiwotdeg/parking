@@ -59,7 +59,7 @@ management:
 resilience4j:
   circuitbreaker:
     instances:
-      auth:
+      default:
         registerHealthIndicator: true
         event-consumer-buffer-size: 100
         slidingWindowType: COUNT_BASED
@@ -79,7 +79,7 @@ resilience4j:
 
   retry:
     instances:
-      auth:
+      default:
         max-attempts: 3
         wait-duration: 3s
         ignore-exceptions:
