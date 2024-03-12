@@ -44,6 +44,18 @@ public class MappingUtil {
         return driver;
     }
 
+    public static Admin mapUpdateAdminRequestDtoToAdmin(UpdateAdminRequestDto dto, Admin admin){
+        if(dto.getEmail() != null)
+            admin.setEmail(dto.getEmail());
+        if(dto.getFirstName() != null)
+            admin.setFirstName(dto.getFirstName());
+        if(dto.getMiddleName() != null)
+            admin.setMiddleName(dto.getMiddleName());
+        if(dto.getLastName() != null)
+            admin.setMiddleName(dto.getMiddleName());
+        return admin;
+    }
+
     public static DriverResponseDto mapDriverToDriverResponseDto(Driver driver) {
         return DriverResponseDto.builder()
                 .id(driver.getId())
@@ -52,6 +64,17 @@ public class MappingUtil {
                 .email(driver.getEmail())
                 .phoneNo(driver.getPhoneNo())
                 .imageUrl(driver.getImageUrl())
+                .build();
+    }
+
+    public static AdminResponseDto mapAdminToAdminResponseDto(Admin admin){
+        return AdminResponseDto.builder()
+                .id(admin.getId())
+                .firstName(admin.getFirstName())
+                .middleName(admin.getMiddleName())
+                .lastName(admin.getLastName())
+                .email(admin.getEmail())
+                .phoneNo(admin.getPhoneNo())
                 .build();
     }
 
