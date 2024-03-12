@@ -62,7 +62,7 @@ public class VehicleService {
 
     public Map<String, String> deleteVehicleById(Integer id) {
         Vehicle vehicle = getVehicle(id);
-        vehicle.setIsActive(true);
+        vehicle.setIsActive(false);
         vehicleRepository.save(vehicle);
         Map<String, String> response = new HashMap<>();
         response.put("message", "vehicle deleted successfully");

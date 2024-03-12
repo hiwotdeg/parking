@@ -5,7 +5,9 @@ import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
 public class DriverSpecification {
-    private DriverSpecification(){}
+    private DriverSpecification() {
+    }
+
     public static Specification<Driver> getDriverById(Integer id) {
         return (root, query, criteriaBuilder) -> {
             Predicate isActive = criteriaBuilder.notEqual(root.get("isActive"), false);
@@ -14,9 +16,8 @@ public class DriverSpecification {
         };
     }
 
-    public static Specification<Driver> getAllDrivers()
-    {
-        return ((root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get("isActive"),false));
+    public static Specification<Driver> getAllDrivers() {
+        return ((root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get("isActive"), false));
     }
 
 }

@@ -12,6 +12,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class AuthService {
     private final WebClient.Builder webClientBuilder;
+
     public Mono<ResponseEntity<AddUserResponse>> getAuthServiceResponseEntityMono(AddUserRequest addUserRequest) {
         return webClientBuilder.build()
                 .post()

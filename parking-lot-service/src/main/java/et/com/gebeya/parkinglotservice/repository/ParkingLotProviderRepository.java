@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ParkingLotProviderRepository extends JpaRepository<ParkingLotProvider,Integer>, JpaSpecificationExecutor<ParkingLotProvider> {
+public interface ParkingLotProviderRepository extends JpaRepository<ParkingLotProvider, Integer>, JpaSpecificationExecutor<ParkingLotProvider> {
 }

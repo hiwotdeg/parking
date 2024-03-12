@@ -29,14 +29,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    @CrossOrigin("http://localhost:8008")
     public ResponseEntity<Object> login(@RequestBody UsersCredential credential)
     {
         return authenticationService.signIn(credential);
     }
 
     @PostMapping("/otp")
-    @CrossOrigin
     public ResponseEntity<OtpVerificationResponseDto> otpVerification(@RequestBody VerificationRequest request)
     {
         return authenticationService.otpVerification(request);

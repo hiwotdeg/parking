@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ParkingLotImageRepository extends JpaRepository<ParkingLotImage,Integer> {
+public interface ParkingLotImageRepository extends JpaRepository<ParkingLotImage, Integer> {
 }

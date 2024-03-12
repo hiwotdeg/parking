@@ -29,10 +29,11 @@ public class ParkingLotProviderService {
     private final BalanceService balanceService;
     private final ParkingLotProviderRepository parkingLotProviderRepository;
     private final AuthService authService;
+
     @Transactional
     public AddUserResponse registerParkingLotProvider(AddProviderDto dto) {
         Integer pId = null;
-        try{
+        try {
             ParkingLotProvider provider = MappingUtil.mapAddProviderDtoToParkingLotProvider(dto);
             provider = parkingLotProviderRepository.save(provider);
             pId = provider.getId();
@@ -44,11 +45,9 @@ public class ParkingLotProviderService {
             return responseMono.blockOptional()
                     .map(ResponseEntity::getBody)
                     .orElseThrow(() -> new AuthException("Error occurred during generating of token"));
-        }
-        catch (Exception e){
-            if(pId!=null)
-            {
-                log.info("delete the coupon balance ==>{}",pId);
+        } catch (Exception e) {
+            if (pId != null) {
+                log.info("delete the coupon balance ==>{}", pId);
                 balanceService.deleteBalanceForProvider(pId);
             }
             throw e;
@@ -63,22 +62,22 @@ public class ParkingLotProviderService {
         return MappingUtil.mapParkingLotProviderToProviderResponseDto(provider);
     }
 
-    public ProviderResponseDto getParkingLotProviderById(Integer id)
-    {
+    public ProviderResponseDto getParkingLotProviderById(Integer id) {
         ParkingLotProvider provider = getParkingLotProvider(id);
         return MappingUtil.mapParkingLotProviderToProviderResponseDto(provider);
     }
 
-    public ProviderResponseDto getMyParkingLotProviderById()
-    {
+    public ProviderResponseDto getMyParkingLotProviderById() {
         UserDto providerId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return getParkingLotProviderById(providerId.getId());
     }
-    public List<ProviderResponseDto> getAllProviders(Pageable pageable){
-        List<ParkingLotProvider> providers = parkingLotProviderRepository.findAll(ParkingLotProviderSpecification.getAllProviders(),pageable).stream().toList();
+
+    public List<ProviderResponseDto> getAllProviders(Pageable pageable) {
+        List<ParkingLotProvider> providers = parkingLotProviderRepository.findAll(ParkingLotProviderSpecification.getAllProviders(), pageable).stream().toList();
         return MappingUtil.listOfProviderToListOfProviderResponseDto(providers);
     }
-    private ParkingLotProvider getParkingLotProvider(Integer id){
+
+    private ParkingLotProvider getParkingLotProvider(Integer id) {
         List<ParkingLotProvider> providers = parkingLotProviderRepository.findAll(ParkingLotProviderSpecification.getProviderById(id));
         if (providers.isEmpty())
             throw new ProviderIdNotFound("provider id not found");

@@ -10,6 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 public class BalanceService {
     private final WebClient.Builder webClientBuilder;
+
     BalanceResponseDto createBalanceForProvider(BalanceRequestDto balanceRequestDto) {
         return webClientBuilder.build().post()
                 .uri("http://PAYMENT-SERVICE/api/v1/payment/provider")
@@ -21,13 +22,13 @@ public class BalanceService {
 
     void deleteBalanceForProvider(Integer id) {
         webClientBuilder.build().delete()
-                .uri("http://PAYMENT-SERVICE/api/v1/payment/provider/"+id)
+                .uri("http://PAYMENT-SERVICE/api/v1/payment/provider/" + id)
                 .retrieve()
                 .bodyToMono(Object.class)
                 .block();
     }
 
-    BalanceResponseDto createBalanceForDriver(BalanceRequestDto balanceRequestDto){
+    BalanceResponseDto createBalanceForDriver(BalanceRequestDto balanceRequestDto) {
         return webClientBuilder.build().post()
                 .uri("http://PAYMENT-SERVICE/api/v1/payment/driver")
                 .bodyValue(balanceRequestDto)
@@ -39,7 +40,7 @@ public class BalanceService {
 
     void deleteBalanceForDriver(Integer id) {
         webClientBuilder.build().delete()
-                .uri("http://PAYMENT-SERVICE/api/v1/payment/driver/"+id)
+                .uri("http://PAYMENT-SERVICE/api/v1/payment/driver/" + id)
                 .retrieve()
                 .bodyToMono(Object.class)
                 .block();

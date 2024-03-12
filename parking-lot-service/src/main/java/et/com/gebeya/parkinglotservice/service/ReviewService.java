@@ -29,10 +29,11 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final DriverService driverService;
     private final ParkingLotService parkingLotService;
-    public ReviewResponseDto createReviewForParkingLot(AddReviewRequestDto reviewRequest, Integer parkingLotId){
+
+    public ReviewResponseDto createReviewForParkingLot(AddReviewRequestDto reviewRequest, Integer parkingLotId) {
         UserDto driverId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<Review> reviews = reviewRepository.findAll(ReviewSpecification.getReviewByParkingLotAndDriver(parkingLotId,driverId.getId()));
-        if(!reviews.isEmpty())
+        List<Review> reviews = reviewRepository.findAll(ReviewSpecification.getReviewByParkingLotAndDriver(parkingLotId, driverId.getId()));
+        if (!reviews.isEmpty())
             throw new MultipleReviewException("a driver can give you only one review per parkingLot");
         Driver driver = driverService.getDriver(driverId.getId());
         ParkingLot parkingLot = parkingLotService.getParkingLot(parkingLotId);
@@ -43,20 +44,20 @@ public class ReviewService {
         return MappingUtil.reviewResponse(review);
     }
 
-    public ReviewResponseDto updateReviewForParkingLot(UpdateReviewRequestDto updateReview, Integer parkingLotId, Integer reviewId){
+    public ReviewResponseDto updateReviewForParkingLot(UpdateReviewRequestDto updateReview, Integer parkingLotId, Integer reviewId) {
         UserDto driverId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<Review> review = reviewRepository.findAll(ReviewSpecification.getByParkingLotReviewAndDriver(parkingLotId,driverId.getId(),reviewId));
-        if(review.isEmpty())
+        List<Review> review = reviewRepository.findAll(ReviewSpecification.getByParkingLotReviewAndDriver(parkingLotId, driverId.getId(), reviewId));
+        if (review.isEmpty())
             throw new ReviewIdNotFound("review id not found");
         Review reviewList = reviewRepository.save(MappingUtil.mapUpdateRequestDtoToReview(review.get(0), updateReview));
         return MappingUtil.reviewResponse(reviewList);
     }
 
 
-    public Map<String,String> deleteReview(Integer parkingLotId, Integer reviewId){
+    public Map<String, String> deleteReview(Integer parkingLotId, Integer reviewId) {
         UserDto driverId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<Review> review = reviewRepository.findAll(ReviewSpecification.getByParkingLotReviewAndDriver(parkingLotId,driverId.getId(),reviewId));
-        if(review.isEmpty())
+        List<Review> review = reviewRepository.findAll(ReviewSpecification.getByParkingLotReviewAndDriver(parkingLotId, driverId.getId(), reviewId));
+        if (review.isEmpty())
             throw new ReviewIdNotFound("review id not found");
         review.get(0).setIsActive(false);
         reviewRepository.save(review.get(0));
@@ -65,25 +66,24 @@ public class ReviewService {
         return response;
     }
 
-    public List<ReviewSearch> getAllReviews(Pageable pageable){
-        List<Review> reviews = reviewRepository.findAll(ReviewSpecification.getAllReviews(),pageable).stream().toList();
+    public List<ReviewSearch> getAllReviews(Pageable pageable) {
+        List<Review> reviews = reviewRepository.findAll(ReviewSpecification.getAllReviews(), pageable).stream().toList();
         return MappingUtil.listOfReviewToListOfReviewSearch(reviews);
     }
 
 
-    public List<ReviewSearch> getReviews(ReviewSearchRequestDto reviewSearchRequestDto, Integer parkingLotId){
+    public List<ReviewSearch> getReviews(ReviewSearchRequestDto reviewSearchRequestDto, Integer parkingLotId) {
         List<Review> reviewList;
-        if(reviewSearchRequestDto.getReviewId()!=null && reviewSearchRequestDto.getDriverId()!=null)
+        if (reviewSearchRequestDto.getReviewId() != null && reviewSearchRequestDto.getDriverId() != null)
             reviewList = reviewRepository.findAll(ReviewSpecification.getByParkingLotReviewAndDriver(parkingLotId, reviewSearchRequestDto.getDriverId(), reviewSearchRequestDto.getReviewId()));
-        else if(reviewSearchRequestDto.getReviewId()!=null)
+        else if (reviewSearchRequestDto.getReviewId() != null)
             reviewList = reviewRepository.findAll(ReviewSpecification.getReviewByParkingLotIdAndReviewId(parkingLotId, reviewSearchRequestDto.getReviewId()));
-        else if(reviewSearchRequestDto.getDriverId()!=null)
+        else if (reviewSearchRequestDto.getDriverId() != null)
             reviewList = reviewRepository.findAll(ReviewSpecification.getReviewByParkingLotAndDriver(parkingLotId, reviewSearchRequestDto.getDriverId()));
         else
             reviewList = reviewRepository.findAll(ReviewSpecification.getReviewByParkingLotId(parkingLotId));
         return MappingUtil.listOfReviewToListOfReviewSearch(reviewList);
     }
-
 
 
 }

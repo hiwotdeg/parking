@@ -85,7 +85,7 @@ public class MappingUtil {
                 .build();
     }
 
-    public static List<DriverResponseDto> listOfReservationToListOfDriverResponseDto(List<Driver> drivers){
+    public static List<DriverResponseDto> listOfReservationToListOfDriverResponseDto(List<Driver> drivers) {
         List<DriverResponseDto> driverResponseDtos = new ArrayList<>();
         drivers.forEach(driver -> driverResponseDtos.add(mapDriverToDriverResponseDto(driver)));
         return driverResponseDtos;
@@ -156,7 +156,8 @@ public class MappingUtil {
                 .build();
 
     }
-    public static List<ParkingLotResponseDto> listOfParkingLotToListOfParkingLotResponseDto(List<ParkingLot> parkingLots){
+
+    public static List<ParkingLotResponseDto> listOfParkingLotToListOfParkingLotResponseDto(List<ParkingLot> parkingLots) {
         List<ParkingLotResponseDto> parkingLotResponseDtoList = new ArrayList<>();
         parkingLots.forEach(parkingLot -> parkingLotResponseDtoList.add(parkingLotResponse(parkingLot)));
         return parkingLotResponseDtoList;
@@ -188,22 +189,23 @@ public class MappingUtil {
                 .build();
     }
 
-    public static Review mapUpdateRequestDtoToReview(Review review, UpdateReviewRequestDto dto){
-        if(dto.getComment() != null)
+    public static Review mapUpdateRequestDtoToReview(Review review, UpdateReviewRequestDto dto) {
+        if (dto.getComment() != null)
             review.setComment(dto.getComment());
-        if(dto.getRate() != null)
+        if (dto.getRate() != null)
             review.setRate(dto.getRate());
         return review;
 
     }
 
-    public static ReviewResponseDto reviewResponse(Review review){
+    public static ReviewResponseDto reviewResponse(Review review) {
         return ReviewResponseDto.builder()
                 .reviewId(review.getId())
                 .comment(review.getComment())
                 .rate(review.getRate())
                 .build();
     }
+
     public static ProviderResponseDto mapParkingLotProviderToProviderResponseDto(ParkingLotProvider provider) {
         return ProviderResponseDto.builder()
                 .id(provider.getId())
@@ -215,7 +217,7 @@ public class MappingUtil {
                 .role(provider.getRole()).build();
     }
 
-    public static List<ProviderResponseDto> listOfProviderToListOfProviderResponseDto(List<ParkingLotProvider> providers){
+    public static List<ProviderResponseDto> listOfProviderToListOfProviderResponseDto(List<ParkingLotProvider> providers) {
         List<ProviderResponseDto> providerResponseDtos = new ArrayList<>();
         providers.forEach(parkingLotProvider -> providerResponseDtos.add(mapParkingLotProviderToProviderResponseDto(parkingLotProvider)));
         return providerResponseDtos;
@@ -274,13 +276,13 @@ public class MappingUtil {
                 .build();
     }
 
-    public static List<ReviewSearch> listOfReviewToListOfReviewSearch(List<Review> reviews){
+    public static List<ReviewSearch> listOfReviewToListOfReviewSearch(List<Review> reviews) {
         List<ReviewSearch> reviewSearchList = new ArrayList<>();
         reviews.forEach(review -> reviewSearchList.add(reviewToReviewSearch(review)));
         return reviewSearchList;
     }
 
-    private static ReviewSearch reviewToReviewSearch(Review review){
+    private static ReviewSearch reviewToReviewSearch(Review review) {
         ReviewDriver reviewDriver = ReviewDriver.builder()
                 .id(review.getDriverId().getId())
                 .firstName(review.getDriverId().getFirstName())
@@ -307,7 +309,7 @@ public class MappingUtil {
                 .build();
     }
 
-    public static List<VehicleResponseDto> vehicleToListOfVehicleResponseDto(List<Vehicle> vehicles){
+    public static List<VehicleResponseDto> vehicleToListOfVehicleResponseDto(List<Vehicle> vehicles) {
         List<VehicleResponseDto> vehicleResponseDtoList = new ArrayList<>();
         vehicles.forEach(vehicle -> vehicleResponseDtoList.add(vehicleToVehicleResponseDto(vehicle)));
         return vehicleResponseDtoList;
@@ -335,12 +337,13 @@ public class MappingUtil {
         return vehicle;
     }
 
-    public static List<ReservationResponseDto> mapListOfReservationToReservationResponseDto(List<Reservation> reservationList){
+    public static List<ReservationResponseDto> mapListOfReservationToReservationResponseDto(List<Reservation> reservationList) {
         List<ReservationResponseDto> reservationResponseDtoList = new ArrayList<>();
-        reservationList.forEach(request->reservationResponseDtoList.add(mapReservationToReservationResponseDto(request)));
+        reservationList.forEach(request -> reservationResponseDtoList.add(mapReservationToReservationResponseDto(request)));
         return reservationResponseDtoList;
     }
-    public static ReservationResponseDto mapReservationToReservationResponseDto(Reservation reservation){
+
+    public static ReservationResponseDto mapReservationToReservationResponseDto(Reservation reservation) {
         return ReservationResponseDto.builder()
                 .id(reservation.getId())
                 .reservationStatus(reservation.getReservationStatus())

@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
  * <p>GET /api/v1/parking-lot/providers/my: Only users with the role 'ROLE_PROVIDER' are allowed access.</p>
  * <p>GET /api/v1/parking-lot/lots/my: Only users with the role 'ROLE_PROVIDER' are allowed access.</p>
  * <p>GET /api/v1/parking-lot/drivers/my: Only users with the role 'ROLE_DRIVER' are allowed access.</p>
+ * <p>GET /api/v1/parking-lot/vehicles/my: Only users with the role 'ROLE_DRIVER' are allowed access.</p>
+ * <p>GET /api/v1/parking-lot/reservations/my: Only users with the role 'ROLE_PROVIDER' are allowed access.</p>
  *
  * <p>
  * The bug caused incorrect access to be granted to users with the opposite role. This aspect addresses the issue
@@ -29,14 +31,18 @@ import org.springframework.stereotype.Component;
 public class AuthAspect {
 
     @Before("execution(* et.com.gebeya.parkinglotservice.controller.ParkingLotProviderController.getMyParkingLotProvider()) || " +
-            "execution(* et.com.gebeya.parkinglotservice.controller.ParkingLotController.getMyParkingLot())")
+            "execution(* et.com.gebeya.parkinglotservice.controller.ParkingLotController.getMyParkingLot()) ||" +
+            "execution(* et.com.gebeya.parkinglotservice.controller.ReservationController.getReservationByProviderID())"
+    )
     public void checkForProviderAuth() {
         UserDto provider = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!provider.getRole().equals("ROLE_PROVIDER"))
             throw new BadCredentialsException("");
     }
 
-    @Before("execution(* et.com.gebeya.parkinglotservice.controller.DriverController.getMyDriver())")
+    @Before("execution(* et.com.gebeya.parkinglotservice.controller.DriverController.getMyDriver()) ||" +
+            "execution(* et.com.gebeya.parkinglotservice.controller.VehicleController.getMyVehicle())"
+    )
     public void checkForDriverAuth() {
         UserDto driver = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!driver.getRole().equals("ROLE_DRIVER"))

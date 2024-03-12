@@ -23,15 +23,17 @@ import java.util.Map;
 public class OperationHourService {
     private final OperationHourRepository operationHourRepository;
     private final ParkingLotService parkingLotService;
+
     public List<OperationHourResponseDto> addOperationHour(List<OperationHourDto> request, Integer parkingId) {
         ParkingLot parkingLot = parkingLotService.getParkingLot(parkingId);
         List<OperationHour> operationHours = MappingUtil.addOperationRequestDtoToOperationHour(parkingLot, request);
         return MappingUtil.listOfOperationHourToListOfOperationHourResponseDto(operationHourRepository.saveAll(operationHours));
     }
-    public Map<String, String> deleteOperationHour(Integer parkingId, Integer operationHourId){
+
+    public Map<String, String> deleteOperationHour(Integer parkingId, Integer operationHourId) {
         UserDto providerId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<OperationHour> operationHours = operationHourRepository.findAll(OperationHourSpecification.hasParkingLotOperationAndProviderId(parkingId,operationHourId,providerId.getId()));
-        if(operationHours.isEmpty())
+        List<OperationHour> operationHours = operationHourRepository.findAll(OperationHourSpecification.hasParkingLotOperationAndProviderId(parkingId, operationHourId, providerId.getId()));
+        if (operationHours.isEmpty())
             throw new OperationHourIdNotFound("operationHourId not found");
         operationHourRepository.delete(operationHours.get(0));
         Map<String, String> response = new HashMap<>();
@@ -45,12 +47,12 @@ public class OperationHourService {
         return MappingUtil.listOfOperationHourToListOfOperationHourResponseDto(operationHours);
     }
 
-    public OperationHourResponseDto getOperationHoursByOperationHourId(Integer parkingLotId,Integer operationHourId){
-        List<OperationHour> operationHours = operationHourRepository.findAll(OperationHourSpecification.hasParkingLotAndOperationHourId(parkingLotId,operationHourId));
+    public OperationHourResponseDto getOperationHoursByOperationHourId(Integer parkingLotId, Integer operationHourId) {
+        List<OperationHour> operationHours = operationHourRepository.findAll(OperationHourSpecification.hasParkingLotAndOperationHourId(parkingLotId, operationHourId));
         return MappingUtil.operationHourToOperationHourResponseDto(operationHours.get(0));
     }
 
-   List<OperationHour> getOperationByParkingLotId(Integer id){
+    List<OperationHour> getOperationByParkingLotId(Integer id) {
         parkingLotService.getParkingLot(id);
         return operationHourRepository.findAll(OperationHourSpecification.hasParkingLotId(id));
     }

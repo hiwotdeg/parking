@@ -22,9 +22,9 @@ public class Driver {
     private Integer id;
     private String firstName;
     private String lastName;
-    @Column(unique=true)
+    @Column(unique = true)
     private String email;
-    @Column(unique=true)
+    @Column(unique = true)
     private String phoneNo;
     private Boolean isActive;
     private String imageUrl;

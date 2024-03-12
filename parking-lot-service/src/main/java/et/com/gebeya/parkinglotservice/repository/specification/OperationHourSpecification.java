@@ -10,6 +10,9 @@ import org.springframework.data.jpa.domain.Specification;
 import java.security.Provider;
 
 public class OperationHourSpecification {
+    private OperationHourSpecification() {
+    }
+
     public static Specification<OperationHour> hasParkingLotId(int parkingLotId) {
         return (root, query, criteriaBuilder) -> {
             Join<OperationHour, ParkingLot> parkingLotJoin = root.join("parkingLot", JoinType.INNER);
@@ -27,7 +30,6 @@ public class OperationHourSpecification {
             );
         };
     }
-
 
 
     public static Specification<OperationHour> hasParkingLotOperationAndProviderId(int parkingLotId, int operationHourId, int providerId) {

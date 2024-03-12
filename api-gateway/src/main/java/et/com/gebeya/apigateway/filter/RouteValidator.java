@@ -38,9 +38,7 @@ public class RouteValidator {
     public Predicate<ServerHttpRequest> isSecured =
             request -> openApiEndpoints
                     .stream()
-                    // Ensure the path matches exactly, not just containing the substring
                     .noneMatch(uri -> request.getURI().getPath().equals(uri))
-                    // Additionally check for POST method for specific URLs
                     && !(request.getURI().getPath().equals("/api/v1/parking-lot/providers") && request.getMethod().equals(HttpMethod.POST))
                     && !(request.getURI().getPath().equals("/api/v1/parking-lot/drivers") && request.getMethod().equals(HttpMethod.POST));
 
