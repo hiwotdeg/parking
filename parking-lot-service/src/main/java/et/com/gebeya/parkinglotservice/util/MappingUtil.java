@@ -23,6 +23,13 @@ public class MappingUtil {
                 .build();
     }
 
+    public static AddUserRequest mapAdminToAddUserRequest(Admin admin){
+        return AddUserRequest.builder()
+                .phoneNo(admin.getPhoneNo())
+                .role(Authority.ADMIN)
+                .roleId(admin.getId())
+                .build();
+    }
     public static Driver mapAddDiverRequestDtoToDriver(AddDriverRequestDto dto) {
         return Driver.builder().firstName(dto.getFirstName())
                 .lastName(dto.getLastName())
@@ -345,6 +352,21 @@ public class MappingUtil {
                 .price(reservation.getPrice())
                 .isActive(reservation.getIsActive())
                 .build();
+    }
+
+    public static Admin mapAddAdminRequestDtoToAdmin(AddAdminRequestDto dto){
+        return Admin.builder()
+                .firstName(dto.getFirstName())
+                .middleName(dto.getMiddleName())
+                .lastName(dto.getLastName())
+                .email(dto.getEmail())
+                .phoneNo(dto.getPhoneNo())
+                .build();
+    }
+    public static List<AdminResponseDto> listOfAdminToListOfAdminResponseDto(List<Admin> adminLists){
+        List<AdminResponseDto> adminResponseDtoList = new ArrayList<>();
+        adminLists.forEach(admin -> adminResponseDtoList.add(mapAdminToAdminResponseDto(admin)));
+        return adminResponseDtoList;
     }
 
 
