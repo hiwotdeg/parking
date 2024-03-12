@@ -21,12 +21,12 @@ public class AdminController {
     }
 
     @GetMapping("/admin/{id}")
-    public ResponseEntity<Admin> getAdminById(@PathVariable("id") Integer id){
+    public ResponseEntity<AdminResponseDto> getAdminById(@PathVariable("id") Integer id){
         return ResponseEntity.ok(adminService.getAdminById(id));
     }
 
     @PostMapping("/admin")
-    public ResponseEntity<Admin> registerAdmin(@RequestBody Admin admin){
+    public ResponseEntity<AdminResponseDto> registerAdmin(@RequestBody Admin admin){
         return ResponseEntity.ok(adminService.registerAdmin(admin));
     }
 

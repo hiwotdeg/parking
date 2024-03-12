@@ -55,8 +55,6 @@ public class MappingUtil {
             admin.setMiddleName(dto.getMiddleName());
         if(dto.getLastName() != null)
             admin.setMiddleName(dto.getMiddleName());
-        if(dto.getPhoneNo() != null)
-            admin.setPhoneNo(dto.getPhoneNo());
         return admin;
     }
 
