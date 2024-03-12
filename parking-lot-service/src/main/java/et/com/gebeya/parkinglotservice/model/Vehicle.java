@@ -26,7 +26,7 @@ public class Vehicle {
     private String plate;
     private Boolean isActive;
     @ManyToOne()
-    @JoinColumn(name ="driver_id")
+    @JoinColumn(name = "driver_id")
     private Driver driver;
     @CreationTimestamp
     private Instant createdOn;

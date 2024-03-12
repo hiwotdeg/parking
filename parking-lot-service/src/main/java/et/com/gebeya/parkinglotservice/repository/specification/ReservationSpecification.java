@@ -8,6 +8,9 @@ import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ReservationSpecification {
+    private ReservationSpecification() {
+    }
+
     public static Specification<Reservation> getReservationByProviderId(Integer providerId) {
         return (root, query, criteriaBuilder) -> {
             Join<Reservation, ParkingLot> parkingLotJoin = root.join("parkingLot");

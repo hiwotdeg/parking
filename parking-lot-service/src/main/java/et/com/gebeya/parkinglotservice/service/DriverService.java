@@ -17,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
@@ -30,10 +29,11 @@ public class DriverService {
     private final BalanceService balanceService;
     private final DriverRepository driverRepository;
     private final AuthService authService;
+
     @Transactional
     public AddUserResponse registerDriver(AddDriverRequestDto dto) {
         Integer dId = null;
-        try{
+        try {
             Driver driver = MappingUtil.mapAddDiverRequestDtoToDriver(dto);
             driver = driverRepository.save(driver);
             dId = driver.getId();
@@ -45,11 +45,9 @@ public class DriverService {
             return responseMono.blockOptional()
                     .map(ResponseEntity::getBody)
                     .orElseThrow(() -> new AuthException("Error occurred during generating of token"));
-        }
-        catch (Exception e){
-            if(dId!=null)
-            {
-                log.info("delete the coupon balance ==>{}",dId);
+        } catch (Exception e) {
+            if (dId != null) {
+                log.info("delete the coupon balance ==>{}", dId);
                 balanceService.deleteBalanceForDriver(dId);
             }
             throw e;
@@ -68,7 +66,7 @@ public class DriverService {
         return MappingUtil.mapDriverToDriverResponseDto(driver);
     }
 
-    public DriverResponseDto getMyDriverProfile(){
+    public DriverResponseDto getMyDriverProfile() {
         UserDto driverId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return getDriverById(driverId.getId());
     }
@@ -80,8 +78,8 @@ public class DriverService {
         return driver.get(0);
     }
 
-    public List<DriverResponseDto> getAllDrivers(Pageable pageable){
-        List<Driver> driverList = driverRepository.findAll(DriverSpecification.getAllDrivers(),pageable).stream().toList();
+    public List<DriverResponseDto> getAllDrivers(Pageable pageable) {
+        List<Driver> driverList = driverRepository.findAll(DriverSpecification.getAllDrivers(), pageable).stream().toList();
         return MappingUtil.listOfReservationToListOfDriverResponseDto(driverList);
     }
 }

@@ -16,11 +16,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -92,8 +89,7 @@ public class ReservationService {
         log.error("fallback error=>{}, message=>{}", throwable.getClass(), throwable.getMessage());
         if (throwable instanceof InsufficientBalance) {
             throw new InsufficientBalance(throwable.getMessage());
-        }
-        else if(throwable instanceof WebClientResponseException.BadRequest){
+        } else if (throwable instanceof WebClientResponseException.BadRequest) {
             throw new ClientErrorException(((WebClientResponseException.BadRequest) throwable).getResponseBodyAsString());
         }
         throw new RuntimeException(throwable.getMessage());

@@ -20,8 +20,8 @@ public class RoleHeaderAuthenticationProvider implements AuthenticationProvider 
         String headerRole = ((RoleHeaderAuthenticationToken) authentication).getHeaderRole();
         Integer roleId = ((RoleHeaderAuthenticationToken) authentication).getRoleId();
         if ((!headerRole.isEmpty())) {
-            List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_"+headerRole));
-            UserDto userDto = UserDto.builder().role("ROLE_"+headerRole).id(roleId).build();
+            List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + headerRole));
+            UserDto userDto = UserDto.builder().role("ROLE_" + headerRole).id(roleId).build();
             return new UsernamePasswordAuthenticationToken(userDto, null, authorities);
         } else {
             throw new BadCredentialsException("Invalid role");

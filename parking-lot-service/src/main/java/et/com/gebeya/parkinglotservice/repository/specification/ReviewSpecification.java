@@ -6,8 +6,10 @@ import et.com.gebeya.parkinglotservice.model.Review;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
+
 public class ReviewSpecification {
-    private ReviewSpecification(){}
+    private ReviewSpecification() {
+    }
 
     public static Specification<Review> getReviewByParkingLotIdAndReviewId(Integer parkingLotId, Integer reviewId) {
         return getReviewByParkingLotId(parkingLotId).and(getReviewById(reviewId));
@@ -21,7 +23,7 @@ public class ReviewSpecification {
         return getReviewByParkingLotId(parkingLotId).and(getReviewByDriverId(driverId)).and(getReviewById(reviewId));
     }
 
-    public static Specification<Review> getReviewByParkingLotId(Integer parkingLotId){
+    public static Specification<Review> getReviewByParkingLotId(Integer parkingLotId) {
         return (root, query, criteriaBuilder) -> {
             Join<Review, ParkingLot> parkingLotJoin = root.join("parkingLot");
             Predicate isActive = criteriaBuilder.isTrue(parkingLotJoin.get("isActive"));
@@ -30,15 +32,15 @@ public class ReviewSpecification {
         };
     }
 
-    public static Specification<Review> getAllReviews(){
-        return ((root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get("isActive"),false));
+    public static Specification<Review> getAllReviews() {
+        return ((root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get("isActive"), false));
     }
 
-    public static Specification<Review> getReviewById(Integer reviewId){
+    public static Specification<Review> getReviewById(Integer reviewId) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("id"), reviewId);
     }
 
-    public static Specification<Review> getReviewByDriverId(Integer driverId){
+    public static Specification<Review> getReviewByDriverId(Integer driverId) {
         return (root, query, criteriaBuilder) -> {
             Join<Review, Driver> driverJoin = root.join("driverId");
             return criteriaBuilder.equal(driverJoin.get("id"), driverId);

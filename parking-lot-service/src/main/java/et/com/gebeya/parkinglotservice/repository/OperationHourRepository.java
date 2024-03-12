@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface OperationHourRepository extends JpaRepository<OperationHour,Integer>, JpaSpecificationExecutor<OperationHour> {
+public interface OperationHourRepository extends JpaRepository<OperationHour, Integer>, JpaSpecificationExecutor<OperationHour> {
 
 }

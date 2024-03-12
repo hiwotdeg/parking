@@ -11,7 +11,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 @AllArgsConstructor
@@ -25,10 +24,10 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ManyToOne()
-    @JoinColumn(name ="driver_id")
+    @JoinColumn(name = "driver_id")
     private Driver driver;
     @ManyToOne()
-    @JoinColumn(name ="parking_lot_id")
+    @JoinColumn(name = "parking_lot_id")
     private ParkingLot parkingLot;
     @ManyToOne()
     @JoinColumn(name = "vehicle_id")

@@ -1,8 +1,11 @@
 package et.com.gebeya.parkinglotservice.dto.requestdto;
 
 import et.com.gebeya.parkinglotservice.enums.ParkingType;
-import lombok.*;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Builder
 @Data
 @AllArgsConstructor

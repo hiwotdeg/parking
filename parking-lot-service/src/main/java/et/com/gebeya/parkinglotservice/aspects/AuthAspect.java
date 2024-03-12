@@ -40,7 +40,7 @@ public class AuthAspect {
             throw new BadCredentialsException("");
     }
 
-    @Before("execution(* et.com.gebeya.parkinglotservice.controller.DriverController.getMyDriver()) ||"+
+    @Before("execution(* et.com.gebeya.parkinglotservice.controller.DriverController.getMyDriver()) ||" +
             "execution(* et.com.gebeya.parkinglotservice.controller.VehicleController.getMyVehicle())"
     )
     public void checkForDriverAuth() {

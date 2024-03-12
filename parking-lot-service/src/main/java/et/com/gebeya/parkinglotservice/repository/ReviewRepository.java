@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ReviewRepository extends JpaRepository<Review,Integer>, JpaSpecificationExecutor<Review> {
+public interface ReviewRepository extends JpaRepository<Review, Integer>, JpaSpecificationExecutor<Review> {
     @Query("SELECT AVG(r.rate) FROM Review r WHERE r.parkingLot.id = :parkingLotId")
     Float calculateAverageRatingByParkingLotId(@Param("parkingLotId") Integer parkingLotId);
 }

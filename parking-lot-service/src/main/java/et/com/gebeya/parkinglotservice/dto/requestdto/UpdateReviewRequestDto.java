@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class UpdateReviewRequestDto {
-    @Size(min = 0,max = 5)
+    @Size(min = 0, max = 5)
     private Float rate;
     private String comment;
 }

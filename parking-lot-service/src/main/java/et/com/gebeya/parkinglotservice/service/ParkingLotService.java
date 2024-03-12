@@ -106,7 +106,7 @@ public class ParkingLotService {
         return parkingLots.get(0);
     }
 
-    public ParkingLotResponseDto getMyParkingLotByProviderId(){
+    public ParkingLotResponseDto getMyParkingLotByProviderId() {
         UserDto providerId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ParkingLot parkingLot = getParkingLotByProviderId(providerId.getId());
         return MappingUtil.parkingLotResponse(parkingLot);
@@ -119,8 +119,8 @@ public class ParkingLotService {
         return providers.get(0);
     }
 
-    public List<ParkingLotResponseDto> getAllParkingLots(Pageable pageable){
-        List<ParkingLot> parkingLots = parkingLotRepository.findAll(ParkingLotSpecification.getAllParkingLot(),pageable).stream().toList();
+    public List<ParkingLotResponseDto> getAllParkingLots(Pageable pageable) {
+        List<ParkingLot> parkingLots = parkingLotRepository.findAll(ParkingLotSpecification.getAllParkingLot(), pageable).stream().toList();
         return MappingUtil.listOfParkingLotToListOfParkingLotResponseDto(parkingLots);
     }
 
