@@ -58,14 +58,14 @@ public class AuthConfig {
 
     private void createAdminUser() {
         try {
-            Users users = usersService.loadUserByUsername("0978904679");
+            usersService.loadUserByUsername("+251979272100");
         } catch (Exception e) {
             Users users = Users.builder()
                     .isActive(true)
                     .authority(Authority.ADMIN)
-                    .userName("0978904679")
+                    .userName("+251979272100")
                     .roleId(0)
-                    .password(passwordEncoder().encode("0978904679"))
+                    .password(passwordEncoder().encode("+251979272100"))
                     .build();
             usersService.createUpdateUser(users);
         }
