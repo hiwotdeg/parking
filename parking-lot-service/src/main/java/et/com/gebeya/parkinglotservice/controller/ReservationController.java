@@ -4,7 +4,6 @@ import et.com.gebeya.parkinglotservice.dto.requestdto.ReservationRequestDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateReservation;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ReservationResponseDto;
 import et.com.gebeya.parkinglotservice.service.ReservationService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -26,7 +25,7 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations/{reservationId}/requests") // provider
-    public ResponseEntity<ReservationResponseDto> updateStatus(@PathVariable("reservationId") Integer reservationId,@RequestBody UpdateReservation dto) {
+    public ResponseEntity<ReservationResponseDto> updateStatus(@PathVariable("reservationId") Integer reservationId, @RequestBody UpdateReservation dto) {
         return ResponseEntity.ok(reservationService.updateReservation(reservationId, dto));
     }
 

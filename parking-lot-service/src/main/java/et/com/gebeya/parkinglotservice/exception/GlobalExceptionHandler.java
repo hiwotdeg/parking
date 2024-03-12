@@ -133,6 +133,18 @@ public class GlobalExceptionHandler {
         errorResponse.put("message", exception.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
+    @ExceptionHandler(ClientErrorException.class)
+    public ResponseEntity<Map<String, Object>> handleClientErrorException(ClientErrorException exception) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        try {
+            Map<String, Object> messageMap = objectMapper.readValue(exception.getMessage(), Map.class);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageMap);
+        } catch (JsonProcessingException e) {
+            errorResponse.put("message", "error occurred. please try again later");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+
+    }
 
     @ExceptionHandler(ParkingLotAvailabilityException.class)
     public ResponseEntity<Map<String, Object>> handleParkingLotAvailabilityException(ParkingLotAvailabilityException exception) {

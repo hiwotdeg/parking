@@ -12,10 +12,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-#        show_sql: true
-#        format_sql: true
-#        use_sql_comments: true
-#        type: trace
+  #        show_sql: true
+  #        format_sql: true
+  #        use_sql_comments: true
+  #        type: trace
   kafka:
     bootstrap-servers: ${KAFKA.URL:localhost:9092}
   flyway:
@@ -46,11 +46,43 @@ management:
       exposure:
         include: "*"
   endpoint:
-   health:
-    show-details: always
+    health:
+      show-details: always
+  health:
+    circuitbreakers:
+      enabled: true
 
   tracing:
     sampling:
       probability: 1.0
 
+resilience4j:
+  circuitbreaker:
+    instances:
+      auth:
+        registerHealthIndicator: true
+        event-consumer-buffer-size: 100
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        ignore-exceptions:
+          - et.com.gebeya.parkinglotservice.exception.InsufficientBalance
+          - et.com.gebeya.parkinglotservice.exception.ClientErrorException
+          - org.springframework.web.reactive.function.client.WebClientResponseException.BadRequest
+  #  timelimiter:
+  #    instances:
+  #      auth:
+  #        timeout-duration: 3s
 
+  retry:
+    instances:
+      auth:
+        max-attempts: 3
+        wait-duration: 3s
+        ignore-exceptions:
+          - et.com.gebeya.parkinglotservice.exception.InsufficientBalance
+          - et.com.gebeya.parkinglotservice.exception.ClientErrorException
+          - org.springframework.web.reactive.function.client.WebClientResponseException.BadRequest

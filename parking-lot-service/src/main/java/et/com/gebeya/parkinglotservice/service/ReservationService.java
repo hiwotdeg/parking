@@ -10,20 +10,27 @@ import et.com.gebeya.parkinglotservice.repository.ReservationRepository;
 import et.com.gebeya.parkinglotservice.repository.specification.ReservationSpecification;
 import et.com.gebeya.parkinglotservice.util.MappingUtil;
 import et.com.gebeya.parkinglotservice.util.MessagingUtil;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.ErrorResponse;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
-import java.math.BigDecimal;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -37,8 +44,12 @@ public class ReservationService {
     private final WebClient.Builder webClientBuilder;
     private final MessageService messageService;
     private final VehicleService vehicleService;
+    private final RestTemplate restTemplate;
 
     @Transactional
+    @CircuitBreaker(name = "auth", fallbackMethod = "fallBackMethod")
+    @Retry(name = "auth")
+
     public Map<String, String> book(Integer parkingLotId, ReservationRequestDto dto) {
         UserDto driverId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Driver driver = driverService.getDriver(driverId.getId());
@@ -60,7 +71,8 @@ public class ReservationService {
 
 
     public Mono<BalanceResponseDto> transferBalance(TransferBalanceRequestDto transferBalanceRequestDto) {
-        return webClientBuilder.build().post()
+        return webClientBuilder.build()
+                .post()
                 .uri("http://PAYMENT-SERVICE/api/v1/payment/transfer")
                 .bodyValue(transferBalanceRequestDto)
                 .retrieve()
@@ -70,18 +82,29 @@ public class ReservationService {
 
     private Mono<BalanceResponseDto> checkBalance(Integer driverId) {
         return webClientBuilder.build().get()
-                .uri("http://PAYMENT-SERVICE/api/v1/payment/driver_balance/" + driverId)
+                .uri("http://PAYMENT-SERVICE/api/v1/payment/driver_balance/" + 111)
                 .retrieve()
                 .bodyToMono(BalanceResponseDto.class);
+    }
+
+
+    private Map<String, String> fallBackMethod(Throwable throwable) {
+        log.error("fallback error=>{}, message=>{}", throwable.getClass(), throwable.getMessage());
+        if (throwable instanceof InsufficientBalance) {
+            throw new InsufficientBalance(throwable.getMessage());
+        }
+        else if(throwable instanceof WebClientResponseException.BadRequest){
+            throw new ClientErrorException(((WebClientResponseException.BadRequest) throwable).getResponseBodyAsString());
+        }
+        throw new RuntimeException(throwable.getMessage());
     }
 
     private void checkBalanceForDriver(Integer driverId, BigDecimal desiredAmount) {
         BalanceResponseDto balanceResponseDto = checkBalance(driverId).block();
         assert balanceResponseDto != null;
-        if (balanceResponseDto.getBalance().compareTo(desiredAmount) < 0)
+        if (balanceResponseDto.getBalance().compareTo(desiredAmount) <= 0)
             throw new InsufficientBalance("You have insufficient balance. please purchase coupons");
     }
-
 
 
     private void notifyBooking(Integer providerId, Integer driverId, String parkingLotName, LocalTime duration) {
@@ -96,6 +119,8 @@ public class ReservationService {
     }
 
     @Transactional
+    @CircuitBreaker(name = "auth", fallbackMethod = "fallBackMethod")
+    @Retry(name = "auth")
     public ReservationResponseDto updateReservation(Integer reservationId, UpdateReservation updateReservation) {
         Reservation reservation = getActiveReservationsById(reservationId);
         if (isFiveMinutesDifference(reservation.getCreatedOn())) {
@@ -113,8 +138,7 @@ public class ReservationService {
             reservation = reservationRepository.save(reservation);
             messageService.sendPushNotificationForDriver(reservation.getDriver().getId(), MessagingUtil.driverBookNotification(reservation.getParkingLot().getName(), reservation.getStayingDuration()));
             return MappingUtil.mapReservationToReservationResponseDto(reservation);
-        }
-        else{
+        } else {
             reservation.setReservationStatus(updateReservation.getReservationStatus());
             reservation = reservationRepository.save(reservation);
             return MappingUtil.mapReservationToReservationResponseDto(reservation);
@@ -136,25 +160,23 @@ public class ReservationService {
         return duration.compareTo(Duration.ofMinutes(5)) >= 0;
     }
 
-    public Map<String, String> cancelReservation(Integer reservationId){
+    public Map<String, String> cancelReservation(Integer reservationId) {
         Reservation reservation = getActiveReservationsById(reservationId);
-        if(reservation.getReservationStatus().equals(ReservationStatus.PENDING) && reservation.getIsActive().equals(true)){
+        if (reservation.getReservationStatus().equals(ReservationStatus.PENDING) && reservation.getIsActive().equals(true)) {
             reservation.setIsActive(false);
             reservationRepository.save(reservation);
 
-        }
-        else if(reservation.getReservationStatus().equals(ReservationStatus.ACCEPTED) && reservation.getIsActive().equals(true)){
+        } else if (reservation.getReservationStatus().equals(ReservationStatus.ACCEPTED) && reservation.getIsActive().equals(true)) {
             reservation.setIsActive(false);
             reservationRepository.save(reservation);
             messageService.sendPushNotificationForDriver(reservation.getDriver().getId(), MessagingUtil.cancelReservationNotificationForDriver(reservation.getParkingLot().getName()));
-        }
-        else{
+        } else {
             throw new CancelReservationException("cancel reservation allowed for active accepted and active pending reservations only");
         }
         return Map.of("message", "you have cancelled your reservation");
     }
 
-    public List<ReservationResponseDto> getAllReservation(Pageable pageable){
+    public List<ReservationResponseDto> getAllReservation(Pageable pageable) {
         List<Reservation> reservations = reservationRepository.findAll(pageable).stream().toList();
         return MappingUtil.mapListOfReservationToReservationResponseDto(reservations);
     }
