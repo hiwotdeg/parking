@@ -1,15 +1,16 @@
-package et.com.gebeya.parkinglotservice.dto.requestdto;
+package et.com.gebeya.paymentservice.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
+@ToString
 public class ReferenceItem {
+    @JsonProperty("Key")
     private String key;
+    @JsonProperty("Value")
     private String value;
 }

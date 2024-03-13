@@ -47,7 +47,8 @@ public class SecurityConfig {
             "/api/v1/payment/driver_balance/*",
             "/api/v1/payment/provider/{id}",
             "/api/v1/payment/deposit/{id}",
-
+            "/api/v1/payment/driver/{id}",
+            "/api/v1/payment/mpesa/b2cresults"
 
     };
 
