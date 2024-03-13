@@ -49,6 +49,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleMalformedJwtException(MalformedJwtException e) {
         Map<String, Object> errorResponse = new HashMap<>();
         errorResponse.put("message", e.getMessage());
+        log.error(e.getMessage(),e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
     @ExceptionHandler(UnsupportedJwtException.class)
@@ -56,6 +57,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleUnsupportedJwtExceptionException(UnsupportedJwtException e) {
         Map<String, Object> errorResponse = new HashMap<>();
         errorResponse.put("message", e.getMessage());
+        log.error(e.getMessage(),e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
     @ExceptionHandler(SignatureException.class)
@@ -63,6 +65,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleSignatureExceptionException(SignatureException e) {
         Map<String, Object> errorResponse = new HashMap<>();
         errorResponse.put("message", e.getMessage());
+        log.error(e.getMessage(),e);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
     @ExceptionHandler(ExpiredJwtException.class)
@@ -70,6 +73,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleExpiredJwtExceptionException(ExpiredJwtException e) {
         Map<String, Object> errorResponse = new HashMap<>();
         errorResponse.put("message", e.getMessage());
+        log.error(e.getMessage(),e);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
     @ExceptionHandler(JwtException.class)
@@ -77,6 +81,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleJwtExceptionException(JwtException e) {
         Map<String, Object> errorResponse = new HashMap<>();
         errorResponse.put("message", e.getMessage());
+        log.error(e.getMessage(),e);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
     @ExceptionHandler(RuntimeException.class)
@@ -84,6 +89,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleRuntimeException(RuntimeException e) {
         Map<String, Object> errorResponse = new HashMap<>();
         errorResponse.put("message", e.getMessage());
+        log.error(e.getMessage(),e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
     @ExceptionHandler(Exception.class)
@@ -91,6 +97,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleJwtExceptionException(Exception e) {
         Map<String, Object> errorResponse = new HashMap<>();
         errorResponse.put("message", e.getMessage());
+        log.error(e.getMessage(),e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 }

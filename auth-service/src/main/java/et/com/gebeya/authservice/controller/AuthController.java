@@ -10,6 +10,7 @@ import et.com.gebeya.authservice.dto.response_dto.OtpVerificationResponseDto;
 import et.com.gebeya.authservice.dto.response_dto.ValidationResponse;
 import et.com.gebeya.authservice.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Hidden;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,7 @@ public class AuthController {
 
     @Hidden
     @PostMapping("/addUser")
-    public ResponseEntity<AddUserResponse> addUser(@RequestBody AddUserRequest request)
+    public ResponseEntity<AddUserResponse> addUser(@Valid @RequestBody AddUserRequest request)
     {
         return authenticationService.addUser(request);
     }
