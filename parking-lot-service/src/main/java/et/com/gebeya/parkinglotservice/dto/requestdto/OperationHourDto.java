@@ -14,6 +14,6 @@ import java.time.LocalTime;
 @Data
 public class OperationHourDto {
     private LocalTime startTime;
-    private LocalTime endTIme;
+    private LocalTime endTime;
     private BigDecimal price;
 }

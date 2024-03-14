@@ -37,7 +37,7 @@ public class OperationHourService {
             throw new OperationHourIdNotFound("operationHourId not found");
         operationHourRepository.delete(operationHours.get(0));
         Map<String, String> response = new HashMap<>();
-        response.put("message", "vehicle deleted successfully");
+        response.put("message", "operation hours deleted successfully");
         return response;
     }
 
