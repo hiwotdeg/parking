@@ -14,18 +14,4 @@ public class WebClientConfig {
     }
 
 
-//    @Bean
-//    public List<GroupedOpenApi> apis() {
-//        List<GroupedOpenApi> groups = new ArrayList<>();
-//        List<RouteDefinition> definitions = resourceLocator.getRouteDefinitions().collectList().block();
-//        definitions.stream()
-//                .filter(routeDefinition -> routeDefinition.getId().matches(".*-service"))
-//                .forEach(routeDefinition -> {
-//                    String name = routeDefinition.getId();
-//                    GroupedOpenApi.builder().pathsToMatch("/" + name + "/**").group(name).build();
-//                })
-//        ;
-//        return groups;
-//    }
-
 }
