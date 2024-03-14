@@ -32,7 +32,9 @@ public class RouteValidator {
             "/v3/api-docs/parking-lot",
             "/v3/api-docs/geo-location",
             "/v3/api-docs/payment",
-            "/api/v1/parking-lot/sendMessage"
+            "/api/v1/parking-lot/sendMessage",
+            "/api/v1/payment/mpesa/b2cresults",
+            "/api/v1/payment/mpesa/stkcallback"
     );
 
     public Predicate<ServerHttpRequest> isSecured =
