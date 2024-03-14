@@ -24,6 +24,8 @@ openapi:
     url: ${API.GATEWAY.SERVICE.URL:http://localhost:80}
 
 eureka:
+  instance:   
+    preferIpAddress: true
   client:
     serviceUrl:
       defaultZone: ${EUREKA.DEFAULT.ZONE.URL:http://localhost:8761/eureka}
