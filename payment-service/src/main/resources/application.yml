@@ -35,3 +35,11 @@ springdoc:
     path: /v3/api-docs/payment
   cache:
     disabled: true
+
+mpesa:
+  stk:
+    username: ${STK.USERNAME:jgdPJACy5TPGniKsmxahZgjYsfCn9ILI2LZanmk5kukRycGd}
+    password: ${STK.PASSWORD:nLIqp5u77VqO2TKshWYAOaG33sMiCkGh7g6NOcnLKFsoneFpwnwskDaOMWs4Vgc1}
+    bsc: ${STK.BSC:4040}
+    pass: ${STK.PASS:9bf4e3c2fa2991a5646133384263ebe6192334202bea54ffd38a7cd270045b40}
+    callBack: ${STK.CALLBACK.URL:https://0287-196-189-16-208.ngrok-free.app/api/v1/payment/mpesa/stkcallback}

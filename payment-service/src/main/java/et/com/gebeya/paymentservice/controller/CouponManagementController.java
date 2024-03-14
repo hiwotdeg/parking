@@ -42,10 +42,10 @@ public class CouponManagementController {
     public ResponseEntity<BalanceResponseDto> withdrawBalanceFromProvider(@RequestBody WithdrawalRequestDto dto){
         return ResponseEntity.ok(couponManagementService.withdrawalBalanceForProvider(dto));
     }
-    @PostMapping("/deposit")
-    public ResponseEntity<BalanceResponseDto> depositBalanceForDriver(@RequestBody BalanceRequestDto dto){
-        return ResponseEntity.ok(couponManagementService.depositBalanceForDriver(dto));
-    }
+//    @PostMapping("/deposit")
+//    public ResponseEntity<BalanceResponseDto> depositBalanceForDriver(@RequestBody BalanceRequestDto dto){
+//        return ResponseEntity.ok(couponManagementService.depositBalanceForDriver(dto));
+//    }
     @Hidden
     @PostMapping("/transfer")
     public ResponseEntity<BalanceResponseDto> transferBalance(@RequestBody TransferBalanceRequestDto dto){
@@ -61,4 +61,5 @@ public class CouponManagementController {
     public ResponseEntity<BalanceResponseDto> checkBalanceForDriverId(@PathVariable("id") Integer driverId){
         return ResponseEntity.ok(couponManagementService.checkBalanceForDriver(driverId));
     }
+
 }
