@@ -7,7 +7,6 @@ import lombok.*;
 @NoArgsConstructor
 @Data
 @Builder
-@ToString
 public class MpesaB2CResponse {
     @JsonProperty("Result")
     private Result result;

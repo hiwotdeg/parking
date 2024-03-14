@@ -7,7 +7,6 @@ import lombok.*;
 @NoArgsConstructor
 @Data
 @Builder
-@ToString
 public class Result {
     @JsonProperty("ResultType")
     private Integer resultType;

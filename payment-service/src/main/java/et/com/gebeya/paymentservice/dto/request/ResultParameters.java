@@ -7,7 +7,6 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
-@ToString
 public class ResultParameters {
     @JsonProperty("ResultParameter")
     private List<ResultParameter> resultParameter;

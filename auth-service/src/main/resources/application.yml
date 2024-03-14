@@ -45,6 +45,9 @@ springdoc:
   cache:
     disabled: true
 
+openapi:
+  service:
+    url: ${API.GATEWAY.SERVICE.URL:http://localhost:80}
 
 token:
   key: ${token.signing.key:Hr6RvNnuoWZ1KxlEYeh2RS/WcoLJZb0e4d/r9/kqajQ=}

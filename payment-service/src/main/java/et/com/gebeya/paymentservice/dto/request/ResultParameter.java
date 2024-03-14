@@ -7,7 +7,6 @@ import lombok.*;
 @NoArgsConstructor
 @Data
 @Builder
-@ToString
 public class ResultParameter {
     @JsonProperty("Key")
     private String key;

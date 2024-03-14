@@ -7,7 +7,6 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @Data
-@ToString
 public class ReferenceData {
     @JsonProperty("ReferenceItem")
     private ReferenceItem referenceItem;
