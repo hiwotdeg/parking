@@ -219,7 +219,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, Object>> handleRuntimeException(RuntimeException exception) {
         Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", exception.getMessage());
+        errorResponse.put("message", "UnExpected Error occurred please try again later");
         log.error(exception.getMessage(), exception);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
@@ -227,7 +227,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleException(Exception exception) {
         Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", exception.getMessage());
+        errorResponse.put("message", "UnExpected Error occurred please try again later");
         log.error(exception.getMessage(), exception);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }

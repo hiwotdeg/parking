@@ -8,14 +8,19 @@ import et.com.gebeya.parkinglotservice.dto.responsedto.AddUserResponse;
 import et.com.gebeya.parkinglotservice.dto.responsedto.AdminResponseDto;
 import et.com.gebeya.parkinglotservice.exception.AdminIdNotFound;
 import et.com.gebeya.parkinglotservice.exception.AuthException;
+import et.com.gebeya.parkinglotservice.exception.ClientErrorException;
 import et.com.gebeya.parkinglotservice.model.Admin;
 import et.com.gebeya.parkinglotservice.repository.AdminRepository;
 import et.com.gebeya.parkinglotservice.repository.specification.AdminSpecification;
 import et.com.gebeya.parkinglotservice.util.MappingUtil;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -23,9 +28,12 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AdminService {
     private final AdminRepository adminRepository;
     private final AuthService authService;
+    @CircuitBreaker(name = "default", fallbackMethod = "adminFallBack")
+    @Retry(name = "default")
     public AddUserResponse registerAdmin(AddAdminRequestDto dto){
         Admin admin = MappingUtil.mapAddAdminRequestDtoToAdmin(dto);
         admin = adminRepository.save(admin);
@@ -36,6 +44,13 @@ public class AdminService {
                 .orElseThrow(() -> new AuthException("Error occurred during generating of token"));
     }
 
+    private AddUserResponse adminFallBack(Throwable throwable) {
+        log.error("fallback error=>{}, message=>{}", throwable.getClass(), throwable.getMessage());
+        if (throwable instanceof WebClientResponseException.BadRequest) {
+            throw new ClientErrorException(((WebClientResponseException.BadRequest) throwable).getResponseBodyAsString());
+        }
+        throw new RuntimeException(throwable.getMessage());
+    }
 
     public List<AdminResponseDto> getAllAdmins(){
         List<Admin> adminList = adminRepository.findAll(AdminSpecification.getAllAdmins());
@@ -60,6 +75,7 @@ public class AdminService {
     public AdminResponseDto updateAdmin(UpdateAdminRequestDto dto, Integer id){
         Admin admin = getAdmin(id);
         admin = MappingUtil.mapUpdateAdminRequestDtoToAdmin(dto,admin);
+        admin = adminRepository.save(admin);
         return MappingUtil.mapAdminToAdminResponseDto(admin);
     }
 }

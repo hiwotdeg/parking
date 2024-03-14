@@ -3,7 +3,7 @@ spring:
     name: Parking-Lot-Service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${DB.URL:jdbc:postgresql://localhost:5432/parking_lot_new}
+    url: ${DB.URL:jdbc:postgresql://localhost:5432/parking_lot}
     username: ${DB.USERNAME:postgres}
     password: ${DB.PASSWORD:password}
   jpa:
@@ -39,6 +39,9 @@ server:
   servlet:
     context-path: /
 
+openapi:
+  service:
+    url: ${API.GATEWAY.SERVICE.URL:http://localhost:80}
 
 management:
   endpoints:
@@ -72,6 +75,8 @@ resilience4j:
           - et.com.gebeya.parkinglotservice.exception.InsufficientBalance
           - et.com.gebeya.parkinglotservice.exception.ClientErrorException
           - org.springframework.web.reactive.function.client.WebClientResponseException.BadRequest
+          - et.com.gebeya.parkinglotservice.exception.ReservationUpdateAfterFiveMinuteException
+          - et.com.gebeya.parkinglotservice.exception.ActiveReservationNotFound
   #  timelimiter:
   #    instances:
   #      auth:
@@ -86,3 +91,5 @@ resilience4j:
           - et.com.gebeya.parkinglotservice.exception.InsufficientBalance
           - et.com.gebeya.parkinglotservice.exception.ClientErrorException
           - org.springframework.web.reactive.function.client.WebClientResponseException.BadRequest
+          - et.com.gebeya.parkinglotservice.exception.ReservationUpdateAfterFiveMinuteException
+          - et.com.gebeya.parkinglotservice.exception.ActiveReservationNotFound

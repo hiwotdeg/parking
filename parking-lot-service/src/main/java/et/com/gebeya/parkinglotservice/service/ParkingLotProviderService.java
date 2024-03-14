@@ -5,11 +5,14 @@ import et.com.gebeya.parkinglotservice.dto.responsedto.AddUserResponse;
 import et.com.gebeya.parkinglotservice.dto.responsedto.BalanceResponseDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ProviderResponseDto;
 import et.com.gebeya.parkinglotservice.exception.AuthException;
+import et.com.gebeya.parkinglotservice.exception.ClientErrorException;
 import et.com.gebeya.parkinglotservice.exception.ProviderIdNotFound;
 import et.com.gebeya.parkinglotservice.model.ParkingLotProvider;
 import et.com.gebeya.parkinglotservice.repository.ParkingLotProviderRepository;
 import et.com.gebeya.parkinglotservice.repository.specification.ParkingLotProviderSpecification;
 import et.com.gebeya.parkinglotservice.util.MappingUtil;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
@@ -31,6 +35,8 @@ public class ParkingLotProviderService {
     private final AuthService authService;
 
     @Transactional
+    @CircuitBreaker(name = "default", fallbackMethod = "providerFallBack")
+    @Retry(name = "default")
     public AddUserResponse registerParkingLotProvider(AddProviderDto dto) {
         Integer pId = null;
         try {
@@ -53,6 +59,14 @@ public class ParkingLotProviderService {
             throw e;
         }
 
+    }
+
+    private AddUserResponse providerFallBack(Throwable throwable) {
+        log.error("provider fallback error=>{}, message=>{}", throwable.getClass(), throwable.getMessage());
+        if (throwable instanceof WebClientResponseException.BadRequest) {
+            throw new ClientErrorException(((WebClientResponseException.BadRequest) throwable).getResponseBodyAsString());
+        }
+        throw new RuntimeException(throwable.getMessage());
     }
 
     public ProviderResponseDto updateParkingLotProvider(UpdateProviderRequestDto dto, Integer id) {

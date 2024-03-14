@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
@@ -90,6 +89,8 @@ public class ReservationService {
             throw new InsufficientBalance(throwable.getMessage());
         } else if (throwable instanceof WebClientResponseException.BadRequest) {
             throw new ClientErrorException(((WebClientResponseException.BadRequest) throwable).getResponseBodyAsString());
+        } else if (throwable instanceof ActiveReservationNotFound) {
+            throw new ActiveReservationNotFound(throwable.getMessage());
         }
         throw new RuntimeException(throwable.getMessage());
     }
@@ -114,8 +115,8 @@ public class ReservationService {
     }
 
     @Transactional
-    @CircuitBreaker(name = "auth", fallbackMethod = "fallBackMethod")
-    @Retry(name = "auth")
+    @CircuitBreaker(name = "default", fallbackMethod = "fallBackForUpdateReservation")
+    @Retry(name = "default")
     public ReservationResponseDto updateReservation(Integer reservationId, UpdateReservation updateReservation) {
         Reservation reservation = getActiveReservationsById(reservationId);
         if (isFiveMinutesDifference(reservation.getCreatedOn())) {
@@ -140,6 +141,16 @@ public class ReservationService {
         }
     }
 
+
+    private ReservationResponseDto fallBackForUpdateReservation(Throwable throwable) {
+        log.error("fallback error=>{}, message=>{}", throwable.getClass(), throwable.getMessage());
+        if (throwable instanceof ReservationUpdateAfterFiveMinuteException) {
+            throw new ReservationUpdateAfterFiveMinuteException(throwable.getMessage());
+        } else if (throwable instanceof WebClientResponseException.BadRequest) {
+            throw new ClientErrorException(((WebClientResponseException.BadRequest) throwable).getResponseBodyAsString());
+        }
+        throw new RuntimeException(throwable.getMessage());
+    }
 
     private Reservation getActiveReservationsById(Integer id) {
         List<Reservation> reservations = reservationRepository.findAll(ReservationSpecification.getReservationById(id));
