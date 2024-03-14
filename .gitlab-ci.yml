@@ -74,7 +74,7 @@ update-geo:
         - git clone $MANIFEST_GIT_REPO
         - git config --global user.name "$GITLAB_USER_NAME"
         - git config --global user.email "$GITLAB_USER_EMAIL"
-    script:service
+    script: service
         - cd deployment-manifest
         - git remote set-url origin --push $MANIFEST_GIT_REPO
         - git pull origin HEAD:$CI_COMMIT_REF_NAME
