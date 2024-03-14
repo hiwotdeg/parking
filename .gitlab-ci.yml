@@ -63,7 +63,7 @@ update-discovery:
 update-geo:
     stage: deploy
     variables:
-        APP_NAME: "geo-location"
+        APP_NAME: "geo-location-service"
         PROJECT_VERSION: 0.0.1-SNAPSHOT
         # GIT_COMMIT_ID: "$(git rev-parse --short HEAD)"
         GIT_COMMIT_ID: "${CI_COMMIT_SHORT_SHA:0:7}"
@@ -74,15 +74,16 @@ update-geo:
         - git clone $MANIFEST_GIT_REPO
         - git config --global user.name "$GITLAB_USER_NAME"
         - git config --global user.email "$GITLAB_USER_EMAIL"
-    script: service
+    script:
         - cd deployment-manifest
         - git remote set-url origin --push $MANIFEST_GIT_REPO
         - git pull origin HEAD:$CI_COMMIT_REF_NAME
         - |
-            sed -i "s#image:.*#image: ${DOCKER_IMAGE}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./geo-location/deployment.yaml
-        - git stage ./geo-location/deployment.yaml
-        - git commit -m "Update the geo-location image tag [skip-ci]"
+            sed -i "s#image:.*#image: ${DOCKER_IMAGE}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./geo-location-service/deployment.yaml
+        - git stage ./geo-location-service/deployment.yaml
+        - git commit -m "Update the geo-location-service image tag [skip-ci]"
         - git push -f origin HEAD:$CI_COMMIT_REF_NAME
+
 
 update-notification:
     stage: deploy
