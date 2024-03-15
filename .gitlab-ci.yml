@@ -3,14 +3,14 @@ stages:
   - deploy
 
 build_microservices:
-  image: eclipse-temurin:17-jre-jammy
+  image: hiwotdeg2129/maven-image
   stage: build
   before_script:
-    - apt-get update && apt-get install -y maven git # Install Maven and Git
     - mvn clean install -DskipTests  # Install dependencies
   script:
     - echo $DOCKER_PASSWORD
-    - mvn clean compile jib:build #-Dimage=$DOCKER_REGISTRY/PROJECT/${APP_NAME}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
+    - mvn clean compile jib:build
+
 
 update-api:
     stage: deploy
