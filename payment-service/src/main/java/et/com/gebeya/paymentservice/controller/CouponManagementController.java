@@ -38,10 +38,10 @@ public class CouponManagementController {
     public ResponseEntity<Map<String,String>> deleteBalanceForProvider(@PathVariable("id") Integer id){
         return ResponseEntity.ok(couponManagementService.deleteCouponBalanceForProvider(id));
     }
-    @PostMapping("/withdrawal")
-    public ResponseEntity<BalanceResponseDto> withdrawBalanceFromProvider(@RequestBody WithdrawalRequestDto dto){
-        return ResponseEntity.ok(couponManagementService.withdrawalBalanceForProvider(dto));
-    }
+//    @PostMapping("/withdrawal")
+//    public ResponseEntity<BalanceResponseDto> withdrawBalanceFromProvider(@RequestBody WithdrawalRequestDto dto){
+//        return ResponseEntity.ok(couponManagementService.withdrawalBalanceForProvider(dto));
+//    }
 //    @PostMapping("/deposit")
 //    public ResponseEntity<BalanceResponseDto> depositBalanceForDriver(@RequestBody BalanceRequestDto dto){
 //        return ResponseEntity.ok(couponManagementService.depositBalanceForDriver(dto));

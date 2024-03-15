@@ -31,9 +31,17 @@ public class BalanceService {
         if (balanceDto.getBalance().compareTo(BigDecimal.valueOf(100)) < 0)
             throw new InSufficientAmount("The minimum withdrawal amount is 100");
         if (provider.getAmount().compareTo(balanceDto.getBalance()) < 0)
-            throw new InSufficientAmount("Your Balance is inSufficient. please purchase coupon");
+            throw new InSufficientAmount("Your Balance is inSufficient.");
         provider.setAmount(provider.getAmount().subtract(balanceDto.getBalance()));
         return MappingUtil.mapBalanceToBalanceResponseDto(balanceRepository.save(provider));
+    }
+
+    void withdrawalBalanceChecker(BalanceDto balanceDto) {
+        Balance provider = getUser(balanceDto.getUserId());
+        if (balanceDto.getBalance().compareTo(BigDecimal.valueOf(100)) < 0)
+            throw new InSufficientAmount("The minimum withdrawal amount is 100");
+        if (provider.getAmount().compareTo(balanceDto.getBalance()) < 0)
+            throw new InSufficientAmount("Your Balance is inSufficient.");
     }
     BalanceResponseDto depositBalance(BalanceDto balanceDto) {
         Balance driver = getUser(balanceDto.getUserId());

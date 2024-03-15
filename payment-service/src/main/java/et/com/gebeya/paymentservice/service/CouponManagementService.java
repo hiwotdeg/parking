@@ -8,6 +8,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import static et.com.gebeya.paymentservice.util.Constant.CREDIT_OR_DEBIT_MESSAGE;
@@ -29,15 +30,21 @@ public class CouponManagementService {
         BalanceDto balanceDto = BalanceDto.builder().userId(providerId).build();
         return balanceService.createBalance(balanceDto);
     }
-    public BalanceResponseDto withdrawalBalanceForProvider(WithdrawalRequestDto dto){
-        UserDto userId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String providerId = userId.getRole()+"_"+userId.getId();
+    public BalanceResponseDto withdrawalBalanceForProvider(BalanceRequestDto dto){
+        String providerId = IdConvertorUtil.providerConvertor(dto.getUserId());
         BalanceDto balanceDto = BalanceDto.builder().balance(dto.getAmount()).userId(providerId).build();
         BalanceResponseDto balanceResponseDto = balanceService.withdrawalBalance(balanceDto);
         CreditOrDebitMessageDto creditOrDebitMessageDto = CreditOrDebitMessageDto.builder().amount(dto.getAmount()).userId(providerId).build();
         creditOrDebitMessageDtoKafkaTemplate.send(CREDIT_OR_DEBIT_MESSAGE,creditOrDebitMessageDto);
         return balanceResponseDto;
     }
+    public void withdrawalBalanceCheckerForProvider(Integer amount){
+        UserDto userId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String providerId = userId.getRole()+"_"+userId.getId();
+        BalanceDto balanceDto = BalanceDto.builder().balance(BigDecimal.valueOf(amount)).userId(providerId).build();
+        balanceService.withdrawalBalanceChecker(balanceDto);
+    }
+
     public BalanceResponseDto depositBalanceForDriver(BalanceRequestDto dto){
         String driverId = IdConvertorUtil.driverConvertor(dto.getUserId());
         BalanceDto balanceDto = BalanceDto.builder().balance(dto.getAmount()).userId(driverId).build();

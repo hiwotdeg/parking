@@ -1,10 +1,9 @@
 package et.com.gebeya.paymentservice.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import et.com.gebeya.paymentservice.dto.request.DepositDto;
 import et.com.gebeya.paymentservice.dto.request.MpesaB2CResponse;
 import et.com.gebeya.paymentservice.dto.request.MpesaStkCallback;
+import et.com.gebeya.paymentservice.dto.request.WithdrawDto;
 import et.com.gebeya.paymentservice.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,17 +23,10 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping("/mpesa/b2cresults")
-    public ResponseEntity<MpesaB2CResponse> handleResponse(@RequestBody String responseBody) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        MpesaB2CResponse response = objectMapper.readValue(responseBody, MpesaB2CResponse.class);
-        Integer resultCode = response.getResult().getResultCode();
-        if (resultCode == 0) {
-            log.info(response.toString());
-            return ResponseEntity.ok(response);
-        } else {
-            log.error(response.toString());
-            return ResponseEntity.ok(response);
-        }
+    public ResponseEntity<MpesaB2CResponse> handleResponse(@RequestBody MpesaB2CResponse request) {
+        paymentService.b2cListener(request);
+        return ResponseEntity.ok().build();
+
     }
 
     @PostMapping("/mpesa/stkcallback")
@@ -47,5 +39,10 @@ public class PaymentController {
     @PostMapping("/deposit")
     public ResponseEntity<Map<String, String>> depositRequesterDriver(@RequestBody DepositDto dto) {
         return ResponseEntity.ok(paymentService.requestDeposit(dto));
+    }
+
+    @PostMapping("/withdrawal")
+    public ResponseEntity<Map<String, String>> withdrawRequesterDriver(@RequestBody WithdrawDto dto) {
+        return ResponseEntity.ok(paymentService.requestWithdraw(dto));
     }
 }
