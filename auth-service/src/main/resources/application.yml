@@ -6,10 +6,7 @@ spring:
     url: ${DB.URL:jdbc:postgresql://localhost:5432/parking_lot}
     username: ${DB.USERNAME:postgres}
     password: ${DB.PASSWORD:password}
-  data:
-    redis:
-      host: ${REDIS.HOST:localhost}
-      port: ${REDIS.PORT:6379}
+
   jpa:
     hibernate:
       ddl-auto: none
@@ -19,6 +16,9 @@ spring:
 
   kafka:
     bootstrap-servers: ${KAFKA.URL:localhost:9092}
+
+redishost: ${REDIS.HOST:localhost}
+redisport: ${REDIS.PORT:6379}
 
 eureka:
   instance:   
