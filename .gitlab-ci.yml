@@ -3,7 +3,7 @@ stages:
   - deploy
 
 build_microservices:
-  image: hiwotdeg2129/mavenn
+  image: hiwotdeg2129/mavenn:1.0
   stage: build
   before_script:
     - mvn clean install -DskipTests  # Install dependencies
