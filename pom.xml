@@ -93,7 +93,7 @@
                 <version>3.4.0</version>
                 <configuration>                   
                     <to>
-                        <image>${DOCKER_USER_NAME}/${project.artifactId}:${project.version}-${CI_COMMIT_SHORT_SHA:0:7}</image>
+                        <image>${env.DOCKER_USER_NAME}/${project.artifactId}:${project.version}-${CI_COMMIT_SHORT_SHA:0:7}</image>
                     </to>
                 </configuration>
             </plugin>
