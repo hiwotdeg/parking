@@ -1,16 +1,14 @@
 spring:
   application:
     name: Notification-Service
-  data:
-    redis:
-      host: ${REDIS.HOST:localhost}
-      port: ${REDIS.PORT:6379}
+
   kafka:
     bootstrap-servers: ${KAFKA.URL:localhost:9092}
 server:
   port: ${NOTIFICATION.SERVICE.SERVER.PORT:8181}
 
-
+redishost: ${REDIS.HOST:localhost}
+redisport: ${REDIS.PORT:6379}
 app:
   telegram:
     username: ${TELEGRAM.USERNAME:parking_lot_locator_bot}

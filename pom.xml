@@ -91,9 +91,12 @@
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
                 <version>3.4.0</version>
-                <configuration>                   
+                <configuration>
+                    <from>
+                        <image>eclipse-temurin:17-jre-jammy</image>
+                    </from>
                     <to>
-                        <image>$DOCKER_USER_NAME/${project.artifactId}:${project.version}-${CI_COMMIT_SHORT_SHA:0:7}</image>
+                        <image>abinet12234/${project.artifactId}:1.5</image>
                     </to>
                 </configuration>
             </plugin>
