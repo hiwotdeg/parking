@@ -90,11 +90,18 @@
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
-                <version>3.4.0</version>
-                <configuration>                   
+                <version>3.2.1</version>
+                <configuration>
+                    <from>
+                        <image>eclipse-temurin:17.0.4.1_1-jre</image>
+                    </from>
                     <to>
-                        <image>${DOCKER_USER_NAME}/${project.artifactId}:${project.version}-${CI_COMMIT_SHORT_SHA:0:7}</image>
-                    </to>
+                        <image>registry.hub.docker.com/hiwotdeg2129/${project.artifactId}:${project.version}-${git.commit.id.abbrev}</image>
+                        <auth>
+                            <username>hiwotdeg2129</username>
+                            <password>Nowayh@18</password>
+                        </auth>
+                    </to>  
                 </configuration>
             </plugin>
         </plugins>
