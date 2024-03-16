@@ -9,8 +9,8 @@ build_microservices:
     - mvn clean install -DskipTests  # Install dependencies
   script:
     - echo $DOCKER_PASSWORD
-    - echo "DOCKER_USER_NAME: $DOCKER_USER_NAME"
-    - echo "CI_COMMIT_SHORT_SHA: $CI_COMMIT_SHORT_SHA"
+    - echo "DOCKER_USER_NAME:$DOCKER_USER_NAME"
+    - echo "CI_COMMIT_SHORT_SHA:$CI_COMMIT_SHORT_SHA"
     - mvn clean compile jib:build
 
 
