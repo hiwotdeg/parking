@@ -1,15 +1,13 @@
 spring:
   application:
     name: Geo-Location-Service
-  data:
-    redis:
-      host: ${REDIS.HOST:localhost}
-      port: ${REDIS.PORT:6379}
 management:
   tracing:
     sampling:
       probability: 1.0
 
+redishost: ${REDIS.HOST:localhost}
+redisport: ${REDIS.PORT:6379}
 server:
   port: ${GEO.LOCATION.SERVICE.SERVER.PORT:8081}
   servlet:

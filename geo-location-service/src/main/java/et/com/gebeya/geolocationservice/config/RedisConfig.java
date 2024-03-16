@@ -8,10 +8,10 @@ import redis.clients.jedis.Jedis;
 @Configuration
 public class RedisConfig {
 
-    @Value("${spring.data.redis.host}")
+    @Value("${redishost}")
     private String redisHost;
 
-    @Value("${spring.data.redis.port}")
+    @Value("${redisport}")
     private int redisPort;
 
 
