@@ -39,7 +39,7 @@ update-api:
 update-discovery:
     stage: deploy
     variables:
-        APP_NAME: "service_discovery"
+        APP_NAME: "service-discovery"
         PROJECT_VERSION: 0.0.1-SNAPSHOT
         # GIT_COMMIT_ID: "$(git rev-parse --short HEAD)"
         GIT_COMMIT_ID: "${CI_COMMIT_SHORT_SHA:0:7}"
