@@ -30,13 +30,13 @@ public class AuthController {
     }
     @CrossOrigin
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody UsersCredential credential)
+    public ResponseEntity<Object> login(@Valid @RequestBody UsersCredential credential)
     {
         return authenticationService.signIn(credential);
     }
     @CrossOrigin
     @PostMapping("/otp")
-    public ResponseEntity<OtpVerificationResponseDto> otpVerification(@RequestBody VerificationRequest request)
+    public ResponseEntity<OtpVerificationResponseDto> otpVerification(@Valid @RequestBody VerificationRequest request)
     {
         return authenticationService.otpVerification(request);
     }
