@@ -6,6 +6,7 @@ import jakarta.validation.ValidationException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.server.ServerHttpRequest;
@@ -25,7 +26,8 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class NotificationChannelInterceptor implements HandshakeInterceptor {
-
+    @Value("${notification.service.url}")
+    private String notificationServiceUrl;
     private final WebClient.Builder webClientBuilder;
 
     @Override
@@ -68,7 +70,7 @@ public class NotificationChannelInterceptor implements HandshakeInterceptor {
     public Mono<ValidationResponseDto> validateAuthorization(TokenDto token) {
         return webClientBuilder.build()
                 .post()
-                .uri("http://localhost:8080/api/v1/auth/validate")
+                .uri(notificationServiceUrl+"/api/v1/auth/validate")
                 .header("Content-Type", "application/json")
                 .body(Mono.just(token), TokenDto.class)
                 .retrieve()
