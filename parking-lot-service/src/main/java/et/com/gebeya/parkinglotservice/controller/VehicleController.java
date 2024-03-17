@@ -2,6 +2,7 @@ package et.com.gebeya.parkinglotservice.controller;
 
 import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateVehicleDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.VehicleRequestDto;
+import et.com.gebeya.parkinglotservice.dto.responsedto.ResponseModel;
 import et.com.gebeya.parkinglotservice.dto.responsedto.VehicleResponseDto;
 import et.com.gebeya.parkinglotservice.service.VehicleService;
 import jakarta.validation.Valid;
@@ -39,7 +40,7 @@ public class VehicleController {
     }
 
     @DeleteMapping("/vehicles/{id}") // driver
-    public ResponseEntity<Map<String, String>> deleteVehicleById(@PathVariable("id") Integer id) {
+    public ResponseEntity<ResponseModel> deleteVehicleById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(vehicleService.deleteVehicleById(id));
     }
 

@@ -364,6 +364,7 @@ public class MappingUtil {
                 .lastName(dto.getLastName())
                 .email(dto.getEmail())
                 .phoneNo(dto.getPhoneNo())
+                .isActive(true)
                 .build();
     }
     public static List<AdminResponseDto> listOfAdminToListOfAdminResponseDto(List<Admin> adminLists){

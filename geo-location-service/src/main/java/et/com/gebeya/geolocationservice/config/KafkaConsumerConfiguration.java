@@ -2,6 +2,7 @@ package et.com.gebeya.geolocationservice.config;
 
 import et.com.gebeya.geolocationservice.dto.AddLocationDto;
 import et.com.gebeya.geolocationservice.dto.DeleteLocationDto;
+import et.com.gebeya.geolocationservice.dto.UpdateLocationDto;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,6 +62,22 @@ public class KafkaConsumerConfiguration {
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, AddLocationDto>> addLocationListenerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, AddLocationDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(addLocationConsumerFactory());
+
+        return factory;
+    }
+
+    @Bean
+    public ConsumerFactory<String, UpdateLocationDto> updateLocationConsumerFactory() {
+        JsonDeserializer<UpdateLocationDto> jsonDeserializer = new JsonDeserializer<>(UpdateLocationDto.class, false);
+        jsonDeserializer.addTrustedPackages("*");
+
+        return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(), new ErrorHandlingDeserializer<>(jsonDeserializer));
+    }
+
+    @Bean
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, UpdateLocationDto>> updateLocationListenerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, UpdateLocationDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(updateLocationConsumerFactory());
 
         return factory;
     }

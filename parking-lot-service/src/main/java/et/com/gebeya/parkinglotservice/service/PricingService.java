@@ -1,6 +1,7 @@
 package et.com.gebeya.parkinglotservice.service;
 
 import et.com.gebeya.parkinglotservice.dto.requestdto.PriceRequestDto;
+import et.com.gebeya.parkinglotservice.dto.responsedto.PricingResponseDto;
 import et.com.gebeya.parkinglotservice.model.OperationHour;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class PricingService {
     private final OperationHourService operationHourService;
 
 
-    public BigDecimal dynamicPricing(PriceRequestDto request, Integer parkingLotId) {
+    public PricingResponseDto dynamicPricing(PriceRequestDto request, Integer parkingLotId) {
         List<OperationHour> operationHours = operationHourService.getOperationByParkingLotId(parkingLotId);
         LocalTime initialTime = LocalTime.now();
         LocalTime finalTime = LocalTime.now().plusHours(request.getDuration().getHour()).plusMinutes(request.getDuration().getMinute());
@@ -31,7 +32,7 @@ public class PricingService {
             LocalDateTime endTime = LocalDateTime.of(2024, 1, 1, finalTime.getHour(), finalTime.getMinute());
             totalPrice = getPrice(operationHours, totalPrice, startTime, endTime);
         }
-        return totalPrice;
+        return PricingResponseDto.builder().amount(totalPrice).build();
     }
 
     private BigDecimal getPrice(List<OperationHour> operationHours, BigDecimal totalPrice, LocalDateTime startTime, LocalDateTime endTime) {

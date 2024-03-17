@@ -4,6 +4,7 @@ import et.com.gebeya.parkinglotservice.dto.requestdto.AddAdminRequestDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateAdminRequestDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.AddUserResponse;
 import et.com.gebeya.parkinglotservice.dto.responsedto.AdminResponseDto;
+import et.com.gebeya.parkinglotservice.dto.responsedto.ResponseModel;
 import et.com.gebeya.parkinglotservice.service.AdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class AdminController {
     }
 
     @PostMapping("/admins")
-    public ResponseEntity<AddUserResponse> registerAdmin(@Valid @RequestBody AddAdminRequestDto admin) {
+    public ResponseEntity<ResponseModel> registerAdmin(@Valid @RequestBody AddAdminRequestDto admin) {
         return ResponseEntity.ok(adminService.registerAdmin(admin));
     }
 

@@ -1,5 +1,6 @@
 package et.com.gebeya.authservice.exception;
 
+import et.com.gebeya.authservice.dto.response_dto.ErrorMessage;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -23,81 +24,71 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Map<String, Object>> handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
+    public ResponseEntity<ErrorMessage> handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
         log.error(exception.getMessage(),exception);
-        errorResponse.put("message", "data integrity violation. please use different value");
+        ErrorMessage errorResponse = ErrorMessage.builder().message("data integrity violation. please use different value").build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
+    public ErrorMessage handleValidationExceptions(MethodArgumentNotValidException ex) {
         StringBuilder errorMessages = new StringBuilder();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errorMessages.append(fieldName).append(" ").append(errorMessage).append("\n");
         });
-        errors.put("message",errorMessages.toString());
-        return errors;
+        return ErrorMessage.builder().message(errorMessages.toString()).build();
     }
 
     @ExceptionHandler(MalformedJwtException.class)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> handleMalformedJwtException(MalformedJwtException e) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", e.getMessage());
+    public ResponseEntity<ErrorMessage> handleMalformedJwtException(MalformedJwtException e) {
         log.error(e.getMessage(),e);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(e.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
     @ExceptionHandler(UnsupportedJwtException.class)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> handleUnsupportedJwtExceptionException(UnsupportedJwtException e) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", e.getMessage());
+    public ResponseEntity<ErrorMessage> handleUnsupportedJwtExceptionException(UnsupportedJwtException e) {
         log.error(e.getMessage(),e);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(e.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
     @ExceptionHandler(SignatureException.class)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> handleSignatureExceptionException(SignatureException e) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", e.getMessage());
+    public ResponseEntity<ErrorMessage> handleSignatureExceptionException(SignatureException e) {
         log.error(e.getMessage(),e);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(e.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
     }
     @ExceptionHandler(ExpiredJwtException.class)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> handleExpiredJwtExceptionException(ExpiredJwtException e) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", e.getMessage());
+    public ResponseEntity<ErrorMessage> handleExpiredJwtExceptionException(ExpiredJwtException e) {
         log.error(e.getMessage(),e);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(e.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
     }
     @ExceptionHandler(JwtException.class)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> handleJwtExceptionException(JwtException e) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", e.getMessage());
+    public ResponseEntity<ErrorMessage> handleJwtExceptionException(JwtException e) {
         log.error(e.getMessage(),e);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(e.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
     }
     @ExceptionHandler(RuntimeException.class)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> handleRuntimeException(RuntimeException e) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", e.getMessage());
+    public ResponseEntity<ErrorMessage> handleRuntimeException(RuntimeException e) {
         log.error(e.getMessage(),e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(e.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
     }
     @ExceptionHandler(Exception.class)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> handleJwtExceptionException(Exception e) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", e.getMessage());
+    public ResponseEntity<ErrorMessage> handleJwtExceptionException(Exception e) {
         log.error(e.getMessage(),e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(e.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
     }
 }

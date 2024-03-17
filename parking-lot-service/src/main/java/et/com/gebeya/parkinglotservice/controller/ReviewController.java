@@ -3,6 +3,7 @@ package et.com.gebeya.parkinglotservice.controller;
 import et.com.gebeya.parkinglotservice.dto.requestdto.AddReviewRequestDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.ReviewSearchRequestDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateReviewRequestDto;
+import et.com.gebeya.parkinglotservice.dto.responsedto.ResponseModel;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ReviewResponseDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ReviewSearch;
 import et.com.gebeya.parkinglotservice.service.ReviewService;
@@ -35,7 +36,7 @@ public class ReviewController {
     }
 
     @DeleteMapping("/lots/{parkingLotId}/reviews/{reviewId}") // driver
-    public ResponseEntity<Map<String, String>> deleteReview(@PathVariable("parkingLotId") Integer parkingLotId, @PathVariable("reviewId") Integer reviewId) {
+    public ResponseEntity<ResponseModel> deleteReview(@PathVariable("parkingLotId") Integer parkingLotId, @PathVariable("reviewId") Integer reviewId) {
         return ResponseEntity.ok(reviewService.deleteReview(parkingLotId, reviewId));
     }
 

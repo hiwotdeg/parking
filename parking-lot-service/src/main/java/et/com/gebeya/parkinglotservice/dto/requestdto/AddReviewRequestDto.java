@@ -1,5 +1,6 @@
 package et.com.gebeya.parkinglotservice.dto.requestdto;
 
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class AddReviewRequestDto {
-    @Size(min = 0, max = 5)
+    @NotNull
     private Float rate;
     private String comment;
 }

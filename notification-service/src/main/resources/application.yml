@@ -12,9 +12,11 @@ redisport: ${REDIS.PORT:6379}
 app:
   telegram:
     username: ${TELEGRAM.USERNAME:parking_lot_locator_bot}
-    token: ${TELEGRAM.TOKEN:6478988761:AAHoiepwTE0Bh8JjK_2piQIjDD8wyGl-qN8}
+    token: ${TELEGRAM.TOKEN:token}
 
-
+notification:
+  service:
+    url: ${NOTIFICATION.SERVER.URL:localhost:8080}
 #management:
 #  tracing:
 #    sampling:

@@ -4,6 +4,7 @@ import et.com.gebeya.parkinglotservice.dto.requestdto.AddReviewRequestDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.ReviewSearchRequestDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateReviewRequestDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.UserDto;
+import et.com.gebeya.parkinglotservice.dto.responsedto.ResponseModel;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ReviewResponseDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ReviewSearch;
 import et.com.gebeya.parkinglotservice.exception.MultipleReviewException;
@@ -54,16 +55,14 @@ public class ReviewService {
     }
 
 
-    public Map<String, String> deleteReview(Integer parkingLotId, Integer reviewId) {
+    public ResponseModel deleteReview(Integer parkingLotId, Integer reviewId) {
         UserDto driverId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Review> review = reviewRepository.findAll(ReviewSpecification.getByParkingLotReviewAndDriver(parkingLotId, driverId.getId(), reviewId));
         if (review.isEmpty())
             throw new ReviewIdNotFound("review id not found");
         review.get(0).setIsActive(false);
         reviewRepository.save(review.get(0));
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "review deleted successfully");
-        return response;
+        return ResponseModel.builder().message("review deleted successfully").build();
     }
 
     public List<ReviewSearch> getAllReviews(Pageable pageable) {

@@ -2,6 +2,7 @@ package et.com.gebeya.parkinglotservice.service;
 
 import et.com.gebeya.parkinglotservice.dto.requestdto.*;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ParkingLotResponseDto;
+import et.com.gebeya.parkinglotservice.dto.responsedto.ResponseModel;
 import et.com.gebeya.parkinglotservice.exception.MoreThanOneProviderException;
 import et.com.gebeya.parkinglotservice.exception.ParkingLotIdNotFound;
 import et.com.gebeya.parkinglotservice.exception.ProviderIdNotFound;
@@ -24,8 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static et.com.gebeya.parkinglotservice.util.Constant.ADD_LOCATION;
-import static et.com.gebeya.parkinglotservice.util.Constant.DELETE_LOCATION;
+import static et.com.gebeya.parkinglotservice.util.Constant.*;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +35,7 @@ public class ParkingLotService {
     private final ParkingLotImageRepository parkingLotImageRepository;
     private final KafkaTemplate<String, DeleteLocationRequestDto> deleteLocationRequestDtoKafkaTemplate;
     private final KafkaTemplate<String, AddLocationRequestDto> addLocationRequestDtoKafkaTemplate;
+    private final KafkaTemplate<String, UpdateLocationRequestDto> updateLocationRequestDtoKafkaTemplate;
 
     @Transactional
     public ParkingLotResponseDto addParkingLot(AddParkingLotDto dto) {
@@ -60,15 +61,13 @@ public class ParkingLotService {
     @Transactional
     public ParkingLotResponseDto updateParkingLot(UpdateParkingLotDto dto, Integer id) {
         ParkingLot parkingLot = getParkingLot(id);
+        UpdateLocationRequestDto updateLocationRequestDto = UpdateLocationRequestDto.builder().id(parkingLot.getId()).existingTitle(parkingLot.getName()).existingAddress(parkingLot.getAddress()).build();
         parkingLot = parkingLotRepository.save(MappingUtil.updateParkingLot(parkingLot, dto));
-        AddLocationRequestDto addLocationRequestDto = AddLocationRequestDto.builder()
-                .id(parkingLot.getId())
-                .title(parkingLot.getName())
-                .address(parkingLot.getAddress())
-                .longitude(parkingLot.getLongitude())
-                .latitude(parkingLot.getLatitude())
-                .build();
-        addLocationRequestDtoKafkaTemplate.send(ADD_LOCATION, addLocationRequestDto);
+        updateLocationRequestDto.setLongitude(parkingLot.getLongitude());
+        updateLocationRequestDto.setLatitude(parkingLot.getLatitude());
+        updateLocationRequestDto.setNewAddress(parkingLot.getAddress());
+        updateLocationRequestDto.setNewTitle(parkingLot.getName());
+        updateLocationRequestDtoKafkaTemplate.send(UPDATE_LOCATION, updateLocationRequestDto);
         return MappingUtil.parkingLotResponse(parkingLot);
     }
 
@@ -78,7 +77,7 @@ public class ParkingLotService {
     }
 
     @Transactional
-    public Map<String, String> deleteParkingLot(Integer id) {
+    public ResponseModel deleteParkingLot(Integer id) {
         ParkingLot parkingLot = getParkingLot(id);
         parkingLot.setIsActive(false);
         parkingLotRepository.save(parkingLot);
@@ -87,9 +86,7 @@ public class ParkingLotService {
                 .title(parkingLot.getName())
                 .address(parkingLot.getAddress()).build();
         deleteLocationRequestDtoKafkaTemplate.send(DELETE_LOCATION, deleteLocationRequestDto);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "parking lot deleted successfully");
-        return response;
+        return ResponseModel.builder().message("parking lot deleted successfully").build();
     }
 
     ParkingLot getParkingLot(Integer id) {

@@ -16,6 +16,11 @@ public class KafkaTopicConfig {
                 .build();
     }
 
+    @Bean
+    public NewTopic updateLocationTopic() {
+        return TopicBuilder.name(UPDATE_LOCATION)
+                .build();
+    }
 
     @Bean
     public NewTopic deleteLocationTopic() {

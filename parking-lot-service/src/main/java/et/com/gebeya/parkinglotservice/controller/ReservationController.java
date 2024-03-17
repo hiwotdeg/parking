@@ -3,6 +3,7 @@ package et.com.gebeya.parkinglotservice.controller;
 import et.com.gebeya.parkinglotservice.dto.requestdto.ReservationRequestDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateReservation;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ReservationResponseDto;
+import et.com.gebeya.parkinglotservice.dto.responsedto.ResponseModel;
 import et.com.gebeya.parkinglotservice.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,7 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping("/lots/{parkingLotId}/reservations") // driver
-    public ResponseEntity<Map<String, String>> book(@RequestBody ReservationRequestDto requestDto, @PathVariable("parkingLotId") Integer parkingLotId) {
+    public ResponseEntity<ResponseModel> book(@RequestBody ReservationRequestDto requestDto, @PathVariable("parkingLotId") Integer parkingLotId) {
         return ResponseEntity.ok(reservationService.book(parkingLotId, requestDto));
     }
 
@@ -30,7 +31,7 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations/{reservationId}/cancel") // driver
-    public ResponseEntity<Map<String, String>> cancelReservation(@PathVariable("reservationId") Integer reservationId) {
+    public ResponseEntity<ResponseModel> cancelReservation(@PathVariable("reservationId") Integer reservationId) {
         return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
     }
 
