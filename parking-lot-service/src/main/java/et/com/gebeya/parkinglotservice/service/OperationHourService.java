@@ -49,6 +49,8 @@ public class OperationHourService {
 
     public OperationHourResponseDto getOperationHoursByOperationHourId(Integer parkingLotId, Integer operationHourId) {
         List<OperationHour> operationHours = operationHourRepository.findAll(OperationHourSpecification.hasParkingLotAndOperationHourId(parkingLotId, operationHourId));
+        if(operationHours.isEmpty())
+            throw new OperationHourIdNotFound("operationHourId not found");
         return MappingUtil.operationHourToOperationHourResponseDto(operationHours.get(0));
     }
 
