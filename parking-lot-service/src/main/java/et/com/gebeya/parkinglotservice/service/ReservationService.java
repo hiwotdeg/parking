@@ -53,7 +53,7 @@ public class ReservationService {
             throw new ParkingLotAvailabilityException("the parking lot that you selected is full at the moment");
         ParkingLotProvider provider = parkingLot.getParkingLotProvider();
         PriceRequestDto requestDto = PriceRequestDto.builder().duration(dto.getStayingDuration()).build();
-        BigDecimal price = pricingService.dynamicPricing(requestDto, parkingLotId);
+        BigDecimal price = pricingService.dynamicPricing(requestDto, parkingLotId).getAmount();
         Reservation reservation = Reservation.builder().price(price).parkingLot(parkingLot).driver(driver).stayingDuration(dto.getStayingDuration()).reservationStatus(ReservationStatus.PENDING).isActive(true).build();
         checkBalanceForDriver(driverId.getId(), price);
         Vehicle vehicle = vehicleService.getVehicle(dto.getVehicleId());
