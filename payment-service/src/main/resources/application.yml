@@ -38,13 +38,13 @@ springdoc:
 
 mpesa:
   stk:
-    username: ${STK.USERNAME:jgdPJACy5TPGniKsmxahZgjYsfCn9ILI2LZanmk5kukRycGd}
-    password: ${STK.PASSWORD:nLIqp5u77VqO2TKshWYAOaG33sMiCkGh7g6NOcnLKFsoneFpwnwskDaOMWs4Vgc1}
-    bsc: ${STK.BSC:4040}
-    pass: ${STK.PASS:9bf4e3c2fa2991a5646133384263ebe6192334202bea54ffd38a7cd270045b40}
-    callBack: ${STK.CALLBACK.URL:https://1d53-196-189-16-88.ngrok-free.app/api/v1/payment/mpesa/stkcallback}
+    username: ${STK.USERNAME:Mpesa_username}
+    password: ${STK.PASSWORD:Mpesa_Password}
+    bsc: ${STK.BSC:Mpesa_bsc_port}
+    pass: ${STK.PASS:Mpesa_stk_password}
+    callBack: ${STK.CALLBACK.URL:callBackUrl_for_stkpush}
   b2c:
-    initiator: ${B2C.INITIATOR:parking}
-    securityCredential: ${B2C.SECURITY.CREDENTIAL:YS5mM4GKgFhTYbirfliSNy+XMzAYlS9+4Juth6HKPaCjYXcOCOgLVSbzV7XdtY1FRXWnqxm7FnjFbWtBigYRMVhtOj9nqC1xzniD/d/RR1Ov3amJe+JfPlSOA2qIcKBKpS4aA4b5hjZiptvFdO0lrQ80RR7gAGOrGSOHsqLpfA/+d6DVeZC2Ey60hLayZLsfsr9CXzLj8S91hcC0zGFAj7vJEy4nT5b3Z+7rYFwTBaPZYD+xddIu0S/1xl+lcmnUGB0vCuYLR5nIp55MOZe27GP0kGvIrleR6QOXMiMhw2S1MsSzjWH/H/q5JVQYAp7nl73/8mVrk4TqHhLsduy1MA==}
-    sender: ${B2C.SENDER:9898}
-    resultUrl: ${B2C.RESULT.URL:https://1d53-196-189-16-88.ngrok-free.app/api/v1/payment/mpesa/b2cresults}
+    initiator: ${B2C.INITIATOR:initiator_name}
+    securityCredential: ${B2C.SECURITY.CREDENTIAL:Mpesa_stk_credential}
+    sender: ${B2C.SENDER:Mpesa_b2c_account}
+    resultUrl: ${B2C.RESULT.URL:callBackUrl_for_b2c}
