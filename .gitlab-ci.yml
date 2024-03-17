@@ -17,6 +17,15 @@ update_manifest:
   stage: deploy
   variables:
     MANIFEST_GIT_REPO: https://$USERNAME:$PAT_TOKEN@git.gebeya.training/parking/deployment-manifest.git
+    PROJECT_VERSION: 0.0.1-SNAPSHOT   
+    SERVICE: "service-discovery"
+    GATEWAY: "api-gateway"
+    LOT: "parking-lot-service"
+    NOT: "notification-service"
+    AUTH: "auth-service"
+    GEO: "geo-location-service"
+    PAY: "payment-service"
+  
   before_script:
     - apk add git
     - git config --global user.email $GITLAB_USER_EMAIL
@@ -26,18 +35,20 @@ update_manifest:
   script:
     - cd deployment-manifest/
     - | 
-      sed -i "s#image:.*#image: ${DOCKER_IMAGE}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./service-discovery/deployment.yaml
+      sed -i "s#image:.*#image: $DOCKER_USER_NAME/${SERVICE}:${PROJECT_VERSION}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./service-discovery/deployment.yaml
     - | 
-      sed -i "s#image:.*#image: ${DOCKER_IMAGE}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./geo-location/deployment.yaml
+      sed -i "s#image:.*#image: $DOCKER_USER_NAME/${GEO}:${PROJECT_VERSION}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./geo-location/deployment.yaml
     - | 
-      sed -i "s#image:.*#image: ${DOCKER_IMAGE}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./notifiaction-service/deployment.yaml
+      sed -i "s#image:.*#image: $DOCKER_USER_NAME/${NOT}:${PROJECT_VERSION}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./notifiaction-service/deployment.yaml
     - | 
-      sed -i "s#image:.*#image: ${DOCKER_IMAGE}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./auth-service/deployment.yaml
+      sed -i "s#image:.*#image: $DOCKER_USER_NAME/${AUTH}:${PROJECT_VERSION}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./auth-service/deployment.yaml
     - | 
-      sed -i "s#image:.*#image: ${DOCKER_IMAGE}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./parking-lot-service/deployment.yaml
+      sed -i "s#image:.*#image: $DOCKER_USER_NAME/${LOT}:${PROJECT_VERSION}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./parking-lot-service/deployment.yaml
     - | 
-      sed -i "s#image:.*#image: ${DOCKER_IMAGE}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./api-gateway/deployment.yaml
+      sed -i "s#image:.*#image: $DOCKER_USER_NAME/${GATEWAY}:${PROJECT_VERSION}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./api-gateway/deployment.yaml
+    - | 
+      sed -i "s#image:.*#image: $DOCKER_USER_NAME/${PAY}:${PROJECT_VERSION}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./payment-service/deployment.yaml
     
-    - git add ./service-discovery/deployment.yaml ./geo-location/deployment.yaml ./notifiaction-service/deployment.yaml ./auth-service/deployment.yaml ./parking-lot-service/deployment.yaml ./api-gateway/deployment.yaml
+    - git add ./service-discovery/deployment.yaml ./geo-location/deployment.yaml ./notifiaction-service/deployment.yaml ./auth-service/deployment.yaml ./parking-lot-service/deployment.yaml ./api-gateway/deployment.yaml ./payment-service/deployment.yaml
     - git commit -m "(Automation) - update parking backend service images tag [skip-ci]"
     - git push origin HEAD:$CI_COMMIT_REF_NAME
