@@ -34,6 +34,7 @@ public class ParkingLotService {
     private final ParkingLotImageRepository parkingLotImageRepository;
     private final KafkaTemplate<String, DeleteLocationRequestDto> deleteLocationRequestDtoKafkaTemplate;
     private final KafkaTemplate<String, AddLocationRequestDto> addLocationRequestDtoKafkaTemplate;
+    private final KafkaTemplate<String, UpdateLocationRequestDto> updateLocationRequestDtoKafkaTemplate;
 
     @Transactional
     public ParkingLotResponseDto addParkingLot(AddParkingLotDto dto) {
@@ -65,7 +66,7 @@ public class ParkingLotService {
         updateLocationRequestDto.setLatitude(parkingLot.getLatitude());
         updateLocationRequestDto.setNewAddress(parkingLot.getAddress());
         updateLocationRequestDto.setNewTitle(parkingLot.getName());
-        addLocationRequestDtoKafkaTemplate.send(UPDATE_LOCATION, updateLocationRequestDto);
+        updateLocationRequestDtoKafkaTemplate.send(UPDATE_LOCATION, updateLocationRequestDto);
         return MappingUtil.parkingLotResponse(parkingLot);
     }
 
