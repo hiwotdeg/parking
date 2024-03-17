@@ -1,5 +1,6 @@
 package et.com.gebeya.paymentservice.exception;
 
+import et.com.gebeya.paymentservice.dto.response.ErrorMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,41 +17,39 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AccountBlocked.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Map<String, Object>> handleAccountBlocked(AccountBlocked exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", exception.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    public ResponseEntity<ErrorMessage> handleAccountBlocked(AccountBlocked exception) {
+        log.error(exception.getMessage(),exception);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(exception.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
     @ExceptionHandler(InSufficientAmount.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Map<String, Object>> handleInSufficientAmount(InSufficientAmount exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", exception.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    public ResponseEntity<ErrorMessage> handleInSufficientAmount(InSufficientAmount exception) {
+        log.error(exception.getMessage(),exception);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(exception.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
     @ExceptionHandler(MinimumWithdrawalAmount.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Map<String, Object>> handleMinimumWithdrawalAmount(MinimumWithdrawalAmount exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", exception.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    public ResponseEntity<ErrorMessage> handleMinimumWithdrawalAmount(MinimumWithdrawalAmount exception) {
+        log.error(exception.getMessage(),exception);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(exception.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<String, Object>> handleRuntimeException(RuntimeException exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", exception.getMessage());
+    public ResponseEntity<ErrorMessage> handleRuntimeException(RuntimeException exception) {
         log.error(exception.getMessage(),exception);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        ErrorMessage errorMessage = ErrorMessage.builder().message("UnExpected Error occurred please try again later").build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleException(Exception exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", exception.getMessage());
+    public ResponseEntity<ErrorMessage> handleException(Exception exception) {
         log.error(exception.getMessage(),exception);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        ErrorMessage errorMessage = ErrorMessage.builder().message("UnExpected Error occurred please try again later").build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
     }
 }
