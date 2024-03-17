@@ -2,6 +2,7 @@ package et.com.gebeya.parkinglotservice.exception;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import et.com.gebeya.parkinglotservice.dto.responsedto.ErrorMessage;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
@@ -31,48 +32,46 @@ public class GlobalExceptionHandler {
     private final ObjectMapper objectMapper;
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Map<String, Object>> handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
+    public ResponseEntity<ErrorMessage> handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
         log.error(exception.getMessage(), exception);
-        errorResponse.put("message", "data integrity violation. please use different value");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        ErrorMessage errorMessage = ErrorMessage.builder().message("data integrity violation. please use different value").build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
+    public ErrorMessage handleValidationExceptions(MethodArgumentNotValidException ex) {
+        log.error(ex.getMessage(),ex);
         StringBuilder errorMessages = new StringBuilder();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errorMessages.append(fieldName).append(" ").append(errorMessage).append("\n");
         });
-        errors.put("message", errorMessages.toString());
-        return errors;
+        return ErrorMessage.builder().message(errorMessages.toString()).build();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseBody
-    public Map<String, String> handleConstraintViolationExceptions(ConstraintViolationException ex) {
-        Map<String, String> errors = new HashMap<>();
+    public ErrorMessage handleConstraintViolationExceptions(ConstraintViolationException ex) {
+        log.error(ex.getMessage(),ex);
+        StringBuilder errorMessages = new StringBuilder();
         for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
             String fieldName = violation.getPropertyPath().toString();
             String errorMessage = violation.getMessage();
-            errors.put(fieldName, errorMessage);
+            errorMessages.append(fieldName).append(" ").append(errorMessage).append("\n");
         }
 
-        return errors;
+        return ErrorMessage.builder().message(errorMessages.toString()).build();
     }
 
     @ExceptionHandler(ParkingLotIdNotFound.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Map<String, Object>> handleParkingLotIdNotFound(ParkingLotIdNotFound exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", exception.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    public ResponseEntity<ErrorMessage> handleParkingLotIdNotFound(ParkingLotIdNotFound exception) {
+        ErrorMessage errorMessage = ErrorMessage.builder().message(exception.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
@@ -82,153 +81,149 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InsufficientBalance.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Map<String, Object>> handleInsufficientBalanceException(InsufficientBalance exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", exception.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    public ResponseEntity<ErrorMessage> handleInsufficientBalanceException(InsufficientBalance exception) {
+        log.error(exception.getMessage(),exception);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(exception.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
     @ExceptionHandler(ActiveReservationNotFound.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Map<String, Object>> handleActiveReservationNotFound(ActiveReservationNotFound exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", exception.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    public ResponseEntity<ErrorMessage> handleActiveReservationNotFound(ActiveReservationNotFound exception) {
+        log.error(exception.getMessage(),exception);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(exception.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
     @ExceptionHandler(ReservationUpdateAfterFiveMinuteException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Map<String, Object>> handleReservationUpdateAfterFiveMinuteException(ReservationUpdateAfterFiveMinuteException exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", exception.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    public ResponseEntity<ErrorMessage> handleReservationUpdateAfterFiveMinuteException(ReservationUpdateAfterFiveMinuteException exception) {
+        log.error(exception.getMessage(),exception);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(exception.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
     @ExceptionHandler(CancelReservationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Map<String, Object>> handleCancelReservationException(CancelReservationException exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", exception.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    public ResponseEntity<ErrorMessage> handleCancelReservationException(CancelReservationException exception) {
+        log.error(exception.getMessage(),exception);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(exception.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Map<String, Object>> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", "Required request body is missing");
-        log.error(exception.getMessage(), exception);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    public ResponseEntity<ErrorMessage> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
+        log.error(exception.getMessage(),exception);
+        ErrorMessage errorMessage = ErrorMessage.builder().message("Required request body is missing").build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
     @ExceptionHandler(AuthException.class)
-    public ResponseEntity<Map<String, Object>> handleAuthService(AuthException exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", exception.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    public ResponseEntity<ErrorMessage> handleAuthService(AuthException exception) {
+        log.error(exception.getMessage(),exception);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(exception.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
     }
 
     @ExceptionHandler(OperationHourIdNotFound.class)
-    public ResponseEntity<Map<String, Object>> handleOperationHourIdNotFoundException(OperationHourIdNotFound exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", exception.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    public ResponseEntity<ErrorMessage> handleOperationHourIdNotFoundException(OperationHourIdNotFound exception) {
+        log.error(exception.getMessage(),exception);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(exception.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
     @ExceptionHandler(ClientErrorException.class)
-    public ResponseEntity<Map<String, Object>> handleClientErrorException(ClientErrorException exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
+    public ResponseEntity<ErrorMessage> handleClientErrorException(ClientErrorException exception) {
         try {
-            Map<String, Object> messageMap = objectMapper.readValue(exception.getMessage(), Map.class);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageMap);
+            log.error(exception.getMessage(),exception);
+            ErrorMessage errorMessage = objectMapper.readValue(exception.getMessage(), ErrorMessage.class);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
         } catch (JsonProcessingException e) {
-            errorResponse.put("message", "error occurred. please try again later");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+            log.error(exception.getMessage(),exception);
+            ErrorMessage errorMessage = ErrorMessage.builder().message("error occurred. please try again later").build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
         }
 
     }
 
     @ExceptionHandler(ParkingLotAvailabilityException.class)
-    public ResponseEntity<Map<String, Object>> handleParkingLotAvailabilityException(ParkingLotAvailabilityException exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", exception.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    public ResponseEntity<ErrorMessage> handleParkingLotAvailabilityException(ParkingLotAvailabilityException exception) {
+        log.error(exception.getMessage(),exception);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(exception.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
     @ExceptionHandler(WebClientResponseException.class)
-    public ResponseEntity<Map<String, Object>> handleWebClientResponseException(WebClientResponseException exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
+    public ResponseEntity<ErrorMessage> handleWebClientResponseException(WebClientResponseException exception) {
         log.error("Error from WebClient - Status {}, Body {}", exception.getStatusCode(), exception.getResponseBodyAsString());
         try {
-            Map<String, Object> messageMap = objectMapper.readValue(exception.getResponseBodyAsString(), Map.class);
-            return ResponseEntity.status(exception.getStatusCode()).body(messageMap);
+            ErrorMessage errorMessage = objectMapper.readValue(exception.getResponseBodyAsString(), ErrorMessage.class);
+            return ResponseEntity.status(exception.getStatusCode()).body(errorMessage);
         } catch (JsonProcessingException e) {
-            errorResponse.put("message", "error occurred. please try again later");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+            ErrorMessage errorMessage = ErrorMessage.builder().message("error occurred. please try again later").build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
         }
 
     }
 
     @ExceptionHandler(WebClientRequestException.class)
-    public ResponseEntity<Map<String, Object>> handleWebClientRequestException(WebClientRequestException exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
+    public ResponseEntity<ErrorMessage> handleWebClientRequestException(WebClientRequestException exception) {
         log.error("webclient request exception {}", exception.getMessage());
-        errorResponse.put("message", "we couldn't deliver our service at the moment. please try again later");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        ErrorMessage errorMessage = ErrorMessage.builder().message("we couldn't deliver our service at the moment. please try again later").build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
     }
 
     @ExceptionHandler(MoreThanOneProviderException.class)
-    public ResponseEntity<Map<String, Object>> handleMoreThanOneProviderException(MoreThanOneProviderException exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", exception.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    public ResponseEntity<ErrorMessage> handleMoreThanOneProviderException(MoreThanOneProviderException exception) {
+        log.error(exception.getMessage(),exception);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(exception.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
     @ExceptionHandler(DriverIdNotFound.class)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> handleDriverIdNotFoundException(DriverIdNotFound e) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    public ResponseEntity<ErrorMessage> handleDriverIdNotFoundException(DriverIdNotFound exception) {
+        log.error(exception.getMessage(),exception);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(exception.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
     @ExceptionHandler(MultipleReviewException.class)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> handleMultipleReviewExceptionException(MultipleReviewException e) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    public ResponseEntity<ErrorMessage> handleMultipleReviewExceptionException(MultipleReviewException exception) {
+        log.error(exception.getMessage(),exception);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(exception.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
     @ExceptionHandler(VehicleIdNotFound.class)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> handleVehicleIdNotFoundException(VehicleIdNotFound e) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    public ResponseEntity<ErrorMessage> handleVehicleIdNotFoundException(VehicleIdNotFound exception) {
+        log.error(exception.getMessage(),exception);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(exception.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
 
     @ExceptionHandler(ProviderIdNotFound.class)
-    public ResponseEntity<Map<String, Object>> handleProviderIdNotFound(ProviderIdNotFound exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", exception.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    public ResponseEntity<ErrorMessage> handleProviderIdNotFound(ProviderIdNotFound exception) {
+        log.error(exception.getMessage(),exception);
+        ErrorMessage errorMessage = ErrorMessage.builder().message(exception.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<String, Object>> handleRuntimeException(RuntimeException exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", "UnExpected Error occurred please try again later");
-        log.error(exception.getMessage(), exception);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    public ResponseEntity<ErrorMessage> handleRuntimeException(RuntimeException exception) {
+        log.error(exception.getMessage(),exception);
+        ErrorMessage errorMessage = ErrorMessage.builder().message("UnExpected Error occurred please try again later").build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleException(Exception exception) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", "UnExpected Error occurred please try again later");
-        log.error(exception.getMessage(), exception);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    public ResponseEntity<ErrorMessage> handleException(Exception exception) {
+        log.error(exception.getMessage(),exception);
+        ErrorMessage errorMessage = ErrorMessage.builder().message("UnExpected Error occurred please try again later").build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
     }
 }
