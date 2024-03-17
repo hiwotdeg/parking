@@ -1,4 +1,4 @@
-package et.com.gebeya.paymentservice.service.payment;
+package et.com.gebeya.paymentservice.service;
 
 
 import et.com.gebeya.paymentservice.dto.request.CreditOrDebitMessageDto;
@@ -21,12 +21,11 @@ import java.util.List;
 
 import static et.com.gebeya.paymentservice.util.Constant.CREDIT_OR_DEBIT_MESSAGE;
 
-// paymentService is @Async and paymentTransactionService @Transaction
 @Service
 @RequiredArgsConstructor
-public class PaymentNewService {
+public class PaymentService {
     private final PaymentGateway paymentGateway;
-    private final BalanceNewService balanceNewService;
+    private final BalanceService balanceService;
     private final PaymentRepository paymentRepository;
     private final KafkaTemplate<String, CreditOrDebitMessageDto> creditOrDebitMessageDtoKafkaTemplate;
 
@@ -50,7 +49,7 @@ public class PaymentNewService {
         if(Boolean.TRUE.equals(confirmDepositForMpesaResponse.getIsSuccessful())){
             payment.setPaymentStatus(PaymentStatus.SUCCESS);
             paymentRepository.save(payment);
-            balanceNewService.depositBalance(payment.getUserId(), BigDecimal.valueOf(payment.getAmount()));
+            balanceService.depositBalance(payment.getUserId(), BigDecimal.valueOf(payment.getAmount()));
             CreditOrDebitMessageDto creditOrDebitMessageDto = CreditOrDebitMessageDto.builder().amount(BigDecimal.valueOf(payment.getAmount())).userId(payment.getUserId()).build();
             creditOrDebitMessageDtoKafkaTemplate.send(CREDIT_OR_DEBIT_MESSAGE,creditOrDebitMessageDto);
         }
@@ -62,7 +61,7 @@ public class PaymentNewService {
 
     @Async
     public void initiateWithdraw(String userId, String phoneNo,Integer amount){
-        balanceNewService.withdrawalBalanceChecker(userId, BigDecimal.valueOf(amount));
+        balanceService.withdrawalBalanceChecker(userId, BigDecimal.valueOf(amount));
         String checkoutId = paymentGateway.initiateWithdrawal(phoneNo,amount);
         if(checkoutId==null)
             throw new PaymentException("error occurred during requesting payment");
@@ -80,7 +79,7 @@ public class PaymentNewService {
         if(conformWithdrawalForMpesaResponse.getIsSuccessful()){
             payment.setPaymentStatus(PaymentStatus.SUCCESS);
             paymentRepository.save(payment);
-            balanceNewService.withdrawalBalance(payment.getUserId(), BigDecimal.valueOf(payment.getAmount()));
+            balanceService.withdrawalBalance(payment.getUserId(), BigDecimal.valueOf(payment.getAmount()));
             CreditOrDebitMessageDto creditOrDebitMessageDto = CreditOrDebitMessageDto.builder().amount(BigDecimal.valueOf(payment.getAmount())).userId(payment.getUserId()).build();
             creditOrDebitMessageDtoKafkaTemplate.send(CREDIT_OR_DEBIT_MESSAGE,creditOrDebitMessageDto);
         }

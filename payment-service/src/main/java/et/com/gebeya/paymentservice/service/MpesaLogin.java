@@ -1,4 +1,4 @@
-package et.com.gebeya.paymentservice.service.payment;
+package et.com.gebeya.paymentservice.service;
 
 
 import et.com.gebeya.paymentservice.dto.response.MpesaLoginResponse;
@@ -15,7 +15,7 @@ import java.util.Base64;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MpesaNewLogin {
+public class MpesaLogin {
     private final WebClient.Builder webClientBuilder;
     @Value("${mpesa.stk.username}")
     private String username;

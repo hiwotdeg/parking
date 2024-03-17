@@ -33,7 +33,7 @@ public class MappingUtil {
                 .build();
     }
 
-    public static B2cRequest createB2cRequest(String amount,String initiator,String sender,String phoneNo,String remarks,String resultUrl,String securityCredential){
+    public static B2cRequest createB2cRequest(Integer amount,String initiator,String sender,String phoneNo,String remarks,String resultUrl,String securityCredential){
         return  B2cRequest.builder()
                 .amount(Integer.valueOf(amount))
                 .commandID("BusinessPayment")

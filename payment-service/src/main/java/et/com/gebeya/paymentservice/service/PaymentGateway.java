@@ -1,4 +1,4 @@
-package et.com.gebeya.paymentservice.service.payment;
+package et.com.gebeya.paymentservice.service;
 
 import et.com.gebeya.paymentservice.dto.response.VerifyResponse;
 

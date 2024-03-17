@@ -1,4 +1,4 @@
-package et.com.gebeya.paymentservice.service.payment;
+package et.com.gebeya.paymentservice.service;
 
 import et.com.gebeya.paymentservice.dto.request.BalanceDto;
 import et.com.gebeya.paymentservice.dto.request.TransferBalanceDto;
@@ -15,11 +15,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class BalanceNewService {
+public class BalanceService {
     private final BalanceRepository balanceRepository;
     BalanceResponseDto createBalance(BalanceDto balanceDto) {
         Balance balance = MappingUtil.mapBalanceRequestDtoToBalance(balanceDto);

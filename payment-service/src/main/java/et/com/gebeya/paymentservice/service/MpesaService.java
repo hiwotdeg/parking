@@ -1,4 +1,4 @@
-package et.com.gebeya.paymentservice.service.payment;
+package et.com.gebeya.paymentservice.service;
 
 
 import et.com.gebeya.paymentservice.dto.request.B2cRequest;
@@ -35,11 +35,11 @@ public class MpesaService implements PaymentGateway{
     @Value("${mpesa.b2c.resultUrl}")
     private String resultUrl;
     private final WebClient.Builder webClientBuilder;
-    private final MpesaNewLogin mpesaNewLogin;
+    private final MpesaLogin mpesaLogin;
 
     @Override
     public String initiateDeposit(String phoneNo, double amount) {
-        String token = mpesaNewLogin.login();
+        String token = mpesaLogin.login();
         StkRequest request = MappingUtil.createStkRequest(String.valueOf(amount), phoneNo, bsc, callBack, pass, "20230629110689","CustomerPayBillOnline");
         StkResponse response = depositRequester(request, token).block();
         assert response != null;
@@ -71,7 +71,7 @@ public class MpesaService implements PaymentGateway{
 
     @Override
     public String initiateWithdrawal(String phoneNo, Integer amount) {
-        String token = mpesaNewLogin.login();
+        String token = mpesaLogin.login();
         B2cRequest request = MappingUtil.createB2cRequest(amount,initiator,sender,phoneNo,"test",resultUrl,securityCredential);
         B2cResponse response = withdrawalRequester(request, token).block();
         assert response != null;
