@@ -4,11 +4,13 @@ stages:
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=https://git.gebeya.training/parking/parking-lot-locator-system.git/.m2/repository"
 
+before_script:
+  - rm -rf https://git.gebeya.training/parking/parking-lot-locator-system.git/.m2/repository/*
 
 build:
   stage: build
   script:
-    - rm -rf https://git.gebeya.training/parking/parking-lot-locator-system.git/.m2/repository/*
+    - mvn clean
 
 
 
