@@ -24,8 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static et.com.gebeya.parkinglotservice.util.Constant.ADD_LOCATION;
-import static et.com.gebeya.parkinglotservice.util.Constant.DELETE_LOCATION;
+import static et.com.gebeya.parkinglotservice.util.Constant.*;
 
 @Service
 @RequiredArgsConstructor
@@ -60,15 +59,13 @@ public class ParkingLotService {
     @Transactional
     public ParkingLotResponseDto updateParkingLot(UpdateParkingLotDto dto, Integer id) {
         ParkingLot parkingLot = getParkingLot(id);
+        UpdateLocationRequestDto updateLocationRequestDto = UpdateLocationRequestDto.builder().id(parkingLot.getId()).existingTitle(parkingLot.getName()).existingAddress(parkingLot.getAddress()).build();
         parkingLot = parkingLotRepository.save(MappingUtil.updateParkingLot(parkingLot, dto));
-        AddLocationRequestDto addLocationRequestDto = AddLocationRequestDto.builder()
-                .id(parkingLot.getId())
-                .title(parkingLot.getName())
-                .address(parkingLot.getAddress())
-                .longitude(parkingLot.getLongitude())
-                .latitude(parkingLot.getLatitude())
-                .build();
-        addLocationRequestDtoKafkaTemplate.send(ADD_LOCATION, addLocationRequestDto);
+        updateLocationRequestDto.setLongitude(parkingLot.getLongitude());
+        updateLocationRequestDto.setLatitude(parkingLot.getLatitude());
+        updateLocationRequestDto.setNewAddress(parkingLot.getAddress());
+        updateLocationRequestDto.setNewTitle(parkingLot.getName());
+        addLocationRequestDtoKafkaTemplate.send(UPDATE_LOCATION, updateLocationRequestDto);
         return MappingUtil.parkingLotResponse(parkingLot);
     }
 
