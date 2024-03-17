@@ -6,6 +6,7 @@ import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateAdminRequestDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.UserDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.AddUserResponse;
 import et.com.gebeya.parkinglotservice.dto.responsedto.AdminResponseDto;
+import et.com.gebeya.parkinglotservice.dto.responsedto.ResponseModel;
 import et.com.gebeya.parkinglotservice.exception.AdminIdNotFound;
 import et.com.gebeya.parkinglotservice.exception.AuthException;
 import et.com.gebeya.parkinglotservice.exception.ClientErrorException;
@@ -34,17 +35,15 @@ public class AdminService {
     private final AuthService authService;
     @CircuitBreaker(name = "default", fallbackMethod = "adminFallBack")
     @Retry(name = "default")
-    public AddUserResponse registerAdmin(AddAdminRequestDto dto){
+    public ResponseModel registerAdmin(AddAdminRequestDto dto){
         Admin admin = MappingUtil.mapAddAdminRequestDtoToAdmin(dto);
         admin = adminRepository.save(admin);
         AddUserRequest addUserRequest = MappingUtil.mapAdminToAddUserRequest(admin);
-        Mono<ResponseEntity<AddUserResponse>> responseMono = authService.getAuthServiceResponseEntityMono(addUserRequest);
-        return responseMono.blockOptional()
-                .map(ResponseEntity::getBody)
-                .orElseThrow(() -> new AuthException("Error occurred during generating of token"));
+        AddUserResponse addUserResponse = authService.getAuthServiceResponseEntityMono(addUserRequest).block().getBody();
+        return ResponseModel.builder().message("admin account created successfully").build();
     }
 
-    private AddUserResponse adminFallBack(Throwable throwable) {
+    private ResponseModel adminFallBack(Throwable throwable) {
         log.error("fallback error=>{}, message=>{}", throwable.getClass(), throwable.getMessage());
         if (throwable instanceof WebClientResponseException.BadRequest) {
             throw new ClientErrorException(((WebClientResponseException.BadRequest) throwable).getResponseBodyAsString());
