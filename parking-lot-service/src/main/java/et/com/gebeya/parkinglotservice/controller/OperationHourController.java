@@ -3,6 +3,7 @@ package et.com.gebeya.parkinglotservice.controller;
 
 import et.com.gebeya.parkinglotservice.dto.requestdto.OperationHourDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.OperationHourResponseDto;
+import et.com.gebeya.parkinglotservice.dto.responsedto.ResponseModel;
 import et.com.gebeya.parkinglotservice.service.OperationHourService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class OperationHourController {
     }
 
     @DeleteMapping("/lots/{parkingLotId}/operation-hours/{operationHourId}") // providers
-    public ResponseEntity<Map<String, String>> deleteOperation(@PathVariable("parkingLotId") Integer parkingId, @PathVariable("operationHourId") Integer operationId) {
+    public ResponseEntity<ResponseModel> deleteOperation(@PathVariable("parkingLotId") Integer parkingId, @PathVariable("operationHourId") Integer operationId) {
         return ResponseEntity.ok(operationHourService.deleteOperationHour(parkingId, operationId));
     }
 }

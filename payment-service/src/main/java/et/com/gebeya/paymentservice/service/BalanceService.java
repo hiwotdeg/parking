@@ -1,8 +1,9 @@
-package et.com.gebeya.paymentservice.service;
+package et.com.gebeya.paymentservice.service.payment;
 
 import et.com.gebeya.paymentservice.dto.request.BalanceDto;
 import et.com.gebeya.paymentservice.dto.request.TransferBalanceDto;
 import et.com.gebeya.paymentservice.dto.response.BalanceResponseDto;
+import et.com.gebeya.paymentservice.dto.response.ResponseModel;
 import et.com.gebeya.paymentservice.exception.AccountBlocked;
 import et.com.gebeya.paymentservice.exception.InSufficientAmount;
 import et.com.gebeya.paymentservice.model.Balance;
@@ -11,14 +12,14 @@ import et.com.gebeya.paymentservice.repository.specification.BalanceSpecificatio
 import et.com.gebeya.paymentservice.util.MappingUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class BalanceService {
+public class BalanceNewService {
     private final BalanceRepository balanceRepository;
     BalanceResponseDto createBalance(BalanceDto balanceDto) {
         Balance balance = MappingUtil.mapBalanceRequestDtoToBalance(balanceDto);
@@ -26,27 +27,24 @@ public class BalanceService {
         balance = balanceRepository.save(balance);
         return MappingUtil.mapBalanceToBalanceResponseDto(balance);
     }
-    BalanceResponseDto withdrawalBalance(BalanceDto balanceDto) {
-       Balance provider = getUser(balanceDto.getUserId());
-        if (balanceDto.getBalance().compareTo(BigDecimal.valueOf(100)) < 0)
-            throw new InSufficientAmount("The minimum withdrawal amount is 100");
-        if (provider.getAmount().compareTo(balanceDto.getBalance()) < 0)
-            throw new InSufficientAmount("Your Balance is inSufficient.");
-        provider.setAmount(provider.getAmount().subtract(balanceDto.getBalance()));
-        return MappingUtil.mapBalanceToBalanceResponseDto(balanceRepository.save(provider));
+    void withdrawalBalance(String userId, BigDecimal amount) {
+       Balance provider = getUser(userId);
+        withdrawalBalanceChecker(userId,amount);
+        provider.setAmount(provider.getAmount().subtract(amount));
+        MappingUtil.mapBalanceToBalanceResponseDto(balanceRepository.save(provider));
     }
 
-    void withdrawalBalanceChecker(BalanceDto balanceDto) {
-        Balance provider = getUser(balanceDto.getUserId());
-        if (balanceDto.getBalance().compareTo(BigDecimal.valueOf(100)) < 0)
+    void withdrawalBalanceChecker(String userId,BigDecimal amount) {
+        Balance provider = getUser(userId);
+        if (amount.compareTo(BigDecimal.valueOf(100)) < 0)
             throw new InSufficientAmount("The minimum withdrawal amount is 100");
-        if (provider.getAmount().compareTo(balanceDto.getBalance()) < 0)
+        if (provider.getAmount().compareTo(amount) < 0)
             throw new InSufficientAmount("Your Balance is inSufficient.");
     }
-    BalanceResponseDto depositBalance(BalanceDto balanceDto) {
-        Balance driver = getUser(balanceDto.getUserId());
-       driver.setAmount(driver.getAmount().add(balanceDto.getBalance()));
-        return MappingUtil.mapBalanceToBalanceResponseDto(balanceRepository.save(driver));
+    void depositBalance(String userId, BigDecimal amount) {
+        Balance driver = getUser(userId);
+       driver.setAmount(driver.getAmount().add(amount));
+       balanceRepository.save(driver);
     }
     BalanceResponseDto transferBalance(TransferBalanceDto transferBalanceDto) {
        Balance driver = getUser(transferBalanceDto.getDriverId());
@@ -72,10 +70,10 @@ public class BalanceService {
         return user.get(0);
     }
 
-    Map<String,String> deleteUser(String id){
+    ResponseModel deleteUser(String id){
         Balance user = getUser(id);
         balanceRepository.delete(user);
-        return Map.of("message","users Coupon account deleted successfully");
+        return ResponseModel.builder().message("users Coupon account deleted successfully").build();
     }
 
 }

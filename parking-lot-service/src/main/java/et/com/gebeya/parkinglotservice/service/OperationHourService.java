@@ -4,6 +4,7 @@ package et.com.gebeya.parkinglotservice.service;
 import et.com.gebeya.parkinglotservice.dto.requestdto.OperationHourDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.UserDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.OperationHourResponseDto;
+import et.com.gebeya.parkinglotservice.dto.responsedto.ResponseModel;
 import et.com.gebeya.parkinglotservice.exception.OperationHourIdNotFound;
 import et.com.gebeya.parkinglotservice.model.OperationHour;
 import et.com.gebeya.parkinglotservice.model.ParkingLot;
@@ -30,15 +31,13 @@ public class OperationHourService {
         return MappingUtil.listOfOperationHourToListOfOperationHourResponseDto(operationHourRepository.saveAll(operationHours));
     }
 
-    public Map<String, String> deleteOperationHour(Integer parkingId, Integer operationHourId) {
+    public ResponseModel deleteOperationHour(Integer parkingId, Integer operationHourId) {
         UserDto providerId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<OperationHour> operationHours = operationHourRepository.findAll(OperationHourSpecification.hasParkingLotOperationAndProviderId(parkingId, operationHourId, providerId.getId()));
         if (operationHours.isEmpty())
             throw new OperationHourIdNotFound("operationHourId not found");
         operationHourRepository.delete(operationHours.get(0));
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "operation hours deleted successfully");
-        return response;
+        return ResponseModel.builder().message("operation hours deleted successfully").build();
     }
 
 

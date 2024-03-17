@@ -3,6 +3,7 @@ package et.com.gebeya.parkinglotservice.controller;
 import et.com.gebeya.parkinglotservice.dto.requestdto.AddParkingLotDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateParkingLotDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ParkingLotResponseDto;
+import et.com.gebeya.parkinglotservice.dto.responsedto.ResponseModel;
 import et.com.gebeya.parkinglotservice.service.ParkingLotService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +47,7 @@ public class ParkingLotController {
     }
 
     @DeleteMapping("/lots/{id}") // providers
-    public ResponseEntity<Map<String, String>> deleteParkingLot(@PathVariable("id") Integer id) {
+    public ResponseEntity<ResponseModel> deleteParkingLot(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(parkingLotService.deleteParkingLot(id));
     }
 

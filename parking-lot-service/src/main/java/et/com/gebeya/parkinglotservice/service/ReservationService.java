@@ -3,6 +3,7 @@ package et.com.gebeya.parkinglotservice.service;
 import et.com.gebeya.parkinglotservice.dto.requestdto.*;
 import et.com.gebeya.parkinglotservice.dto.responsedto.BalanceResponseDto;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ReservationResponseDto;
+import et.com.gebeya.parkinglotservice.dto.responsedto.ResponseModel;
 import et.com.gebeya.parkinglotservice.enums.ReservationStatus;
 import et.com.gebeya.parkinglotservice.exception.*;
 import et.com.gebeya.parkinglotservice.model.*;
@@ -45,7 +46,7 @@ public class ReservationService {
     @CircuitBreaker(name = "default", fallbackMethod = "fallBackMethod")
     @Retry(name = "default")
 
-    public Map<String, String> book(Integer parkingLotId, ReservationRequestDto dto) {
+    public ResponseModel book(Integer parkingLotId, ReservationRequestDto dto) {
         UserDto driverId = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Driver driver = driverService.getDriver(driverId.getId());
         ParkingLot parkingLot = parkingLotService.getParkingLot(parkingLotId);
@@ -54,13 +55,15 @@ public class ReservationService {
         ParkingLotProvider provider = parkingLot.getParkingLotProvider();
         PriceRequestDto requestDto = PriceRequestDto.builder().duration(dto.getStayingDuration()).build();
         BigDecimal price = pricingService.dynamicPricing(requestDto, parkingLotId).getAmount();
+        if(price.compareTo(BigDecimal.ZERO)<=0)
+            throw new PricingException("we can not perform the reservation due to provider price misconfiguration");
         Reservation reservation = Reservation.builder().price(price).parkingLot(parkingLot).driver(driver).stayingDuration(dto.getStayingDuration()).reservationStatus(ReservationStatus.PENDING).isActive(true).build();
         checkBalanceForDriver(driverId.getId(), price);
         Vehicle vehicle = vehicleService.getVehicle(dto.getVehicleId());
         reservation.setVehicle(vehicle);
         reservationRepository.save(reservation);
         notifyBooking(provider.getId(), driverId.getId(), parkingLot.getName(), dto.getStayingDuration());
-        return Map.of("message", "you have reserved a parking lot successfully");
+        return ResponseModel.builder().message("you have reserved a parking lot successfully").build();
 
     }
 
@@ -120,8 +123,6 @@ public class ReservationService {
     public ReservationResponseDto updateReservation(Integer reservationId, UpdateReservation updateReservation) {
         Reservation reservation = getActiveReservationsById(reservationId);
         if (isFiveMinutesDifference(reservation.getCreatedOn())) {
-            reservation.setReservationStatus(ReservationStatus.REJECTED);
-            reservationRepository.save(reservation);
             throw new ReservationUpdateAfterFiveMinuteException("Reservation request must be accepted or rejected within 5 minutes of submission");
         }
         if (updateReservation.getReservationStatus().equals(ReservationStatus.ACCEPTED)) {
@@ -148,6 +149,8 @@ public class ReservationService {
             throw new ReservationUpdateAfterFiveMinuteException(throwable.getMessage());
         } else if (throwable instanceof WebClientResponseException.BadRequest) {
             throw new ClientErrorException(((WebClientResponseException.BadRequest) throwable).getResponseBodyAsString());
+        } else if (throwable instanceof ActiveReservationNotFound) {
+            throw new ActiveReservationNotFound(throwable.getMessage());
         }
         throw new RuntimeException(throwable.getMessage());
     }
@@ -166,7 +169,7 @@ public class ReservationService {
         return duration.compareTo(Duration.ofMinutes(5)) >= 0;
     }
 
-    public Map<String, String> cancelReservation(Integer reservationId) {
+    public ResponseModel cancelReservation(Integer reservationId) {
         Reservation reservation = getActiveReservationsById(reservationId);
         if (reservation.getReservationStatus().equals(ReservationStatus.PENDING) && reservation.getIsActive().equals(true)) {
             reservation.setIsActive(false);
@@ -179,7 +182,7 @@ public class ReservationService {
         } else {
             throw new CancelReservationException("cancel reservation allowed for active accepted and active pending reservations only");
         }
-        return Map.of("message", "you have cancelled your reservation");
+        return ResponseModel.builder().message("you have cancelled your reservation").build();
     }
 
     public List<ReservationResponseDto> getAllReservation(Pageable pageable) {

@@ -2,6 +2,7 @@ package et.com.gebeya.parkinglotservice.service;
 
 import et.com.gebeya.parkinglotservice.dto.requestdto.*;
 import et.com.gebeya.parkinglotservice.dto.responsedto.ParkingLotResponseDto;
+import et.com.gebeya.parkinglotservice.dto.responsedto.ResponseModel;
 import et.com.gebeya.parkinglotservice.exception.MoreThanOneProviderException;
 import et.com.gebeya.parkinglotservice.exception.ParkingLotIdNotFound;
 import et.com.gebeya.parkinglotservice.exception.ProviderIdNotFound;
@@ -76,7 +77,7 @@ public class ParkingLotService {
     }
 
     @Transactional
-    public Map<String, String> deleteParkingLot(Integer id) {
+    public ResponseModel deleteParkingLot(Integer id) {
         ParkingLot parkingLot = getParkingLot(id);
         parkingLot.setIsActive(false);
         parkingLotRepository.save(parkingLot);
@@ -85,9 +86,7 @@ public class ParkingLotService {
                 .title(parkingLot.getName())
                 .address(parkingLot.getAddress()).build();
         deleteLocationRequestDtoKafkaTemplate.send(DELETE_LOCATION, deleteLocationRequestDto);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "parking lot deleted successfully");
-        return response;
+        return ResponseModel.builder().message("parking lot deleted successfully").build();
     }
 
     ParkingLot getParkingLot(Integer id) {

@@ -73,6 +73,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
+    @ExceptionHandler(PricingException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorMessage> handlePricingException(PricingException exception) {
+        ErrorMessage errorMessage = ErrorMessage.builder().message(exception.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+    }
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Map<String, Object>> handleBadCredentialsException(BadCredentialsException exception) {
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

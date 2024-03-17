@@ -3,6 +3,7 @@ package et.com.gebeya.parkinglotservice.service;
 import et.com.gebeya.parkinglotservice.dto.requestdto.UpdateVehicleDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.UserDto;
 import et.com.gebeya.parkinglotservice.dto.requestdto.VehicleRequestDto;
+import et.com.gebeya.parkinglotservice.dto.responsedto.ResponseModel;
 import et.com.gebeya.parkinglotservice.dto.responsedto.VehicleResponseDto;
 import et.com.gebeya.parkinglotservice.exception.VehicleIdNotFound;
 import et.com.gebeya.parkinglotservice.model.Driver;
@@ -60,13 +61,11 @@ public class VehicleService {
     }
 
 
-    public Map<String, String> deleteVehicleById(Integer id) {
+    public ResponseModel deleteVehicleById(Integer id) {
         Vehicle vehicle = getVehicle(id);
         vehicle.setIsActive(false);
         vehicleRepository.save(vehicle);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "vehicle deleted successfully");
-        return response;
+        return ResponseModel.builder().message("vehicle deleted successfully").build();
     }
 
 

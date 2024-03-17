@@ -19,7 +19,7 @@ import reactor.core.publisher.Mono;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MpesaService implements MpesaPaymentChannel {
+public class MpesaService implements PaymentGateway{
     @Value("${mpesa.stk.bsc}")
     private String bsc;
     @Value("${mpesa.stk.pass}")
@@ -38,19 +38,20 @@ public class MpesaService implements MpesaPaymentChannel {
     private final MpesaNewLogin mpesaNewLogin;
 
     @Override
-    public String initiateDepositForMpesa(String phoneNo, double amount) {
+    public String initiateDeposit(String phoneNo, double amount) {
         String token = mpesaNewLogin.login();
         StkRequest request = MappingUtil.createStkRequest(String.valueOf(amount), phoneNo, bsc, callBack, pass, "20230629110689","CustomerPayBillOnline");
         StkResponse response = depositRequester(request, token).block();
         assert response != null;
         log.info(response.toString());
-        if (!response.getResponseCode().equals("0"))
+        if (response.getResponseCode().equals("0"))
             return response.getCheckoutRequestID();
         return null;
     }
 
     @Override
-    public VerifyResponse confirmDepositForMpesa(MpesaStkCallback confirmationResponse) {
+    public VerifyResponse confirmDeposit(Object response) {
+        MpesaStkCallback confirmationResponse = (MpesaStkCallback) response;
         String resultCode = confirmationResponse.getEnvelope().getBody().getStkCallback().getResultCode();
         try {
             int parsedResultCode = Integer.parseInt(resultCode);
@@ -69,9 +70,9 @@ public class MpesaService implements MpesaPaymentChannel {
     }
 
     @Override
-    public String initiateWithdrawalForMpesa(String phoneNo, double amount) {
+    public String initiateWithdrawal(String phoneNo, Integer amount) {
         String token = mpesaNewLogin.login();
-        B2cRequest request = MappingUtil.createB2cRequest(String.valueOf(amount),initiator,sender,phoneNo,"test",resultUrl,securityCredential);
+        B2cRequest request = MappingUtil.createB2cRequest(amount,initiator,sender,phoneNo,"test",resultUrl,securityCredential);
         B2cResponse response = withdrawalRequester(request, token).block();
         assert response != null;
         log.info(response.toString());
@@ -81,7 +82,8 @@ public class MpesaService implements MpesaPaymentChannel {
     }
 
     @Override
-    public VerifyResponse confirmWithdrawalForMpesa(MpesaB2CResponse confirmationResponse) {
+    public VerifyResponse confirmWithdrawal(Object response) {
+        MpesaB2CResponse confirmationResponse = (MpesaB2CResponse) response;
         try{
             if (confirmationResponse.getResult().getResultCode() == 0)
                 return VerifyResponse.builder()

@@ -1,4 +1,5 @@
-package et.com.gebeya.paymentservice.service;
+package et.com.gebeya.paymentservice.service.payment;
+
 
 import et.com.gebeya.paymentservice.dto.response.MpesaLoginResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.Base64;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MpesaLogin {
+public class MpesaNewLogin {
     private final WebClient.Builder webClientBuilder;
     @Value("${mpesa.stk.username}")
     private String username;
@@ -45,3 +46,4 @@ public class MpesaLogin {
 
 
 }
+
