@@ -30,7 +30,7 @@ update_manifest:
     - | 
       sed -i "s#image:.*#image: ${DOCKER_IMAGE}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./geo-location/deployment.yaml
     - | 
-      sed -i "s#image:.*#image: ${DOCKER_IMAGE}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./notification-service/deployment.yaml
+      sed -i "s#image:.*#image: ${DOCKER_IMAGE}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./notifiaction-service/deployment.yaml
     - | 
       sed -i "s#image:.*#image: ${DOCKER_IMAGE}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./auth-service/deployment.yaml
     - | 
