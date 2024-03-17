@@ -1,158 +1,72 @@
 stages:
   - build
-  - deploy
 
-build_microservices:
-  image: eclipse-temurin:17-jre-jammy
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=https://git.gebeya.training/parking/parking-lot-locator-system.git/.m2/repository"
+
+before_script:
+  - rm -rf https://git.gebeya.training/parking/parking-lot-locator-system.git/.m2/repository/*
+
+build:
   stage: build
-  before_script:
-    - apt-get update && apt-get install -y maven git # Install Maven and Git
-    - mvn clean install -DskipTests  # Install dependencies
   script:
-    - echo $DOCKER_PASSWORD
-    - mvn clean compile jib:build #-Dimage=$DOCKER_REGISTRY/PROJECT/${APP_NAME}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
-
-update-api:
-    stage: deploy
-    variables:
-        APP_NAME: "api-gateway"
-        PROJECT_VERSION: 0.0.1-SNAPSHOT
-        # GIT_COMMIT_ID: "$(git rev-parse --short HEAD)"
-        GIT_COMMIT_ID: "${CI_COMMIT_SHORT_SHA:0:7}"
-        DOCKER_IMAGE: $DOCKER_USER_NAME/${APP_NAME}:${PROJECT_VERSION}
-        MANIFEST_GIT_REPO: https://$USERNAME:$PAT_TOKEN@git.gebeya.training/parking/deployment-manifest.git
-    before_script:
-        - apk add git
-        - git clone $MANIFEST_GIT_REPO
-        - git config --global user.name "$GITLAB_USER_NAME"
-        - git config --global user.email "$GITLAB_USER_EMAIL"
-    script:
-        - cd deployment-manifest
-        - git remote set-url origin --push $MANIFEST_GIT_REPO
-        - git pull origin HEAD:$CI_COMMIT_REF_NAME
-        - |
-            sed -i "s#image:.*#image: ${DOCKER_IMAGE}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./api-gateway/deployment.yaml
-        - git stage ./api-gateway/deployment.yaml
-        - git commit -m "Update the api-gateway image tag [skip-ci]"
-        - git push -f origin HEAD:$CI_COMMIT_REF_NAME
-
-update-discovery:
-    stage: deploy
-    variables:
-        APP_NAME: "service_discovery"
-        PROJECT_VERSION: 0.0.1-SNAPSHOT
-        # GIT_COMMIT_ID: "$(git rev-parse --short HEAD)"
-        GIT_COMMIT_ID: "${CI_COMMIT_SHORT_SHA:0:7}"
-        DOCKER_IMAGE: $DOCKER_USER_NAME/${APP_NAME}:${PROJECT_VERSION}
-        MANIFEST_GIT_REPO: https://$USERNAME:$PAT_TOKEN@git.gebeya.training/parking/deployment-manifest.git
-    before_script:
-        - apk add git
-        - git clone $MANIFEST_GIT_REPO
-        - git config --global user.name "$GITLAB_USER_NAME"
-        - git config --global user.email "$GITLAB_USER_EMAIL"
-    script:
-        - cd deployment-manifest
-        - git remote set-url origin --push $MANIFEST_GIT_REPO
-        - git pull origin HEAD:$CI_COMMIT_REF_NAME
-        - |
-            sed -i "s#image:.*#image: ${DOCKER_IMAGE}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./service-discovery/deployment.yaml
-        - git stage ./service-discovery/deployment.yaml
-        - git commit -m "Update the service-discovery tag [skip-ci]"
-        - git push -f origin HEAD:$CI_COMMIT_REF_NAME
-
-update-geo:
-    stage: deploy
-    variables:
-        APP_NAME: "geo-location-service"
-        PROJECT_VERSION: 0.0.1-SNAPSHOT
-        # GIT_COMMIT_ID: "$(git rev-parse --short HEAD)"
-        GIT_COMMIT_ID: "${CI_COMMIT_SHORT_SHA:0:7}"
-        DOCKER_IMAGE: $DOCKER_USER_NAME/${APP_NAME}:${PROJECT_VERSION}
-        MANIFEST_GIT_REPO: https://$USERNAME:$PAT_TOKEN@git.gebeya.training/parking/deployment-manifest.git
-    before_script:
-        - apk add git
-        - git clone $MANIFEST_GIT_REPO
-        - git config --global user.name "$GITLAB_USER_NAME"
-        - git config --global user.email "$GITLAB_USER_EMAIL"
-    script:
-        - cd deployment-manifest
-        - git remote set-url origin --push $MANIFEST_GIT_REPO
-        - git pull origin HEAD:$CI_COMMIT_REF_NAME
-        - |
-            sed -i "s#image:.*#image: ${DOCKER_IMAGE}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./geo-location-service/deployment.yaml
-        - git stage ./geo-location-service/deployment.yaml
-        - git commit -m "Update the geo-location-service image tag [skip-ci]"
-        - git push -f origin HEAD:$CI_COMMIT_REF_NAME
+    - mvn clean
 
 
-update-notification:
-    stage: deploy
-    variables:
-        APP_NAME: "notification-service"
-        PROJECT_VERSION: 0.0.1-SNAPSHOT
-        # GIT_COMMIT_ID: "$(git rev-parse --short HEAD)"
-        GIT_COMMIT_ID: "${CI_COMMIT_SHORT_SHA:0:7}"
-        DOCKER_IMAGE: $DOCKER_USER_NAME/${APP_NAME}:${PROJECT_VERSION}
-        MANIFEST_GIT_REPO: https://$USERNAME:$PAT_TOKEN@git.gebeya.training/parking/deployment-manifest.git
-    before_script:
-        - apk add git
-        - git clone $MANIFEST_GIT_REPO
-        - git config --global user.name "$GITLAB_USER_NAME"
-        - git config --global user.email "$GITLAB_USER_EMAIL"
-    script:
-        - cd deployment-manifest
-        - git remote set-url origin --push $MANIFEST_GIT_REPO
-        - git pull origin HEAD:$CI_COMMIT_REF_NAME
-        - |
-            sed -i "s#image:.*#image: ${DOCKER_IMAGE}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./notification-service/deployment.yaml
-        - git stage ./notification-service/deployment.yaml
-        - git commit -m "Update the notification-service image tag [skip-ci]"
-        - git push -f origin HEAD:$CI_COMMIT_REF_NAME
 
-update-auth:
-    stage: deploy
-    variables:
-        APP_NAME: "auth-service"
-        PROJECT_VERSION: 0.0.1-SNAPSHOT
-        # GIT_COMMIT_ID: "$(git rev-parse --short HEAD)"
-        GIT_COMMIT_ID: "${CI_COMMIT_SHORT_SHA:0:7}"
-        DOCKER_IMAGE: $DOCKER_USER_NAME/${APP_NAME}:${PROJECT_VERSION}
-        MANIFEST_GIT_REPO: https://$USERNAME:$PAT_TOKEN@git.gebeya.training/parking/deployment-manifest.git
-    before_script:
-        - apk add git
-        - git clone $MANIFEST_GIT_REPO
-        - git config --global user.name "$GITLAB_USER_NAME"
-        - git config --global user.email "$GITLAB_USER_EMAIL"
-    script:
-        - cd deployment-manifest
-        - git remote set-url origin --push $MANIFEST_GIT_REPO
-        - git pull origin HEAD:$CI_COMMIT_REF_NAME
-        - |
-            sed -i "s#image:.*#image: ${DOCKER_IMAGE}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./auth-service/deployment.yaml
-        - git stage ./auth-service/deployment.yaml
-        - git commit -m "Update the authentication-service image tag [skip-ci]"
-        - git push -f origin HEAD:$CI_COMMIT_REF_NAME
 
-update-parking:
-    stage: deploy
-    variables:
-        APP_NAME: "parking-lot-service"
-        PROJECT_VERSION: 0.0.1-SNAPSHOT
-        # GIT_COMMIT_ID: "$(git rev-parse --short HEAD)"
-        GIT_COMMIT_ID: "${CI_COMMIT_SHORT_SHA:0:7}"
-        DOCKER_IMAGE: $DOCKER_USER_NAME/${APP_NAME}:${PROJECT_VERSION}
-        MANIFEST_GIT_REPO: https://$USERNAME:$PAT_TOKEN@git.gebeya.training/parking/deployment-manifest.git
-    before_script:
-        - apk add git
-        - git clone $MANIFEST_GIT_REPO
-        - git config --global user.name "$GITLAB_USER_NAME"
-        - git config --global user.email "$GITLAB_USER_EMAIL"
-    script:
-        - cd deployment-manifest
-        - git remote set-url origin --push $MANIFEST_GIT_REPO
-        - git pull origin HEAD:$CI_COMMIT_REF_NAME
-        - |
-            sed -i "s#image:.*#image: ${DOCKER_IMAGE}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./parking-lot-service/deployment.yaml
-        - git stage ./parking-lot-service/deployment.yaml
-        - git commit -m "Update the parking-lot-service image tag [skip-ci]"
-        - git push -f origin HEAD:$CI_COMMIT_REF_NAME
+
+# stages:
+#   - build
+#   - deploy
+
+# build_microservices:
+#   image: hiwotdeg2129/mavenn:1.0
+#   stage: build
+#   before_script:
+#     - mvn clean install -DskipTests  # Install dependencies
+#   script:
+#     - echo $DOCKER_PASSWORD
+#     - mvn clean compile jib:dockerbuild
+
+
+
+# update_manifest:
+#   stage: deploy
+#   variables:
+#     MANIFEST_GIT_REPO: https://$USERNAME:$PAT_TOKEN@git.gebeya.training/parking/deployment-manifest.git
+#     PROJECT_VERSION: 0.0.1-SNAPSHOT   
+#     SERVICE: "service-discovery"
+#     GATEWAY: "api-gateway"
+#     LOT: "parking-lot-service"
+#     NOT: "notification-service"
+#     AUTH: "auth-service"
+#     GEO: "geo-location-service"
+#     PAY: "payment-service"
+  
+#   before_script:
+#     - apk add git
+#     - git config --global user.email $GITLAB_USER_EMAIL
+#     - git config --global user.name $GITLAB_USER_NAME
+#     - git remote set-url origin --push $MANIFEST_GIT_REPO
+#     - git clone $MANIFEST_GIT_REPO
+#   script:
+#     - cd deployment-manifest/
+#     - | 
+#       sed -i "s#image:.*#image: $DOCKER_USER_NAME/${SERVICE}:${PROJECT_VERSION}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./service-discovery/deployment.yaml
+#     - | 
+#       sed -i "s#image:.*#image: $DOCKER_USER_NAME/${GEO}:${PROJECT_VERSION}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./geo-location/deployment.yaml
+#     - | 
+#       sed -i "s#image:.*#image: $DOCKER_USER_NAME/${NOT}:${PROJECT_VERSION}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./notifiaction-service/deployment.yaml
+#     - | 
+#       sed -i "s#image:.*#image: $DOCKER_USER_NAME/${AUTH}:${PROJECT_VERSION}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./auth-service/deployment.yaml
+#     - | 
+#       sed -i "s#image:.*#image: $DOCKER_USER_NAME/${LOT}:${PROJECT_VERSION}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./parking-lot-service/deployment.yaml
+#     - | 
+#       sed -i "s#image:.*#image: $DOCKER_USER_NAME/${GATEWAY}:${PROJECT_VERSION}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./api-gateway/deployment.yaml
+#     - | 
+#       sed -i "s#image:.*#image: $DOCKER_USER_NAME/${PAY}:${PROJECT_VERSION}-${CI_COMMIT_SHORT_SHA:0:7}#g" ./payment-service/deployment.yaml
+    
+#     - git add ./service-discovery/deployment.yaml ./geo-location/deployment.yaml ./notifiaction-service/deployment.yaml ./auth-service/deployment.yaml ./parking-lot-service/deployment.yaml ./api-gateway/deployment.yaml ./payment-service/deployment.yaml
+#     - git commit -m "(Automation) - update parking backend service images tag [skip-ci]"
+#     - git push origin HEAD:$CI_COMMIT_REF_NAME

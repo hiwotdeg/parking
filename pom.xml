@@ -88,18 +88,37 @@
             </plugin>
 
             <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>4.0.0</version>
+                <executions>
+                    <execution>
+                        <id>get-the-git-infos</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
-                <version>3.4.0</version>
+                <version>3.2.1</version>
                 <configuration>
                     <from>
-                        <image>eclipse-temurin:17-jre-jammy</image>
+                        <image>eclipse-temurin:17.0.4.1_1-jre</image>
                     </from>
                     <to>
-                        <image>abinet12234/${project.artifactId}:1.5</image>
+                        <image>registry.hub.docker.com/hiwotdeg2129/${project.artifactId}:${project.version}-${git.commit.id.abbrev}</image>
+                        <auth>
+                            <username>hiwotdeg2129</username>
+                            <password>Nowayh@18</password>
+                        </auth>
                     </to>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 
