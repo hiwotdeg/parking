@@ -12,7 +12,7 @@ build_microservices:
     - mvn clean install -DskipTests  # Install dependencies
   script:
     - echo $DOCKER_PASSWORD
-    - mvn clean compile jib:dockerbuild
+    - mvn clean compile jib:build
 
 
 
