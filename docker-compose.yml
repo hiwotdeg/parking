@@ -1,5 +1,120 @@
-version: '3'
+version: '3.8'
+
 services:
+  service-discovery:
+    image: registry.hub.docker.com/hiwotdeg2129/service-discovery:0.0.1-SNAPSHOT-054c502
+    container_name: service-discovery
+    ports:
+      - "8761:8761"
+    environment:
+      - EUREKA_INSTANCE_HOSTNAME=service-discovery
+      - SERVICE_DISCOVERY_SERVER.PORT=8761
+
+
+  api-gateway:
+    image: registry.hub.docker.com/hiwotdeg2129/api-gateway:0.0.1-SNAPSHOT-054c502
+    container_name: api-gateway
+    depends_on:
+      - service-discovery
+      - auth-service
+      - geo-location-service
+      - parking-lot-service
+      - notification-service
+      - payment-service
+    ports:
+      - "80:80"
+    environment:
+      - DISCOVERY_SERVICE_URL=http://service-discovery:8761
+      - NOTIFICATION_SERVICE_URL=ws://notification-service:8181
+      - EUREKA_DEFAULT_ZONE_URL=http://service-discovery:8761/eureka
+      - API_GATEWAY_SERVER_PORT=80
+
+  auth-service:
+    image: registry.hub.docker.com/hiwotdeg2129/auth-service:0.0.1-SNAPSHOT-054c502
+    container_name: auth-service
+    depends_on:
+      - service-discovery
+      - redis
+      - broker
+      - zookeeper
+      - database
+    environment:
+      - EUREKA_DEFAULT_ZONE_URL=http://service-discovery:8761/eureka
+      - KAFKA_URL=broker:9092
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DB_URL=jdbc:postgresql://database:5432/parking_lot
+      - API_GATEWAY_SERVICE_URL=http://api-gateway:80
+
+  geo-location-service:
+    image: registry.hub.docker.com/hiwotdeg2129/geo-location-service:0.0.1-SNAPSHOT-054c502
+    container_name: geo-location-service
+    depends_on:
+      - service-discovery
+      - redis
+      - broker
+      - zookeeper
+    environment:
+      - EUREKA_DEFAULT_ZONE_URL=http://service-discovery:8761/eureka
+      - KAFKA_URL=broker:9092
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - API_GATEWAY_SERVICE_URL=http://api-gateway:80
+
+  parking-lot-service:
+    image: registry.hub.docker.com/hiwotdeg2129/parking-lot-service:0.0.1-SNAPSHOT-054c502
+    container_name: parking-lot-service
+    depends_on:
+      - service-discovery
+      - redis
+      - broker
+      - zookeeper
+      - database
+    environment:
+      - EUREKA_DEFAULT_ZONE_URL=http://service-discovery:8761/eureka
+      - KAFKA_URL=broker:9092
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DB_URL=jdbc:postgresql://database:5432/parking_lot
+      - API_GATEWAY_SERVICE_URL=http://api-gateway:80
+
+
+  notification-service:
+    image: registry.hub.docker.com/hiwotdeg2129/notification-service:0.0.1-SNAPSHOT-054c502
+    container_name: notification-service
+    depends_on:
+      - service-discovery
+      - redis
+      - broker
+      - zookeeper
+    ports:
+      - "8081:8081"
+    environment:
+      - EUREKA_DEFAULT_ZONE_URL=http://service-discovery:8761/eureka
+      - KAFKA_URL=broker:9092
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - NOTIFICATION_SERVER_URL=notification-service
+      - TELEGRAM_USERNAME=parking_lot_locator_bot
+      - TELEGRAM_TOKEN=6478988761:AAHoiepwTE0Bh8JjK_2piQIjDD8wyGl-qN8
+
+  payment-service:
+    image: registry.hub.docker.com/hiwotdeg2129/payment-service:0.0.1-SNAPSHOT-054c502
+    container_name: payment-service
+    depends_on:
+      - service-discovery
+      - redis
+      - broker
+      - zookeeper
+      - database
+    environment:
+      - EUREKA_DEFAULT_ZONE_URL=http://service-discovery:8761/eureka
+      - KAFKA_URL=broker:9092
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DB_URL=jdbc:postgresql://database:5432/parking_lot
+      - API_GATEWAY_SERVICE_URL=http://api-gateway:80
+
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper
@@ -49,17 +164,14 @@ services:
     # command: --logging.level.zipkin2=DEBUG
 
   database:
-    container_name: parking-lot-db
+    container_name: database
     image: postgres
-    restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_DB: parking_lot
       POSTGRES_PASSWORD: password
     ports:
       - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
 
 volumes:
   postgres_data:
