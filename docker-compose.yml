@@ -5,7 +5,7 @@ services:
     image: ${HARBOR_URL}/kft-lab/service-discovery
     container_name: service-discovery
     ports:
-      - "8761:8761"
+      - "8762:8761"
     environment:
       - EUREKA_INSTANCE_HOSTNAME=service-discovery
       - SERVICE_DISCOVERY_SERVER.PORT=8761
