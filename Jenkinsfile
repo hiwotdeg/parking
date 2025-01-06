@@ -45,21 +45,18 @@ pipeline {
             steps {
                 script {
                     echo 'Deploying Parking services using Docker Compose...'
-                    sh '''
-                    cd parking
 
                     # Login to Harbor to allow Docker Compose to pull images
-                    echo "${HARBOR_PASSWORD}" | docker login ${HARBOR_URL} -u ${HARBOR_USERNAME} --password-stdin
+                    sh "echo \"${HARBOR_PASSWORD}\" | docker login ${HARBOR_URL} -u ${HARBOR_USERNAME} --password-stdin"
 
                     # Stop and remove any existing containers
-                    docker-compose down
+                    sh "docker-compose down"
 
                     # Pull the latest images
-                    docker-compose pull
+                    sh "docker-compose pull"
 
                     # Start the application in detached mode
-                    docker-compose up -d
-                    '''
+                    sh "docker-compose up -d"
                 }
             }
         }
