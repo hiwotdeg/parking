@@ -4,14 +4,7 @@ FROM maven:3.9.4-eclipse-temurin-17 as builder
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the parent pom.xml
-COPY pom.xml ./pom.xml
-
-# Copy the parking-lot-service module pom.xml
-COPY parking-lot-service/pom.xml ./parking-lot-service/pom.xml
-
-# Copy the src folder for the parking-lot-service
-COPY parking-lot-service/src ./parking-lot-service/src
+COPY . .
 
 # Build the application (skip tests for the build process)
 RUN mvn clean install -DskipTests
