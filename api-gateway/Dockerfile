@@ -4,14 +4,7 @@ FROM maven:3.9.4-eclipse-temurin-17 as builder
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the parent pom.xml
-COPY pom.xml ./pom.xml
-
-# Copy the api-gateway module pom.xml
-COPY api-gateway/pom.xml ./api-gateway/pom.xml
-
-# Copy the src folder for the api-gateway service
-COPY api-gateway/src ./api-gateway/src
+COPY . .
 
 # Build the application (skip tests for the build process)
 RUN mvn clean install -DskipTests
