@@ -18,8 +18,15 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    echo 'Building and pushing Docker images using Jib...'
-                    sh 'mvn compile jib:dockerBuild'
+                    echo 'Building Docker images using Dockerfiles...'
+
+                    sh "docker build -t ${HARBOR_URL}/kft-lab/notification-service -f notification-service/Dockerfile ."
+                    sh "docker build -t ${HARBOR_URL}/kft-lab/parking-lot-service -f parking-lot-service/Dockerfile ."
+                    sh "docker build -t ${HARBOR_URL}/kft-lab/payment-service -f payment-service/Dockerfile ."
+                    sh "docker build -t ${HARBOR_URL}/kft-lab/auth-service -f auth-service/Dockerfile ."
+                    sh "docker build -t ${HARBOR_URL}/kft-lab/geo-location-service -f geo-location-service/Dockerfile ."
+                    sh "docker build -t ${HARBOR_URL}/kft-lab/service-discovery -f service-discovery/Dockerfile ."
+                    sh "docker build -t ${HARBOR_URL}/kft-lab/api-gateway -f api-gateway/Dockerfile ."
                 }
             }
         }
