@@ -5,9 +5,7 @@ FROM maven:3.9.4-eclipse-temurin-17 as builder
 WORKDIR /app
 
 # Copy only the necessary pom.xml for the auth-service module
-COPY auth-service/pom.xml ./auth-service/pom.xml
-COPY pom.xml ./pom.xml  # Parent pom.xml, if needed to resolve shared dependencies
-COPY auth-service/src ./auth-service/src
+COPY . .
 
 # Build the application for the specific service
 RUN mvn clean install -DskipTests
