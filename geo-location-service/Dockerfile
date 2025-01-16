@@ -25,8 +25,6 @@ WORKDIR /app
 # Copy the jar file from the builder stage
 COPY --from=builder /app/geo-location-service/target/*.jar app.jar
 
-# Expose the port based on the application.yml configuration (8081 for geo-location-service)
-EXPOSE 8081
 
 # Default command to run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
