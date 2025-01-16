@@ -14,8 +14,7 @@ COPY payment-service/pom.xml ./payment-service/pom.xml
 COPY payment-service/src ./payment-service/src
 
 # Build the application (skip tests for the build process)
-RUN mvn clean package -f payment-service/pom.xml -DskipTests
-
+RUN mvn clean install -DskipTests
 # Step 2: Use a lightweight JDK image for runtime
 FROM openjdk:17-jdk-slim
 
