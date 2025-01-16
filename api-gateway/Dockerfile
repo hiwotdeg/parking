@@ -1,12 +1,32 @@
+# Step 1: Use Maven image for building the jar
 FROM maven:3.9.4-eclipse-temurin-17 as builder
-WORKDIR /app
-COPY pom.xml ./
-COPY src ./src
-RUN mvn clean package -DskipTests
 
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the parent pom.xml
+COPY pom.xml ./pom.xml
+
+# Copy the api-gateway module pom.xml
+COPY api-gateway/pom.xml ./api-gateway/pom.xml
+
+# Copy the src folder for the api-gateway service
+COPY api-gateway/src ./api-gateway/src
+
+# Build the application (skip tests for the build process)
+RUN mvn clean package -f api-gateway/pom.xml -DskipTests
+
+# Step 2: Use a lightweight JDK image for runtime
 FROM openjdk:17-jdk-slim
-WORKDIR /app
-COPY --from=builder /app/target/*.jar app.jar
-EXPOSE 80
-ENTRYPOINT ["java", "-jar", "app.jar"]
 
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the jar file from the builder stage
+COPY --from=builder /app/api-gateway/target/*.jar app.jar
+
+# Expose the application's port (modify this if necessary)
+EXPOSE 80
+
+# Default command to run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
