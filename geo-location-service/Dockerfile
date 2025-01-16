@@ -4,14 +4,7 @@ FROM maven:3.9.4-eclipse-temurin-17 as builder
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the parent pom.xml
-COPY pom.xml ./pom.xml
-
-# Copy the geo-location-service module pom.xml
-COPY geo-location-service/pom.xml ./geo-location-service/pom.xml
-
-# Copy the src folder for the geo-location-service service
-COPY geo-location-service/src ./geo-location-service/src
+COPY . .
 
 # Build the application (skip tests for the build process)
 RUN mvn clean install -DskipTests
