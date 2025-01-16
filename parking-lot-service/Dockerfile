@@ -14,7 +14,7 @@ COPY parking-lot-service/pom.xml ./parking-lot-service/pom.xml
 COPY parking-lot-service/src ./parking-lot-service/src
 
 # Build the application (skip tests for the build process)
-RUN mvn clean package -f parking-lot-service/pom.xml -DskipTests
+RUN mvn clean install -DskipTests
 
 # Step 2: Use a lightweight JDK image for runtime
 FROM openjdk:17-jdk-slim
