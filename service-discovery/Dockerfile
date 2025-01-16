@@ -14,8 +14,7 @@ COPY service-discovery/pom.xml ./service-discovery/pom.xml
 COPY service-discovery/src ./service-discovery/src
 
 # Build the application (skip tests for the build process)
-RUN mvn clean package -f service-discovery/pom.xml -DskipTests
-
+RUN mvn clean install -DskipTests
 # Step 2: Use a lightweight JDK image for runtime
 FROM openjdk:17-jdk-slim
 
