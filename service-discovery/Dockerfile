@@ -4,15 +4,7 @@ FROM maven:3.9.4-eclipse-temurin-17 as builder
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the parent pom.xml
-COPY pom.xml ./pom.xml
-
-# Copy the service-discovery module pom.xml
-COPY service-discovery/pom.xml ./service-discovery/pom.xml
-
-# Copy the src folder for the service-discovery
-COPY service-discovery/src ./service-discovery/src
-
+COPY . .
 # Build the application (skip tests for the build process)
 RUN mvn clean install -DskipTests
 # Step 2: Use a lightweight JDK image for runtime
