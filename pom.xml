@@ -101,23 +101,7 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>com.google.cloud.tools</groupId>
-                <artifactId>jib-maven-plugin</artifactId>
-                <version>3.2.1</version>
-                <configuration>
-                    <from>
-                        <image>eclipse-temurin:17.0.4.1_1-jre</image>
-                    </from>
-                    <to>
-                        <image>${HARBOR_URL}/kft-lab/${project.artifactId}</image>
-                        <auth>
-                            <username>hiwot</username>
-                            <password>Spok5G@#t!uENC9JA5</password>
-                        </auth>
-                    </to>
-                </configuration>
-            </plugin>
+            
 
         </plugins>
     </build>
