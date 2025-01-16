@@ -10,8 +10,7 @@ COPY pom.xml ./pom.xml  # Parent pom.xml, if needed to resolve shared dependenci
 COPY auth-service/src ./auth-service/src
 
 # Build the application for the specific service
-RUN mvn clean package -f auth-service/pom.xml -DskipTests
-
+RUN mvn clean install -DskipTests
 # Step 2: Use a lightweight JDK image for runtime
 FROM openjdk:17-jdk-slim
 
