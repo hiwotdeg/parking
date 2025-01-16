@@ -14,7 +14,7 @@ COPY api-gateway/pom.xml ./api-gateway/pom.xml
 COPY api-gateway/src ./api-gateway/src
 
 # Build the application (skip tests for the build process)
-RUN mvn clean package -f api-gateway/pom.xml -DskipTests
+RUN mvn clean install -DskipTests
 
 # Step 2: Use a lightweight JDK image for runtime
 FROM openjdk:17-jdk-slim
