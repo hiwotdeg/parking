@@ -14,7 +14,7 @@ COPY notification-service/pom.xml ./notification-service/pom.xml
 COPY notification-service/src ./notification-service/src
 
 # Build the application (skip tests for the build process)
-RUN mvn clean package -f notification-service/pom.xml -DskipTests
+RUN mvn clean install -DskipTests
 
 # Step 2: Use a lightweight JDK image for runtime
 FROM openjdk:17-jdk-slim
