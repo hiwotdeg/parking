@@ -25,8 +25,5 @@ WORKDIR /app
 # Copy the jar file from the builder stage
 COPY --from=builder /app/parking-lot-service/target/*.jar app.jar
 
-# Expose the port based on application.yml configuration (8082 for parking-lot-service)
-EXPOSE 8082
-
 # Default command to run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
