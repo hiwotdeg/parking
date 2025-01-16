@@ -21,8 +21,7 @@ WORKDIR /app
 # Copy the jar file from the builder stage (adjust the path if necessary)
 COPY --from=builder /app/auth-service/target/*.jar app.jar
 
-# Expose the application's port (you might change the port based on the environment)
-EXPOSE 8080
+
 
 # Default command to run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
