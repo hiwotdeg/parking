@@ -14,7 +14,7 @@ COPY geo-location-service/pom.xml ./geo-location-service/pom.xml
 COPY geo-location-service/src ./geo-location-service/src
 
 # Build the application (skip tests for the build process)
-RUN mvn clean package -f geo-location-service/pom.xml -DskipTests
+RUN mvn clean install -DskipTests
 
 # Step 2: Use a lightweight JDK image for runtime
 FROM openjdk:17-jdk-slim
